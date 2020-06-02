@@ -1,0 +1,28 @@
+{
+  "name": "@ngneat/error-tailor",
+  "version": "1.0.0",
+  "peerDependencies": {
+    "@angular/common": "^9.1.9",
+    "@angular/core": "^9.1.9"
+  },
+  "dependencies": {
+    "tslib": "^1.10.0"
+  },
+  "keywords": [
+    "angular",
+    "angular 2",
+    "error-tailor"
+  ],
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "bugs": {
+    "url": "https://github.com/ngneat/error-tailor/issue"
+  },
+  "homepage": "https://github.com/ngneat/error-tailor#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ngneat/error-tailor"
+  }
+}

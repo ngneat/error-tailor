@@ -1,1 +1,16 @@
-/* You can add global styles to this file, and also import other style files */
+body {
+  margin-top: 30px;
+}
+
+.control-error {
+  width: 100%;
+  margin-top: 0.25rem;
+  font-size: 80%;
+  color: #dc3545;
+}
+
+.form-submitted input.ng-invalid,
+.form-submitted select.ng-invalid {
+  border-color: #dc3545;
+  padding-right: calc(1.5em + 0.75rem);
+}
