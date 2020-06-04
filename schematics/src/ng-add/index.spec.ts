@@ -1,7 +1,7 @@
 import { Tree } from '@angular-devkit/schematics';
 import { SchematicTestRunner } from '@angular-devkit/schematics/testing';
-
 import { join } from 'path';
+import { readFileSync } from 'fs';
 
 const angularJSON = {
   projects: {
@@ -53,8 +53,9 @@ describe('Schematics', () => {
 
       const appModuleModified = tree.readContent('./src/app/app.module.ts');
 
-      expect(appModuleModified).toContain(`import { ErrorTailorModule } from '@ngneat/error-tailor';`);
-      expect(appModuleModified).toContain(`ErrorTailorModule.forRoot({ errors: {} })`);
+      const expectedAppModule = readFileSync(join(__dirname, 'app.module.ts.snap')).toString();
+
+      expect(appModuleModified).toContain(expectedAppModule);
 
       const packageJSONModified = JSON.parse(tree.readContent('./package.json'));
 

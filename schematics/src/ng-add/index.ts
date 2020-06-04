@@ -79,7 +79,13 @@ function addModuleToImports(options: Schema): Rule {
     const workspace = getWorkspace(host);
     const project = getProjectFromWorkspace(workspace, Object.keys(workspace.projects)[0]);
 
-    const moduleImport = 'ErrorTailorModule.forRoot({ errors: {} })';
+    const moduleImport = `ErrorTailorModule.forRoot({
+      errors: {
+        useValue: {
+          required: error => 'This field is required'
+        }
+      }
+    })`;
 
     addModuleImportToRootModule(host, moduleImport, null as any, project);
 
