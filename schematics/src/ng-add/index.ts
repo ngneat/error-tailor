@@ -13,7 +13,7 @@ import {
 import * as ts from 'typescript';
 
 import { Schema } from './schema';
-import { addProviderToModule, applyChanges, getModuleFile, insertImport } from './utils';
+import { insertImport } from './utils';
 
 function addPackageJsonDependencies(options: Schema): Rule {
   return (host: Tree, context: SchematicContext) => {
@@ -62,7 +62,7 @@ function injectImports(options: Schema): Rule {
 
     const moduleSource = getTsSourceFile(host, modulePath);
 
-    const change = insertImport(moduleSource, modulePath, 'ErrorTailorModule, FORM_ERRORS', '@ngneat/error-tailor');
+    const change = insertImport(moduleSource, modulePath, 'ErrorTailorModule', '@ngneat/error-tailor');
 
     if (change) {
       const recorder = host.beginUpdate(modulePath);
@@ -79,14 +79,9 @@ function addModuleToImports(options: Schema): Rule {
     const workspace = getWorkspace(host);
     const project = getProjectFromWorkspace(workspace, Object.keys(workspace.projects)[0]);
 
-    addModuleImportToRootModule(host, 'ErrorTailorModule', null as any, project);
+    const moduleImport = 'ErrorTailorModule.forRoot({ errors: {} })';
 
-    const provider = `{ provide: FORM_ERRORS, useValue: { } }`;
-
-    const modulePath = getAppModulePath(host, project.architect.build.options.main);
-    const module = getModuleFile(host, modulePath);
-    const providerChanges = addProviderToModule(module, modulePath, provider, null);
-    applyChanges(host, modulePath, providerChanges as InsertChange[]);
+    addModuleImportToRootModule(host, moduleImport, null as any, project);
 
     context.logger.log('info', `🌈 @ngneat/error-tailor is imported`);
 

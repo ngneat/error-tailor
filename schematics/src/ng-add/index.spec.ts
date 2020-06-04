@@ -53,11 +53,8 @@ describe('Schematics', () => {
 
       const appModuleModified = tree.readContent('./src/app/app.module.ts');
 
-      console.log(appModuleModified);
-
-      expect(appModuleModified).toContain(`import { ErrorTailorModule, FORM_ERRORS } from '@ngneat/error-tailor';`);
-      expect(appModuleModified).toContain(`imports: [ErrorTailorModule]`);
-      expect(appModuleModified).toContain(`{ provide: FORM_ERRORS, useValue: { } }`);
+      expect(appModuleModified).toContain(`import { ErrorTailorModule } from '@ngneat/error-tailor';`);
+      expect(appModuleModified).toContain(`ErrorTailorModule.forRoot({ errors: {} })`);
 
       const packageJSONModified = JSON.parse(tree.readContent('./package.json'));
 
