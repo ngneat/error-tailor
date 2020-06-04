@@ -16,7 +16,7 @@ import { AbstractControl, ControlContainer, NgControl } from '@angular/forms';
 import { ControlErrorComponent } from './control-error.component';
 import { ControlErrorAnchorDirective } from './control-error-anchor.directive';
 import { EMPTY, fromEvent, merge, Observable, Subject } from 'rxjs';
-import { FORM_ERRORS } from './providers';
+import { ErrorTailorConfig, ErrorTailorConfigProvider, FORM_ERRORS } from './providers';
 import { startWith, switchMap, takeUntil } from 'rxjs/operators';
 import { FormSubmitDirective } from './form-submit.directive';
 import { HashMap } from './types';
@@ -36,11 +36,13 @@ export class ControlErrorsDirective implements OnInit, OnDestroy {
   private submit$: Observable<Event>;
   private control: AbstractControl;
   private destroy = new Subject();
+  private mergedConfig: ErrorTailorConfig = {};
 
   constructor(
     private vcr: ViewContainerRef,
     private resolver: ComponentFactoryResolver,
     private host: ElementRef,
+    @Inject(ErrorTailorConfigProvider) private config: ErrorTailorConfig,
     @Inject(FORM_ERRORS) private globalErrors,
     @Optional() private controlErrorAnchorParent: ControlErrorAnchorDirective,
     @Optional() private form: FormSubmitDirective,
@@ -48,14 +50,16 @@ export class ControlErrorsDirective implements OnInit, OnDestroy {
     @Optional() @Self() private controlContainer: ControlContainer
   ) {
     this.submit$ = this.form ? this.form.submit$ : EMPTY;
+    this.mergedConfig = this.buildConfig();
   }
 
   ngOnInit() {
     this.anchor = this.resolveAnchor();
     this.control = (this.controlContainer || this.ngControl).control;
-    const isInput = this.host.nativeElement.tagName === 'INPUT';
+    const isInput = this.mergedConfig.inputPredicate(this.host.nativeElement);
+
     const valueChanges$ = this.control.valueChanges;
-    let changes$ = valueChanges$;
+    let changes$: Observable<any> = EMPTY;
 
     if (this.controlErrorsOnBlur && isInput) {
       const blur$ = fromEvent(this.host.nativeElement, 'focusout');
@@ -118,5 +122,16 @@ export class ControlErrorsDirective implements OnInit, OnDestroy {
       return this.controlErrorAnchorParent.vcr;
     }
     return this.vcr;
+  }
+
+  private buildConfig() {
+    return {
+      ...{
+        inputPredicate(element) {
+          return element.tagName === 'INPUT';
+        }
+      },
+      ...this.config
+    };
   }
 }
