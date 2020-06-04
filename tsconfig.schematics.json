@@ -1,0 +1,13 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "module": "commonjs",
+    "outDir": "./dist/ngneat/error-tailor/schematics",
+    "declaration": true,
+    "rootDir": "./schematics",
+    "types": [],
+    "skipLibCheck": true
+  },
+  "include": ["./schematics/**/*.ts"],
+  "exclude": ["./schematics/**/*.spec.ts"]
+}
