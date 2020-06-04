@@ -70,6 +70,29 @@ Now, the only thing that you need to add is the `errorTailor` directive to your 
 </form>
 ```
 
+```ts
+export class AppComponent {
+  form: FormGroup;
+
+  constructor(private builder: FormBuilder) {}
+
+  ngOnInit() {
+    this.form = this.builder.group({
+      name: ['', [Validators.required, Validators.minLength(3)]],
+      terms: [false, Validators.requiredTrue],
+      animal: [null, Validators.required],
+      address: this.builder.group(
+        {
+          city: ['', Validators.required],
+          country: ['']
+        },
+        { validator: addressValidator }
+      )
+    });
+  }
+}
+```
+
 The directive will show each error automagically in two cases - on submit or on blur.
 
 ## Inputs
