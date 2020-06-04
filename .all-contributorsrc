@@ -21,6 +21,16 @@
         "ideas",
         "infra"
       ]
+    },
+    {
+      "login": "tonivj5",
+      "name": "Toni Villena",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/7110786?v=4",
+      "profile": "https://github.com/tonivj5",
+      "contributions": [
+        "code",
+        "test"
+      ]
     }
   ],
   "contributorsPerLine": 7
