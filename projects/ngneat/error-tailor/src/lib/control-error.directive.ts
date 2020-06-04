@@ -22,7 +22,7 @@ import { FormSubmitDirective } from './form-submit.directive';
 import { HashMap } from './types';
 
 @Directive({
-  selector: '[formControlName], [formControl], [formGroup], [formGroupName], [formArrayName], [ngModel], [ngModelGroup]'
+  selector: '[formControlName], [formControl], [formGroup], [formGroupName], [formArrayName], [ngModel]'
 })
 export class ControlErrorsDirective implements OnInit, OnDestroy {
   @Input('controlErrors') customErrors: HashMap = {};

@@ -1,27 +1,23 @@
 import { Component, Type } from '@angular/core';
-import { FormBuilder, Validators, ReactiveFormsModule, FormsModule, FormControl, FormArray } from '@angular/forms';
-import { Spectator, createComponentFactory, byPlaceholder, byText } from '@ngneat/spectator';
-
-import { ControlErrorAnchorDirective } from './control-error-anchor.directive';
-import { ControlErrorsDirective } from './control-error.directive';
-import { FORM_ERRORS } from './providers';
-import { ControlErrorComponent } from './control-error.component';
-import { FormSubmitDirective } from './form-submit.directive';
+import { FormArray, FormBuilder, FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { byPlaceholder, byText, createComponentFactory, Spectator } from '@ngneat/spectator';
+import { ErrorTailorModule } from '@ngneat/error-tailor';
 
 function getComponentFactory<C>(component: Type<C>) {
   return createComponentFactory({
     component,
-    imports: [FormsModule, ReactiveFormsModule],
-    declarations: [ControlErrorsDirective, FormSubmitDirective, ControlErrorComponent, ControlErrorAnchorDirective],
-    providers: [
-      {
-        provide: FORM_ERRORS,
-        useValue: {
-          required: () => 'required error',
-          minlength: () => 'min error',
-          requiredone: () => 'required one error'
+    imports: [
+      FormsModule,
+      ReactiveFormsModule,
+      ErrorTailorModule.forRoot({
+        errors: {
+          useValue: {
+            required: () => 'required error',
+            minlength: () => 'min error',
+            requiredone: () => 'required one error'
+          }
         }
-      }
+      })
     ]
   });
 }
@@ -46,6 +42,8 @@ describe('ControlErrorDirective', () => {
               <input [formControl]="name" placeholder="Name {{ i }}" />
             </div>
           </div>
+
+          <button type="submit">Submit</button>
         </form>
       `
     })
@@ -91,12 +89,15 @@ describe('ControlErrorDirective', () => {
       typeInElementAndFocusOut(spectator, 'test', nameInput);
 
       const oneNameInput = spectator.query<HTMLInputElement>(byPlaceholder('Name 0'));
+      const oneNameInput1 = spectator.query<HTMLInputElement>(byPlaceholder('Name 1'));
 
-      typeInElementAndFocusOut(spectator, '', oneNameInput);
+      spectator.click('button');
 
       expect(spectator.query(byText('required one error'))).toBeTruthy();
 
       typeInElementAndFocusOut(spectator, 'no error', oneNameInput);
+      typeInElementAndFocusOut(spectator, 'no error2', oneNameInput1);
+      spectator.click('input[type=checkbox]');
 
       expect(spectator.query(byText(/error/))).toBeNull();
     });
@@ -173,32 +174,6 @@ describe('ControlErrorDirective', () => {
       typeInElementAndFocusOut(spectator, 'test', nameInput);
 
       expect(spectator.query(byText(/error/))).toBeNull();
-    });
-  });
-
-  // TODO: control-error.directive isn't working with ngModelGroup
-  xdescribe('NgModelGroup', () => {
-    @Component({
-      template: `
-        <form>
-          <div ngModelGroup="name">
-            <input [(ngModel)]="name.firstname" placeholder="first name" required minlength="3" />
-            <input [(ngModel)]="name.surname" placeholder="surn name" required minlength="3" />
-          </div>
-        </form>
-      `
-    })
-    class NgModelGroupComponent {
-      name = { firstname: '', surname: '' };
-    }
-    let spectator: Spectator<NgModelGroupComponent>;
-
-    const createComponent = getComponentFactory(NgModelGroupComponent);
-
-    beforeEach(() => (spectator = createComponent()));
-
-    it('should create', () => {
-      expect(spectator.component).toBeTruthy();
     });
   });
 
@@ -302,18 +277,6 @@ describe('ControlErrorDirective', () => {
 
         expect(divContainer.firstElementChild).toBe(input);
       });
-    });
-
-    it('should show error on change', () => {
-      const input = spectator.query<HTMLInputElement>(byPlaceholder('On every change'));
-
-      spectator.typeInElement('', input);
-
-      expect(spectator.query(byText('required error'))).toBeTruthy();
-
-      spectator.typeInElement('t', input);
-
-      expect(spectator.query(byText('min error'))).toBeTruthy();
     });
   });
 });
