@@ -14,8 +14,6 @@
 
 > Making sure your tailor-made error solution is seamless!
 
-
-
 ## Getting Started
 
 Run `ng add @ngneat/error-tailor`. This command updates the `AppModule`, and adds the `ErrorTailorModule`:
@@ -41,7 +39,7 @@ export class AppModule {}
 ```
 
 The `errors` config property takes a partial `Provider` that should provide an object with the form errors. 
-Now, the only thing you need to add the `errorTailor` directive to your form:
+Now, the only thing that you need to add the `errorTailor` directive to your form:
 
 ```html
 <form [formGroup]="form" errorTailor>

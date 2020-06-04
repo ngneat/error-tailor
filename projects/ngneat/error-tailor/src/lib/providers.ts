@@ -9,7 +9,7 @@ export const FORM_ERRORS = new InjectionToken('FORM_ERRORS', {
 
 export type ErrorTailorConfig = {
   errors?: Partial<Provider>;
-  inputPredicate?: (element: Element) => boolean;
+  blurPredicate?: (element: Element) => boolean;
 };
 
 export const ErrorTailorConfigProvider = new InjectionToken<ErrorTailorConfig>('ErrorTailorConfigProvider');

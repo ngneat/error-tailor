@@ -56,7 +56,7 @@ export class ControlErrorsDirective implements OnInit, OnDestroy {
   ngOnInit() {
     this.anchor = this.resolveAnchor();
     this.control = (this.controlContainer || this.ngControl).control;
-    const isInput = this.mergedConfig.inputPredicate(this.host.nativeElement);
+    const isInput = this.mergedConfig.blurPredicate(this.host.nativeElement);
 
     const valueChanges$ = this.control.valueChanges;
     let changes$: Observable<any> = EMPTY;
@@ -124,10 +124,10 @@ export class ControlErrorsDirective implements OnInit, OnDestroy {
     return this.vcr;
   }
 
-  private buildConfig() {
+  private buildConfig(): ErrorTailorConfig {
     return {
       ...{
-        inputPredicate(element) {
+        blurPredicate(element) {
           return element.tagName === 'INPUT';
         }
       },
