@@ -27,7 +27,8 @@ Run `ng add @ngneat/error-tailor`. This command updates the `AppModule`, and add
       errors: {
         useValue() {
           required: error => `This field is required`,
-          minlength: ({ requiredLength, actualLength }) => `Expect ${requiredLength} but got ${actualLength}`,
+          minlength: ({ requiredLength, actualLength }) => 
+                       `Expect ${requiredLength} but got ${actualLength}`,
           invalidAddress: error => `Address not valid`
         },
       }
@@ -39,7 +40,7 @@ export class AppModule {}
 ```
 
 The `errors` config property takes a partial `Provider` that should provide an object with the form errors. 
-Now, the only thing that you need to add the `errorTailor` directive to your form:
+Now, the only thing that you need to add is the `errorTailor` directive to your form:
 
 ```html
 <form [formGroup]="form" errorTailor>
