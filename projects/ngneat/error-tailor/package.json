@@ -1,14 +1,16 @@
 {
   "name": "@ngneat/error-tailor",
   "version": "1.0.0",
+  "description": "Seamless form errors for Angular Applications",
   "schematics": "./schematics/src/collection.json",
   "dependencies": {
     "tslib": "^1.10.0"
   },
   "keywords": [
     "angular",
-    "angular 2",
-    "error-tailor"
+    "form errors",
+    "errors",
+    "validation"
   ],
   "license": "MIT",
   "publishConfig": {
