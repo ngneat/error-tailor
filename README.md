@@ -171,7 +171,10 @@ The library adds a `form-submitted` to the submitted form. You can use it to sty
 <input [controlErrorsOnBlur]="false" formControlName="name" />
 ```
 
-## I18n Example
+## Recipies
+
+### I18n Example
+Here's how to support i18n:
 
 ```ts
 import { TranslocoService } from '@ngneat/transloco';
@@ -193,6 +196,19 @@ import { TranslocoService } from '@ngneat/transloco';
   bootstrap: [AppComponent]
 })
 export class AppModule {}
+```
+
+
+### Control Error Style
+Here's a default style you can use for the error component:
+
+```css
+.control-error {
+  width: 100%;
+  margin-top: 0.25rem;
+  font-size: 12px;
+  color: #dc3545;
+}
 ```
 
 ## Contributors ✨
