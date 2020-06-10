@@ -14,6 +14,8 @@
 
 > Making sure your tailor-made error solution is seamless!
 
+<img src="./demo.gif">
+
 ## Getting Started
 
 Run `ng add @ngneat/error-tailor`. This command updates the `AppModule`, and adds the `ErrorTailorModule`:

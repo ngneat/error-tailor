@@ -12,7 +12,7 @@
     "hooks:pre-commit": "node hooks/pre-commit.js",
     "commit": "git-cz",
     "release:first": "npm run release -- --first-release",
-    "build:lib": "ng build @ngneat/error-tailor && npm run schematics:build",
+    "build:lib": "ng build @ngneat/error-tailor --prod && npm run schematics:build",
     "test:lib": "ng test @ngneat/error-tailor",
     "release": "cd projects/ngneat/error-tailor && standard-version --infile ../../../CHANGELOG.md",
     "test:lib:headless": "cross-env CI=true npm run test:lib",

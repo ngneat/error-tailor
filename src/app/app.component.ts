@@ -25,7 +25,7 @@ export class AppComponent {
       address: this.builder.group(
         {
           city: ['', Validators.required],
-          country: ['']
+          country: ['', Validators.required]
         },
         { validator: addressValidator }
       )

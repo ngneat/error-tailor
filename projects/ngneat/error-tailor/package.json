@@ -2,10 +2,6 @@
   "name": "@ngneat/error-tailor",
   "version": "1.0.0",
   "schematics": "./schematics/src/collection.json",
-  "peerDependencies": {
-    "@angular/common": "^9.1.9",
-    "@angular/core": "^9.1.9"
-  },
   "dependencies": {
     "tslib": "^1.10.0"
   },
