@@ -171,6 +171,30 @@ The library adds a `form-submitted` to the submitted form. You can use it to sty
 <input [controlErrorsOnBlur]="false" formControlName="name" />
 ```
 
+## I18n Example
+
+```ts
+import { TranslocoService } from '@ngneat/transloco';
+
+@NgModule({
+  declarations: [AppComponent],
+  imports: [
+    ErrorTailorModule.forRoot({
+      errors: {
+        useFactory(service: TranslocoService) {
+          return {
+            required: error => service.translate('errors.required'),
+          };
+        },
+        deps: [TranslocoService]
+      }
+    })
+  ],
+  bootstrap: [AppComponent]
+})
+export class AppModule {}
+```
+
 ## Contributors ✨
 
 Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
