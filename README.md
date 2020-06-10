@@ -35,7 +35,7 @@ Run `ng add @ngneat/error-tailor`. This command updates the `AppModule`, and add
           required: error => `This field is required`,
           minlength: ({ requiredLength, actualLength }) => 
                        `Expect ${requiredLength} but got ${actualLength}`,
-          invalidAddress: error => `Address not valid`
+          invalidAddress: error => `Address isn't valid`
         },
       }
     })
@@ -166,13 +166,10 @@ The library adds a `form-submitted` to the submitted form. You can use it to sty
   }
 }
 ```
-
-To modify the error display behavior and show the errors on submission alone, set the following input: 
+- `controlErrorsOnBlur` - To modify the error display behavior and show the errors on submission alone, set the following input: 
 ```html
-<form errorTailor [controlErrorsOnBlur]="false">
+<input [controlErrorsOnBlur]="false" formControlName="name" />
 ```
-
-To display the errors in case the form is submitted without being touched, add a call to the form's `markAllAsTouched()` method upon submission. 
 
 ## Contributors ✨
 
