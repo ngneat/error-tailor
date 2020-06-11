@@ -174,14 +174,7 @@ The library adds a `form-submitted` to the submitted form. You can use it to sty
 }
 ```
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-
-- # `controlErrorsOnBlur` - To modify the error display behavior and show the errors on submission alone, set the following input:
 - `controlErrorsOnBlur` - To modify the error display behavior and show the errors on submission alone, set the following input:
-  > > > > > > > # master
-- `controlErrorsOnBlur` - To modify the error display behavior and show the errors on submission alone, set the following input:
-  > > > > > > > fix: 🐛 customErrors + blurPredicate
 
 ```html
 <input [controlErrorsOnBlur]="false" formControlName="name" />
