@@ -14,8 +14,8 @@
 [![ngneat](https://img.shields.io/badge/@-ngneat-383636?style=flat-square&labelColor=8f68d4)](https://github.com/ngneat/)
 [![spectator](https://img.shields.io/badge/tested%20with-spectator-2196F3.svg?style=flat-square)]()
 
-The Error Tailor offers seamless handling of form errors, saving you the trouble of repeating the error boilerplate. 
-It's fully customizable, so you can control when, where, and how each form field's errors are displayed. 
+The Error Tailor offers seamless handling of form errors, saving you the trouble of repeating the error boilerplate.
+It's fully customizable, so you can control when, where, and how each form field's errors are displayed.
 Sit back, relax, and let the Error Tailor do all the work!
 
 <img src="./demo.gif">
@@ -35,7 +35,7 @@ Run `ng add @ngneat/error-tailor`. This command updates the `AppModule`, and add
           required: error => `This field is required`,
           minlength: ({ requiredLength, actualLength }) => `Expect ${requiredLength} but got ${actualLength}`,
           invalidAddress: error => `Address isn't valid`
-      }
+        }
       }
     })
   ],
@@ -44,7 +44,7 @@ Run `ng add @ngneat/error-tailor`. This command updates the `AppModule`, and add
 export class AppModule {}
 ```
 
-The `errors` config property takes a partial `Provider`, that should provide an object containing the form errors. 
+The `errors` config property takes a partial `Provider`, that should provide an object containing the form errors.
 Now the only thing you need to add is the `errorTailor` directive to your form:
 
 ```html
@@ -146,8 +146,9 @@ The custom `anchor` can also be added as a directive, in which case it'll act as
 ```
 
 - `customErrors` - Additional errors to use for the form field, that aren't specified in the config:
+
 ```html
-<input class="form-control" formControlName="city" placeholder="City" [customErrors]="serverErrors"/>
+<input class="form-control" formControlName="city" placeholder="City" [customErrors]="serverErrors" />
 ```
 
 ## CSS Styling
@@ -162,7 +163,9 @@ The library adds a `form-submitted` to the submitted form. You can use it to sty
 ```
 
 ## Config
+
 - `blurPredicate` - Elements that should listen the `focusout` event. The default predicate is:
+
 ```ts
 {
   blurPredicate(element) {
@@ -171,7 +174,11 @@ The library adds a `form-submitted` to the submitted form. You can use it to sty
 }
 ```
 
-- `controlErrorsOnBlur` - To modify the error display behavior and show the errors on submission alone, set the following input: 
+<<<<<<< HEAD
+
+- # `controlErrorsOnBlur` - To modify the error display behavior and show the errors on submission alone, set the following input:
+- `controlErrorsOnBlur` - To modify the error display behavior and show the errors on submission alone, set the following input:
+  > > > > > > > master
 
 ```html
 <input [controlErrorsOnBlur]="false" formControlName="name" />
