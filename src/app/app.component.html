@@ -14,7 +14,7 @@
 
   <section formGroupName="address">
     <div class="form-group">
-      <input class="form-control" formControlName="city" placeholder="City" />
+      <input class="form-control" formControlName="city" placeholder="City" controlErrorsClass="my-class" />
     </div>
 
     <div class="form-group">
@@ -39,7 +39,7 @@
 
 <form #f="ngForm" errorTailor>
   <div class="form-group">
-    <input class="form-control" ngModel="model" required name="model" />
+    <input class="form-control" [(ngModel)]="model" required name="model" />
   </div>
   <button class="btn btn-success">Submit</button>
   {{ f.value | json }}
@@ -47,11 +47,11 @@
 
 <h1>Custom Template</h1>
 
-<form #f="ngForm" errorTailor>
+<form errorTailor>
   <ng-template let-error let-text="text" #tpl> {{ error | json }} {{ text }} </ng-template>
 
   <div class="form-group">
-    <input class="form-control" ngModel="name" required name="name" [controlErrorsTpl]="tpl" />
+    <input class="form-control" ngModel required name="name" [controlErrorsOnBlur]="false" [controlErrorsTpl]="tpl" />
   </div>
   <button class="btn btn-success">Submit</button>
 </form>

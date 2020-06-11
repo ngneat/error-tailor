@@ -31,12 +31,11 @@ Run `ng add @ngneat/error-tailor`. This command updates the `AppModule`, and add
     ReactiveFormsModule,
     ErrorTailorModule.forRoot({
       errors: {
-        useValue() {
+        useValue: {
           required: error => `This field is required`,
-          minlength: ({ requiredLength, actualLength }) => 
-                       `Expect ${requiredLength} but got ${actualLength}`,
+          minlength: ({ requiredLength, actualLength }) => `Expect ${requiredLength} but got ${actualLength}`,
           invalidAddress: error => `Address isn't valid`
-        },
+      }
       }
     })
   ],
@@ -102,18 +101,21 @@ export class AppComponent {
 The directive will show all errors for a form field automatically in two instances - on the field element blur and on form submit.
 
 ## Inputs
+
 - `controlErrorsClass` - A custom class that'll be added to the control error component, a component that is added after the form field when an error needs to be displayed:
+
 ```html
-<input class="form-control" formControlName="city" placeholder="City" controlErrorsClass="my-class"/>
+<input class="form-control" formControlName="city" placeholder="City" controlErrorsClass="my-class" />
 ```
 
 - `controlErrorsTpl` - A custom error template to be used instead of the control error component's default view:
+
 ```html
 <form errorTailor>
   <ng-template let-error let-text="text" #tpl> {{ error | json }} {{ text }} </ng-template>
 
   <div class="form-group">
-    <input class="form-control" ngModel="name" required name="name" [controlErrorsTpl]="tpl" />
+    <input class="form-control" ngModel required name="name" [controlErrorsTpl]="tpl" />
   </div>
 
   <button class="btn btn-success">Submit</button>
@@ -121,6 +123,7 @@ The directive will show all errors for a form field automatically in two instanc
 ```
 
 - `controlErrorAnchor` - A custom `anchor` element for the control error component. The default anchor is the form field element:
+
 ```html
 <div class="form-check form-group">
   <input type="checkbox" formControlName="terms" id="check" [controlErrorAnchor]="anchor" />
@@ -148,6 +151,7 @@ The custom `anchor` can also be added as a directive, in which case it'll act as
 ```
 
 ## CSS Styling
+
 The library adds a `form-submitted` to the submitted form. You can use it to style your inputs:
 
 ```css
@@ -166,7 +170,9 @@ The library adds a `form-submitted` to the submitted form. You can use it to sty
   }
 }
 ```
+
 - `controlErrorsOnBlur` - To modify the error display behavior and show the errors on submission alone, set the following input: 
+
 ```html
 <input [controlErrorsOnBlur]="false" formControlName="name" />
 ```
@@ -174,6 +180,7 @@ The library adds a `form-submitted` to the submitted form. You can use it to sty
 ## Recipies
 
 ### I18n Example
+
 Here's how to support i18n:
 
 ```ts
@@ -186,7 +193,7 @@ import { TranslocoService } from '@ngneat/transloco';
       errors: {
         useFactory(service: TranslocoService) {
           return {
-            required: error => service.translate('errors.required'),
+            required: error => service.translate('errors.required')
           };
         },
         deps: [TranslocoService]
@@ -198,8 +205,8 @@ import { TranslocoService } from '@ngneat/transloco';
 export class AppModule {}
 ```
 
-
 ### Control Error Style
+
 Here's a default style you can use for the error component:
 
 ```css
@@ -228,6 +235,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 
 <!-- markdownlint-enable -->
 <!-- prettier-ignore-end -->
+
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
