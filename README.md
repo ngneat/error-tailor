@@ -14,8 +14,8 @@
 [![ngneat](https://img.shields.io/badge/@-ngneat-383636?style=flat-square&labelColor=8f68d4)](https://github.com/ngneat/)
 [![spectator](https://img.shields.io/badge/tested%20with-spectator-2196F3.svg?style=flat-square)]()
 
-The Error Tailor offers seamless handling of form errors, saving you the trouble of repeating the error boilerplate. 
-It's fully customizable, so you can control when, where, and how each form field's errors are displayed. 
+The Error Tailor offers seamless handling of form errors, saving you the trouble of repeating the error boilerplate.
+It's fully customizable, so you can control when, where, and how each form field's errors are displayed.
 Sit back, relax, and let the Error Tailor do all the work!
 
 <img src="./demo.gif">
@@ -25,6 +25,12 @@ Sit back, relax, and let the Error Tailor do all the work!
 Run `ng add @ngneat/error-tailor`. This command updates the `AppModule`, and adds the `ErrorTailorModule` dependency:
 
 ```ts
+const errors = {
+  required: error => `This field is required`,
+  minlength: ({ requiredLength, actualLength }) => `Expect ${requiredLength} but got ${actualLength}`,
+  invalidAddress: error => `Address isn't valid`
+};
+
 @NgModule({
   declarations: [AppComponent],
   imports: [
@@ -32,11 +38,8 @@ Run `ng add @ngneat/error-tailor`. This command updates the `AppModule`, and add
     ErrorTailorModule.forRoot({
       errors: {
         useValue() {
-          required: error => `This field is required`,
-          minlength: ({ requiredLength, actualLength }) => 
-                       `Expect ${requiredLength} but got ${actualLength}`,
-          invalidAddress: error => `Address isn't valid`
-        },
+          return errors;
+        }
       }
     })
   ],
@@ -45,7 +48,7 @@ Run `ng add @ngneat/error-tailor`. This command updates the `AppModule`, and add
 export class AppModule {}
 ```
 
-The `errors` config property takes a partial `Provider`, that should provide an object containing the form errors. 
+The `errors` config property takes a partial `Provider`, that should provide an object containing the form errors.
 Now the only thing you need to add is the `errorTailor` directive to your form:
 
 ```html
@@ -102,12 +105,15 @@ export class AppComponent {
 The directive will show all errors for a form field automatically in two instances - on the field element blur and on form submit.
 
 ## Inputs
+
 - `controlErrorsClass` - A custom class that'll be added to the control error component, a component that is added after the form field when an error needs to be displayed:
+
 ```html
-<input class="form-control" formControlName="city" placeholder="City" controlErrorsClass="my-class"/>
+<input class="form-control" formControlName="city" placeholder="City" controlErrorsClass="my-class" />
 ```
 
 - `controlErrorsTpl` - A custom error template to be used instead of the control error component's default view:
+
 ```html
 <form errorTailor>
   <ng-template let-error let-text="text" #tpl> {{ error | json }} {{ text }} </ng-template>
@@ -121,6 +127,7 @@ The directive will show all errors for a form field automatically in two instanc
 ```
 
 - `controlErrorAnchor` - A custom `anchor` element for the control error component. The default anchor is the form field element:
+
 ```html
 <div class="form-check form-group">
   <input type="checkbox" formControlName="terms" id="check" [controlErrorAnchor]="anchor" />
@@ -143,11 +150,13 @@ The custom `anchor` can also be added as a directive, in which case it'll act as
 ```
 
 - `customErrors` - Additional errors to use for the form field, that aren't specified in the config:
+
 ```html
-<input class="form-control" formControlName="city" placeholder="City" [customErrors]="serverErrors"/>
+<input class="form-control" formControlName="city" placeholder="City" [customErrors]="serverErrors" />
 ```
 
 ## CSS Styling
+
 The library adds a `form-submitted` to the submitted form. You can use it to style your inputs:
 
 ```css
@@ -158,7 +167,9 @@ The library adds a `form-submitted` to the submitted form. You can use it to sty
 ```
 
 ## Config
+
 - `blurPredicate` - Elements that should listen the `focusout` event. The default predicate is:
+
 ```ts
 {
   blurPredicate(element) {
@@ -166,7 +177,9 @@ The library adds a `form-submitted` to the submitted form. You can use it to sty
   }
 }
 ```
-- `controlErrorsOnBlur` - To modify the error display behavior and show the errors on submission alone, set the following input: 
+
+- `controlErrorsOnBlur` - To modify the error display behavior and show the errors on submission alone, set the following input:
+
 ```html
 <input [controlErrorsOnBlur]="false" formControlName="name" />
 ```
@@ -174,6 +187,7 @@ The library adds a `form-submitted` to the submitted form. You can use it to sty
 ## Recipies
 
 ### I18n Example
+
 Here's how to support i18n:
 
 ```ts
@@ -186,7 +200,7 @@ import { TranslocoService } from '@ngneat/transloco';
       errors: {
         useFactory(service: TranslocoService) {
           return {
-            required: error => service.translate('errors.required'),
+            required: error => service.translate('errors.required')
           };
         },
         deps: [TranslocoService]
@@ -198,8 +212,8 @@ import { TranslocoService } from '@ngneat/transloco';
 export class AppModule {}
 ```
 
-
 ### Control Error Style
+
 Here's a default style you can use for the error component:
 
 ```css
@@ -228,6 +242,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 
 <!-- markdownlint-enable -->
 <!-- prettier-ignore-end -->
+
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
