@@ -145,10 +145,10 @@ The custom `anchor` can also be added as a directive, in which case it'll act as
 </div>
 ```
 
-- `customErrors` - Additional errors to use for the form field, that aren't specified in the config:
+- `controlErrors` - Additional errors to use for the form field, that aren't specified in the config:
 
 ```html
-<input class="form-control" formControlName="city" placeholder="City" [customErrors]="serverErrors" />
+<input class="form-control" formControlName="country" placeholder="Country" [controlErrors]="extraErrors" />
 ```
 
 ## CSS Styling
@@ -169,16 +169,19 @@ The library adds a `form-submitted` to the submitted form. You can use it to sty
 ```ts
 {
   blurPredicate(element) {
-    return element.tagName === 'INPUT';
+    return element.tagName === 'INPUT' || element.tagName === 'SELECT';
   }
 }
 ```
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 - # `controlErrorsOnBlur` - To modify the error display behavior and show the errors on submission alone, set the following input:
 - `controlErrorsOnBlur` - To modify the error display behavior and show the errors on submission alone, set the following input:
-  > > > > > > > master
+  > > > > > > > # master
+- `controlErrorsOnBlur` - To modify the error display behavior and show the errors on submission alone, set the following input:
+  > > > > > > > fix: 🐛 customErrors + blurPredicate
 
 ```html
 <input [controlErrorsOnBlur]="false" formControlName="name" />

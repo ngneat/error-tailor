@@ -18,12 +18,13 @@
     </div>
 
     <div class="form-group">
-      <input class="form-control" formControlName="country" placeholder="Country" />
+      <input class="form-control" formControlName="country" placeholder="Country" [controlErrors]="extraErrors" />
     </div>
   </section>
 
   <div class="form-group">
     <select formControlName="animal" class="form-control">
+      <option [ngValue]="null">- -</option>
       <option *ngFor="let option of options; index as index" [ngValue]="option">
         {{ option.label }}
       </option>

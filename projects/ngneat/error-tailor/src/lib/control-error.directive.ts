@@ -95,18 +95,19 @@ export class ControlErrorsDirective implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.destroy.next();
+    if (this.ref) this.ref.destroy();
   }
 
   private valueChanges() {
     const controlErrors = this.control.errors;
     if (controlErrors) {
       const [firstKey] = Object.keys(controlErrors);
-      const getError = this.globalErrors[firstKey];
-      if (typeof getError !== 'function') {
+      const getError = this.customErrors[firstKey] || this.globalErrors[firstKey];
+      if (!getError) {
         return;
       }
 
-      const text = this.customErrors[firstKey] || getError(controlErrors[firstKey]);
+      const text = typeof getError === 'function' ? getError(controlErrors[firstKey]) : getError;
       this.setError(text, controlErrors);
     } else if (this.ref) {
       this.setError(null);
@@ -128,7 +129,7 @@ export class ControlErrorsDirective implements OnInit, OnDestroy {
     return {
       ...{
         blurPredicate(element) {
-          return element.tagName === 'INPUT';
+          return element.tagName === 'INPUT' || element.tagName === 'SELECT';
         }
       },
       ...this.config
