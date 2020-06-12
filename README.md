@@ -150,9 +150,12 @@ The custom `anchor` can also be added as a directive, in which case it'll act as
 
 - `controlErrors` - Additional errors to use for the form field, that aren't specified in the config:
 
+<!-- prettier-ignore-start -->
 ```html
-<input class="form-control" formControlName="country" placeholder="Country" [controlErrors]="extraErrors" />
+<input class="form-control" formControlName="country" placeholder="Country"
+       [controlErrors]="extraErrors" />
 ```
+<!-- prettier-ignore-end -->
 
 ## CSS Styling
 
