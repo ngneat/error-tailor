@@ -47,7 +47,7 @@ export class AppModule {}
 ```
 <!-- prettier-ignore-end -->
 
-The `errors` config property takes a partial `Provider`, that should provide a `HashMap< string | (err:any) => string >` that is an object with keys corresponding to the errors name that you want to handle, and values that can be a simple string, or function that return a string used as error message to be shown.
+The `errors` config property takes a partial `Provider`, that should provide a `HashMap<string | (err:any) => string>` that is an object with keys corresponding to the errors name that you want to handle, and values that can be a simple string, or function that return a string used as error message to be shown.
 Now the only thing you need to add is the `errorTailor` directive to your form:
 
 ```html
@@ -242,6 +242,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 
 <!-- markdownlint-enable -->
 <!-- prettier-ignore-end -->
+
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
