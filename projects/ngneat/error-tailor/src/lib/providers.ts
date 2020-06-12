@@ -1,4 +1,5 @@
-import { InjectionToken, Provider } from '@angular/core';
+import { InjectionToken, ValueSansProvider, FactorySansProvider } from '@angular/core';
+import { ErrorsMap } from './types';
 
 export const FORM_ERRORS = new InjectionToken('FORM_ERRORS', {
   providedIn: 'root',
@@ -7,8 +8,18 @@ export const FORM_ERRORS = new InjectionToken('FORM_ERRORS', {
   }
 });
 
+export interface ErrorsUseValue extends ValueSansProvider {
+  useValue: ErrorsMap;
+}
+
+export interface ErrorsUseFactory extends FactorySansProvider {
+  useFactory: (...args: any[]) => ErrorsMap;
+}
+
+export type ErrorsProvider = ErrorsUseValue | ErrorsUseFactory;
+
 export type ErrorTailorConfig = {
-  errors?: Partial<Provider>;
+  errors?: ErrorsProvider;
   blurPredicate?: (element: Element) => boolean;
 };
 

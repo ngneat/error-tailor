@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, TemplateRef } from '@angular/core';
-import { HashMap } from './types';
+import { ValidationErrors } from '@angular/forms';
 
 @Component({
   selector: 'control-error',
@@ -22,11 +22,11 @@ import { HashMap } from './types';
 })
 export class ControlErrorComponent {
   _text: string | null = null;
-  _tpl: TemplateRef<{ $implicit: HashMap; text: string }> | undefined;
-  context: { $implicit: HashMap; text: string };
+  _tpl: TemplateRef<{ $implicit: ValidationErrors; text: string }> | undefined;
+  context: { $implicit: ValidationErrors; text: string };
   hide = true;
 
-  createTemplate(tpl: TemplateRef<any>, error, text: string) {
+  createTemplate(tpl: TemplateRef<any>, error: ValidationErrors, text: string) {
     this._tpl = tpl;
     this.context = { $implicit: error, text };
     this.cdr.markForCheck();
