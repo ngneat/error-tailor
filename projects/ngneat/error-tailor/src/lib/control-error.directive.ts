@@ -12,20 +12,20 @@ import {
   TemplateRef,
   ViewContainerRef
 } from '@angular/core';
-import { AbstractControl, ControlContainer, NgControl } from '@angular/forms';
+import { AbstractControl, ControlContainer, NgControl, ValidationErrors } from '@angular/forms';
 import { ControlErrorComponent } from './control-error.component';
 import { ControlErrorAnchorDirective } from './control-error-anchor.directive';
 import { EMPTY, fromEvent, merge, Observable, Subject } from 'rxjs';
 import { ErrorTailorConfig, ErrorTailorConfigProvider, FORM_ERRORS } from './providers';
 import { startWith, switchMap, takeUntil } from 'rxjs/operators';
 import { FormSubmitDirective } from './form-submit.directive';
-import { HashMap } from './types';
+import { ErrorsMap } from './types';
 
 @Directive({
   selector: '[formControlName], [formControl], [formGroup], [formGroupName], [formArrayName], [ngModel]'
 })
 export class ControlErrorsDirective implements OnInit, OnDestroy {
-  @Input('controlErrors') customErrors: HashMap = {};
+  @Input('controlErrors') customErrors: ErrorsMap = {};
   @Input() controlErrorsClass: string | undefined;
   @Input() controlErrorsTpl: TemplateRef<any> | undefined;
   @Input() controlErrorsOnBlur = true;
@@ -75,7 +75,7 @@ export class ControlErrorsDirective implements OnInit, OnDestroy {
       .subscribe(() => this.valueChanges());
   }
 
-  private setError(text: string, error?: HashMap) {
+  private setError(text: string, error?: ValidationErrors) {
     if (!this.ref) {
       const factory = this.resolver.resolveComponentFactory(ControlErrorComponent);
       this.ref = this.anchor.createComponent(factory);

@@ -17,7 +17,7 @@ import { ErrorTailorModule } from '@ngneat/error-tailor';
       errors: {
         useFactory() {
           return {
-            required: error => `This field is required`,
+            required: 'This field is required',
             minlength: ({ requiredLength, actualLength }) => `Expect ${requiredLength} but got ${actualLength}`,
             invalidAddress: error => `Address not valid`
           };
