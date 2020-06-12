@@ -25,20 +25,16 @@ Sit back, relax, and let the Error Tailor do all the work!
 Run `ng add @ngneat/error-tailor`. This command updates the `AppModule`, and adds the `ErrorTailorModule` dependency:
 
 ```ts
-const errors = {
-  required: error => `This field is required`,
-  minlength: ({ requiredLength, actualLength }) => `Expect ${requiredLength} but got ${actualLength}`,
-  invalidAddress: error => `Address isn't valid`
-};
-
 @NgModule({
   declarations: [AppComponent],
   imports: [
     ReactiveFormsModule,
     ErrorTailorModule.forRoot({
       errors: {
-        useValue() {
-          return errors;
+        useValue: {
+          required: error => `This field is required`,
+          minlength: ({ requiredLength, actualLength }) => `Expect ${requiredLength} but got ${actualLength}`,
+          invalidAddress: error => `Address isn't valid`
         }
       }
     })
@@ -119,7 +115,7 @@ The directive will show all errors for a form field automatically in two instanc
   <ng-template let-error let-text="text" #tpl> {{ error | json }} {{ text }} </ng-template>
 
   <div class="form-group">
-    <input class="form-control" ngModel="name" required name="name" [controlErrorsTpl]="tpl" />
+    <input class="form-control" ngModel required name="name" [controlErrorsTpl]="tpl" />
   </div>
 
   <button class="btn btn-success">Submit</button>
@@ -236,13 +232,13 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
   <tr>
     <td align="center"><a href="https://www.netbasal.com"><img src="https://avatars1.githubusercontent.com/u/6745730?v=4" width="100px;" alt=""/><br /><sub><b>Netanel Basal</b></sub></a><br /><a href="https://github.com/@ngneat/error-tailor/commits?author=NetanelBasal" title="Code">💻</a> <a href="https://github.com/@ngneat/error-tailor/commits?author=NetanelBasal" title="Documentation">📖</a> <a href="#ideas-NetanelBasal" title="Ideas, Planning, & Feedback">🤔</a> <a href="#infra-NetanelBasal" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a></td>
     <td align="center"><a href="https://github.com/tonivj5"><img src="https://avatars2.githubusercontent.com/u/7110786?v=4" width="100px;" alt=""/><br /><sub><b>Toni Villena</b></sub></a><br /><a href="https://github.com/@ngneat/error-tailor/commits?author=tonivj5" title="Code">💻</a> <a href="https://github.com/@ngneat/error-tailor/commits?author=tonivj5" title="Tests">⚠️</a></td>
-    <td align="center"><a href="https://github.com/theblushingcrow"><img src="https://avatars3.githubusercontent.com/u/638818?v=4" width="100px;" alt=""/><br /><sub><b>Inbal Sinai</b></sub></a><br /><a href="https://github.com/@ngneat/error-tailor/commits?author=theblushingcrow" title="Documentation">📖</a> </td>
+    <td align="center"><a href="https://github.com/theblushingcrow"><img src="https://avatars3.githubusercontent.com/u/638818?v=4" width="100px;" alt=""/><br /><sub><b>Inbal Sinai</b></sub></a><br /><a href="https://github.com/@ngneat/error-tailor/commits?author=theblushingcrow" title="Documentation">📖</a></td>
+    <td align="center"><a href="https://twitter.com/dmorosinotto"><img src="https://avatars2.githubusercontent.com/u/3982050?v=4" width="100px;" alt=""/><br /><sub><b>Daniele Morosinotto</b></sub></a><br /><a href="https://github.com/@ngneat/error-tailor/commits?author=dmorosinotto" title="Code">💻</a> <a href="https://github.com/@ngneat/error-tailor/commits?author=dmorosinotto" title="Documentation">📖</a> <a href="#example-dmorosinotto" title="Examples">💡</a></td>
   </tr>
 </table>
 
 <!-- markdownlint-enable -->
 <!-- prettier-ignore-end -->
-
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!

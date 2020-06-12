@@ -31,6 +31,26 @@
         "code",
         "test"
       ]
+    },
+    {
+      "login": "theblushingcrow",
+      "name": "Inbal Sinai",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/638818?v=4",
+      "profile": "https://github.com/theblushingcrow",
+      "contributions": [
+        "doc"
+      ]
+    },
+    {
+      "login": "dmorosinotto",
+      "name": "Daniele Morosinotto",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/3982050?v=4",
+      "profile": "https://twitter.com/dmorosinotto",
+      "contributions": [
+        "code",
+        "doc",
+        "example"
+      ]
     }
   ],
   "contributorsPerLine": 7
