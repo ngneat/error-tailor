@@ -24,6 +24,7 @@ Sit back, relax, and let the Error Tailor do all the work!
 
 Run `ng add @ngneat/error-tailor`. This command updates the `AppModule`, and adds the `ErrorTailorModule` dependency:
 
+<!-- prettier-ignore-start -->
 ```ts
 @NgModule({
   declarations: [AppComponent],
@@ -32,8 +33,9 @@ Run `ng add @ngneat/error-tailor`. This command updates the `AppModule`, and add
     ErrorTailorModule.forRoot({
       errors: {
         useValue: {
-          required: error => `This field is required`,
-          minlength: ({ requiredLength, actualLength }) => `Expect ${requiredLength} but got ${actualLength}`,
+          required: 'This field is required',
+          minlength: ({ requiredLength, actualLength }) => 
+                      `Expect ${requiredLength} but got ${actualLength}`,
           invalidAddress: error => `Address isn't valid`
         }
       }
@@ -43,8 +45,9 @@ Run `ng add @ngneat/error-tailor`. This command updates the `AppModule`, and add
 })
 export class AppModule {}
 ```
+<!-- prettier-ignore-end -->
 
-The `errors` config property takes a partial `Provider`, that should provide an object containing the form errors.
+The `errors` config property takes a partial `Provider`, that should provide a `HashMap< string | (err:any) => string >` that is an object with keys corresponding to the errors name that you want to handle, and values that can be a simple string, or function that return a string used as error message to be shown.
 Now the only thing you need to add is the `errorTailor` directive to your form:
 
 ```html
@@ -145,10 +148,10 @@ The custom `anchor` can also be added as a directive, in which case it'll act as
 </div>
 ```
 
-- `customErrors` - Additional errors to use for the form field, that aren't specified in the config:
+- `controlErrors` - Additional errors to use for the form field, that aren't specified in the config:
 
 ```html
-<input class="form-control" formControlName="city" placeholder="City" [customErrors]="serverErrors" />
+<input class="form-control" formControlName="country" placeholder="Country" [controlErrors]="extraErrors" />
 ```
 
 ## CSS Styling
@@ -169,7 +172,7 @@ The library adds a `form-submitted` to the submitted form. You can use it to sty
 ```ts
 {
   blurPredicate(element) {
-    return element.tagName === 'INPUT';
+    return element.tagName === 'INPUT' || element.tagName === 'SELECT';
   }
 }
 ```

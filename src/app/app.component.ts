@@ -15,6 +15,11 @@ export class AppComponent {
     id: i + 1
   }));
 
+  extraErrors = {
+    minlength: ({ requiredLength }) => `Use country abbreviation! (min ${requiredLength} chars)`,
+    maxlength: 'Use country abbreviation! (max 3 chars)'
+  };
+
   constructor(private builder: FormBuilder) {}
 
   ngOnInit() {
@@ -25,7 +30,7 @@ export class AppComponent {
       address: this.builder.group(
         {
           city: ['', Validators.required],
-          country: ['', Validators.required]
+          country: ['', [Validators.minLength(2), Validators.maxLength(3)]]
         },
         { validator: addressValidator }
       )
@@ -33,6 +38,6 @@ export class AppComponent {
   }
 }
 
-function addressValidator(formGroup: FormGroup) {
-  return { invalidAddress: true };
+function addressValidator(addr: FormGroup) {
+  return addr.value && addr.value.country && addr.value.city ? null : { invalidAddress: true };
 }
