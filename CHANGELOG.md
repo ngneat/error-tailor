@@ -2,31 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
-## [2.0.0](https://github.com/ngneat/error-tailor/compare/v1.0.1...v2.0.0) (2020-06-12)
-
-
-### ⚠ BREAKING CHANGES
-
-* No
-* No
-* No
-* no
+## [1.0.2](https://github.com/ngneat/error-tailor/compare/v1.0.1...v2.0.0) (2020-06-12)
 
 ### Bug Fixes
 
-* 🐛 add types support ([19aef88](https://github.com/ngneat/error-tailor/commit/19aef88796e0df128c58beaf47f74a5827167bd1))
-* 🐛 customErrors + blurPredicate ([5a8daea](https://github.com/ngneat/error-tailor/commit/5a8daeaf6e6d8213c29b3c83a1e6e5bbca60acc4))
-
+- 🐛 add types support ([19aef88](https://github.com/ngneat/error-tailor/commit/19aef88796e0df128c58beaf47f74a5827167bd1))
+- 🐛 customErrors + blurPredicate ([5a8daea](https://github.com/ngneat/error-tailor/commit/5a8daeaf6e6d8213c29b3c83a1e6e5bbca60acc4))
 
 ### chore
 
-* 🤖 fix docs merge conflict ([998f32d](https://github.com/ngneat/error-tailor/commit/998f32d5a51838f0d009131b487a26887dba5695))
-
+- 🤖 fix docs merge conflict ([998f32d](https://github.com/ngneat/error-tailor/commit/998f32d5a51838f0d009131b487a26887dba5695))
 
 ### docs
 
-* ✏️ clarify config errors usage ([a2a6f29](https://github.com/ngneat/error-tailor/commit/a2a6f29592e5699ce117e4a0154ad2b4484f18a9))
-* ✏️ fix useValue getting started ([28c59f2](https://github.com/ngneat/error-tailor/commit/28c59f230917896ec16220091580af6e88b9b3f0)), closes [#3](https://github.com/ngneat/error-tailor/issues/3)
+- ✏️ clarify config errors usage ([a2a6f29](https://github.com/ngneat/error-tailor/commit/a2a6f29592e5699ce117e4a0154ad2b4484f18a9))
+- ✏️ fix useValue getting started ([28c59f2](https://github.com/ngneat/error-tailor/commit/28c59f230917896ec16220091580af6e88b9b3f0)), closes [#3](https://github.com/ngneat/error-tailor/issues/3)
 
 ## [1.0.2](https://github.com/ngneat/error-tailor/compare/v1.0.1...v2.0.0) (2020-06-12)
 
