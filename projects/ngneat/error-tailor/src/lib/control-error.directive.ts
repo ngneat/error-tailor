@@ -96,6 +96,7 @@ export class ControlErrorsDirective implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.destroy.next();
     if (this.ref) this.ref.destroy();
+    this.ref = null;
   }
 
   private valueChanges() {
