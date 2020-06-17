@@ -51,6 +51,17 @@
         "doc",
         "example"
       ]
+    },
+    {
+      "login": "rhutchison",
+      "name": "Ryan Hutchison",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/1460261?v=4",
+      "profile": "https://github.com/rhutchison",
+      "contributions": [
+        "bug",
+        "code",
+        "test"
+      ]
     }
   ],
   "contributorsPerLine": 7
