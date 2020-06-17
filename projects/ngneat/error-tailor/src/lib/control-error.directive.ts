@@ -17,7 +17,7 @@ import { ControlErrorComponent } from './control-error.component';
 import { ControlErrorAnchorDirective } from './control-error-anchor.directive';
 import { EMPTY, fromEvent, merge, Observable, Subject } from 'rxjs';
 import { ErrorTailorConfig, ErrorTailorConfigProvider, FORM_ERRORS } from './providers';
-import { startWith, switchMap, takeUntil } from 'rxjs/operators';
+import { distinctUntilChanged, startWith, switchMap, takeUntil } from 'rxjs/operators';
 import { FormSubmitDirective } from './form-submit.directive';
 import { ErrorsMap } from './types';
 
@@ -58,19 +58,21 @@ export class ControlErrorsDirective implements OnInit, OnDestroy {
     this.control = (this.controlContainer || this.ngControl).control;
     const isInput = this.mergedConfig.blurPredicate(this.host.nativeElement);
 
+    const statusChanges$ = this.control.statusChanges.pipe(distinctUntilChanged());
     const valueChanges$ = this.control.valueChanges;
-    let changes$: Observable<any> = EMPTY;
+    const controlChanges$ = merge(statusChanges$, valueChanges$);
+    let changesOnBlur$: Observable<any> = EMPTY;
 
     if (this.controlErrorsOnBlur && isInput) {
       const blur$ = fromEvent(this.host.nativeElement, 'focusout');
       // blurFirstThanUponChange
-      changes$ = blur$.pipe(switchMap(() => valueChanges$.pipe(startWith(true))));
+      changesOnBlur$ = blur$.pipe(switchMap(() => valueChanges$.pipe(startWith(true))));
     }
 
     // submitFirstThanUponChanges
-    const submit$ = this.submit$.pipe(switchMap(() => valueChanges$.pipe(startWith(true))));
+    const changesOnSubmit$ = this.submit$.pipe(switchMap(() => controlChanges$.pipe(startWith(true))));
 
-    merge(submit$, changes$)
+    merge(changesOnSubmit$, changesOnBlur$)
       .pipe(takeUntil(this.destroy))
       .subscribe(() => this.valueChanges());
   }

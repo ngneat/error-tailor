@@ -2,6 +2,7 @@ import { Component, Type } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { byPlaceholder, byText, createComponentFactory, Spectator } from '@ngneat/spectator';
 import { ErrorTailorModule } from '@ngneat/error-tailor';
+import { tick, fakeAsync } from '@angular/core/testing';
 
 function getComponentFactory<C>(component: Type<C>) {
   return createComponentFactory({
@@ -14,7 +15,8 @@ function getComponentFactory<C>(component: Type<C>) {
           useValue: {
             required: () => 'required error',
             minlength: () => 'min error',
-            requiredone: () => 'required one error'
+            requiredone: () => 'required one error',
+            serverError: error => error
           }
         }
       })
@@ -101,6 +103,29 @@ describe('ControlErrorDirective', () => {
 
       expect(spectator.query(byText(/error/))).toBeNull();
     });
+
+    it('should show errors on async statusChanges', fakeAsync(() => {
+      const serverError = 'server error';
+      const nameInput = spectator.query<HTMLInputElement>(byPlaceholder('Name'));
+
+      typeInElementAndFocusOut(spectator, 'no error', nameInput);
+
+      expect(spectator.query(byText(serverError))).toBeFalsy();
+
+      spectator.click('button');
+
+      setTimeout(() => {
+        const control = spectator.component.form.get('name');
+
+        control.setErrors({ serverError });
+      }, 50);
+
+      tick(50);
+
+      spectator.detectChanges();
+
+      expect(spectator.query(byText(serverError))).toBeTruthy();
+    }));
   });
 
   describe('FormControl', () => {
