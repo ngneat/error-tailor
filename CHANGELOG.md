@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.0.4](https://github.com/ngneat/error-tailor/compare/v1.0.2...v1.0.4) (2020-06-17)
+
+
+### Bug Fixes
+
+* show error on async statusChanges after submit ([ef9f00e](https://github.com/ngneat/error-tailor/commit/ef9f00e72f8ca9bf51cb361453c9dfbf153a2d11))
+
 ## [1.0.2](https://github.com/ngneat/error-tailor/compare/v1.0.1...v2.0.0) (2020-06-12)
 
 ### Bug Fixes
