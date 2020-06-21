@@ -39,6 +39,8 @@ describe('ControlErrorDirective', () => {
           <input type="checkbox" formControlName="terms" id="check" [controlErrorAnchor]="anchor" />
           <ng-template controlErrorAnchor #anchor="controlErrorAnchor"></ng-template>
 
+          <input formControlName="ignored" placeholder="Ignored" controlErrorsIgnore />
+
           <div formArrayName="names">
             <div *ngFor="let name of form.controls.names.controls; index as i">
               <input [formControl]="name" placeholder="Name {{ i }}" />
@@ -53,6 +55,7 @@ describe('ControlErrorDirective', () => {
       form = this.builder.group({
         name: this.createName(),
         terms: [false, Validators.requiredTrue],
+        ignored: ['', Validators.required],
         names: this.builder.array([this.createName(), this.createName()], this.validator)
       });
 
@@ -102,6 +105,14 @@ describe('ControlErrorDirective', () => {
       spectator.click('input[type=checkbox]');
 
       expect(spectator.query(byText(/error/))).toBeNull();
+    });
+
+    it('should not show errors on interactions', () => {
+      const ignoredInput = spectator.query<HTMLInputElement>(byPlaceholder('Ignored'));
+
+      typeInElementAndFocusOut(spectator, '', ignoredInput);
+
+      expect(spectator.query(byText('required error'))).toBeFalsy();
     });
 
     it('should show errors on async statusChanges', fakeAsync(() => {

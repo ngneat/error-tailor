@@ -22,7 +22,8 @@ import { FormSubmitDirective } from './form-submit.directive';
 import { ErrorsMap } from './types';
 
 @Directive({
-  selector: '[formControlName], [formControl], [formGroup], [formGroupName], [formArrayName], [ngModel]'
+  selector:
+    '[formControlName]:not([controlErrorsIgnore]), [formControl]:not([controlErrorsIgnore]), [formGroup]:not([controlErrorsIgnore]), [formGroupName]:not([controlErrorsIgnore]), [formArrayName]:not([controlErrorsIgnore]), [ngModel]:not([controlErrorsIgnore])'
 })
 export class ControlErrorsDirective implements OnInit, OnDestroy {
   @Input('controlErrors') customErrors: ErrorsMap = {};

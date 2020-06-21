@@ -157,6 +157,25 @@ The custom `anchor` can also be added as a directive, in which case it'll act as
 ```
 <!-- prettier-ignore-end -->
 
+- `controlErrorsIgnore` - A custom attribute on a form field element to skip instantiating of a control error component on it.
+
+One typical case when to use it, are radio buttons in the same radio group where it's enough to show only one error message and not all of them for each separate radio button.
+
+<!-- prettier-ignore-start -->
+```html
+<div class="form-group">
+  Communication language: &nbsp;
+  <input type="radio" name="languages" formControlName="languages" value="en" id="en" [controlErrorAnchor]="anchorRadio" />
+  <label class="form-radio-label" for="en">English</label>
+  <input type="radio" name="languages" formControlName="languages" value="de" id="de" controlErrorsIgnore />
+  <label class="form-radio-label" for="de">German</label>
+  <input type="radio" name="languages" formControlName="languages" value="cs" id="cs" controlErrorsIgnore />
+  <label class="form-radio-label" for="cs">Czech</label>
+  <ng-template controlErrorAnchor #anchorRadio="controlErrorAnchor"></ng-template>
+</div>
+```
+<!-- prettier-ignore-end -->
+
 ## CSS Styling
 
 The library adds a `form-submitted` to the submitted form. You can use it to style your inputs:
