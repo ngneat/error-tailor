@@ -13,7 +13,7 @@
   </div>
 
   <div class="form-group">
-    Communication language: &nbsp;
+    <span class="form-radio-group-label">Communication language:</span>
     <input
       type="radio"
       name="languages"
@@ -22,17 +22,11 @@
       id="en"
       [controlErrorAnchor]="anchorRadio"
     />
-    <label class="form-radio-label" for="en">
-      English
-    </label>
+    <label class="form-radio-label" for="en">English</label>
     <input type="radio" name="languages" formControlName="languages" value="de" id="de" controlErrorsIgnore />
-    <label class="form-radio-label" for="de">
-      German
-    </label>
+    <label class="form-radio-label" for="de">German</label>
     <input type="radio" name="languages" formControlName="languages" value="cs" id="cs" controlErrorsIgnore />
-    <label class="form-radio-label" for="cs">
-      Czech
-    </label>
+    <label class="form-radio-label" for="cs">Czech</label>
     <ng-template controlErrorAnchor #anchorRadio="controlErrorAnchor"></ng-template>
   </div>
 

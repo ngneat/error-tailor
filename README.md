@@ -159,7 +159,7 @@ The custom `anchor` can also be added as a directive, in which case it'll act as
 
 - `controlErrorsIgnore` - A custom attribute on a form field element to skip instantiating of a control error component on it.
 
-One typical case when to use it, are radio buttons in the same radio group where it's enough to show only one error message and not all of them for each separate radio button.
+One typical case when to use it is radio buttons in the same radio group where it's enough to show only one error message and not all of them for each separate radio button.
 
 <!-- prettier-ignore-start -->
 ```html
