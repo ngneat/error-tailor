@@ -26,6 +26,7 @@ export class AppComponent {
     this.form = this.builder.group({
       name: ['', [Validators.required, Validators.minLength(3)]],
       terms: [false, Validators.requiredTrue],
+      languages: ['', Validators.required],
       animal: [null, Validators.required],
       address: this.builder.group(
         {
