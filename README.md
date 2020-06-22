@@ -205,7 +205,7 @@ The library adds a `form-submitted` to the submitted form. You can use it to sty
 <input [controlErrorsOnBlur]="false" formControlName="name" />
 ```
 
-## Recipies
+## Recipes
 
 ### I18n Example
 
