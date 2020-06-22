@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.1.0](https://github.com/ngneat/error-tailor/compare/v1.0.4...v1.1.0) (2020-06-22)
+
+
+### Features
+
+* **directive:** a new custom attribute on a field ([#12](https://github.com/ngneat/error-tailor/issues/12)) ([080455f](https://github.com/ngneat/error-tailor/commit/080455fda23b6fabbad17720e785c7a53c8c0285))
+
 ### [1.0.4](https://github.com/ngneat/error-tailor/compare/v1.0.2...v1.0.4) (2020-06-17)
 
 
