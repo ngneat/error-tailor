@@ -189,6 +189,7 @@ The library adds a `form-submitted` to the submitted form. You can use it to sty
 
 ## Config
 
+### Global Config
 - `blurPredicate` - Elements that should listen the `focusout` event. The default predicate is:
 
 ```ts
@@ -198,7 +199,47 @@ The library adds a `form-submitted` to the submitted form. You can use it to sty
   }
 }
 ```
+- `controlErrorComponent` - Optional. Allows changing the default component that is used to reflect 
+  the errors. This component should implement the `IControlErrorComponent` interface.  Defaults to
+  `ControlErrorComponent`.
 
+  For example:
+  ```ts
+  {
+      controlErrorComponent: CustomControlErrorComponent
+  }
+  ```
+
+  `CustomControlErrorComponent` is declared as:
+  ```ts
+    @Component(...)
+    export class CustomControlErrorComponent implements IControlErrorComponent {
+
+        set customClass(className: string) {
+            this.host.nativeElement.classList.add(className);
+        }
+
+        set text(value: string|null) {
+            this._text = value;
+            this.hide = !value;
+            this.cdr.markForCheck();
+        }
+    }
+  ```
+- `controlErrorComponentAnchorFn` - Optional. A hook function that allows the error component to be 
+  repositioned in the DOM. By default error components are inserted at the bottom of the form field
+  with error. If your UI layout dictates a different positioning scheme, you may use this hook.
+
+  In the following example, the error component is attached to the form field's 
+  grandparent element.
+```ts
+    controlErrorComponentAnchorFn(host: ElementRef, errorComponent: ComponentRef<IControlErrorComponent>) {
+        let errorComponentElem = (errorComponent.hostView as EmbeddedViewRef<any>).rootNodes[0] as HTMLElement;
+        (host.nativeElement as HTMLElement).parentElement.parentElement.append(errorComponentElem);
+    }
+```
+
+### Per Control Config
 - `controlErrorsOnBlur` - To modify the error display behavior and show the errors on submission alone, set the following input:
 
 ```html

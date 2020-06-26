@@ -10,10 +10,11 @@ import {
   Optional,
   Self,
   TemplateRef,
-  ViewContainerRef
+  ViewContainerRef,
+  EmbeddedViewRef
 } from '@angular/core';
 import { AbstractControl, ControlContainer, NgControl, ValidationErrors } from '@angular/forms';
-import { ControlErrorComponent } from './control-error.component';
+import { ControlErrorComponent, IControlErrorComponent } from './control-error.component';
 import { ControlErrorAnchorDirective } from './control-error-anchor.directive';
 import { EMPTY, fromEvent, merge, Observable, Subject } from 'rxjs';
 import { ErrorTailorConfig, ErrorTailorConfigProvider, FORM_ERRORS } from './providers';
@@ -32,7 +33,7 @@ export class ControlErrorsDirective implements OnInit, OnDestroy {
   @Input() controlErrorsOnBlur = true;
   @Input() controlErrorAnchor: ControlErrorAnchorDirective;
 
-  private ref: ComponentRef<ControlErrorComponent>;
+  private ref: ComponentRef<IControlErrorComponent>;
   private anchor: ViewContainerRef;
   private submit$: Observable<Event>;
   private control: AbstractControl;
@@ -80,8 +81,10 @@ export class ControlErrorsDirective implements OnInit, OnDestroy {
 
   private setError(text: string, error?: ValidationErrors) {
     if (!this.ref) {
-      const factory = this.resolver.resolveComponentFactory(ControlErrorComponent);
-      this.ref = this.anchor.createComponent(factory);
+      const factory = this.resolver.resolveComponentFactory<IControlErrorComponent>(
+        this.mergedConfig.controlErrorComponent
+      );
+      this.ref = this.anchor.createComponent<IControlErrorComponent>(factory);
     }
     const instance = this.ref.instance;
 
@@ -93,6 +96,10 @@ export class ControlErrorsDirective implements OnInit, OnDestroy {
 
     if (this.controlErrorsClass) {
       instance.customClass = this.controlErrorsClass;
+    }
+
+    if (this.mergedConfig.controlErrorComponentAnchorFn) {
+      this.mergedConfig.controlErrorComponentAnchorFn(this.host, this.ref);
     }
   }
 
@@ -134,7 +141,8 @@ export class ControlErrorsDirective implements OnInit, OnDestroy {
       ...{
         blurPredicate(element) {
           return element.tagName === 'INPUT' || element.tagName === 'SELECT';
-        }
+        },
+        controlErrorComponent: ControlErrorComponent
       },
       ...this.config
     };

@@ -1,16 +1,13 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, TemplateRef } from '@angular/core';
+import { IControlErrorComponent } from '@ngneat/error-tailor';
 import { ValidationErrors } from '@angular/forms';
 
-export interface IControlErrorComponent {
-  customClass: string;
-  text: string | null;
-  createTemplate?(tpl: TemplateRef<any>, error: ValidationErrors, text: string): void;
-}
-
 @Component({
-  selector: 'control-error',
+  selector: 'custom-control-error',
   template: `
-    <label class="control-error" [class.hide-control]="hide" *ngIf="!_tpl">{{ _text }}</label>
+    <div class="control-error" [class.hide-control]="hide" *ngIf="!_tpl">
+      <h3>{{ _text }}</h3>
+    </div>
     <ng-template *ngTemplateOutlet="_tpl; context: context"></ng-template>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -26,7 +23,7 @@ export interface IControlErrorComponent {
     `
   ]
 })
-export class ControlErrorComponent implements IControlErrorComponent {
+export class CustomControlErrorComponent implements IControlErrorComponent {
   _text: string | null = null;
   _tpl: TemplateRef<{ $implicit: ValidationErrors; text: string }> | undefined;
   context: { $implicit: ValidationErrors; text: string };
