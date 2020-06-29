@@ -1,8 +1,9 @@
-import { Component, Type } from '@angular/core';
+import { Component, Type, ElementRef, ChangeDetectorRef } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { byPlaceholder, byText, createComponentFactory, Spectator } from '@ngneat/spectator';
 import { ErrorTailorModule } from '@ngneat/error-tailor';
 import { tick, fakeAsync } from '@angular/core/testing';
+import { ControlErrorComponent } from './control-error.component';
 
 function getComponentFactory<C>(component: Type<C>) {
   return createComponentFactory({
@@ -312,6 +313,122 @@ describe('ControlErrorDirective', () => {
         const divContainer = error.parentElement.previousElementSibling;
 
         expect(divContainer.firstElementChild).toBe(input);
+      });
+    });
+  });
+
+  describe('GlobalConfig', () => {
+    @Component({
+      template: `
+        <form [formGroup]="form" errorTailor>
+          <input formControlName="name" placeholder="Name" />
+        </form>
+      `
+    })
+    class CustomErrorFormGroupComponent {
+      form = this.builder.group({
+        name: new FormControl('', [Validators.required])
+      });
+
+      customErrors = {
+        required: 'required error'
+      };
+
+      constructor(private builder: FormBuilder) {}
+    }
+
+    @Component({
+      template: `
+        <h1>{{ _text }}</h1>
+      `
+    })
+    class CustomControlErrorComponent implements ControlErrorComponent {
+      _text: string | null;
+      hide = true;
+
+      set customClass(className: string) {
+        this.host.nativeElement.classList.add(className);
+      }
+
+      set text(value: string | null) {
+        if (value !== this._text) {
+          this._text = value;
+          this.hide = !value;
+          this.cdr.markForCheck();
+        }
+      }
+      constructor(private cdr: ChangeDetectorRef, private host: ElementRef<HTMLElement>) {}
+    }
+
+    function getCustomErrorComponentFactory<C>(
+      component: Type<C>,
+      controlErrorComponent: Type<any> = null,
+      controlErrorComponentAnchorFn: (hostElem: Element, errorElem: Element) => () => void = null
+    ) {
+      return createComponentFactory({
+        component,
+        declarations: [CustomControlErrorComponent],
+        imports: [
+          FormsModule,
+          ReactiveFormsModule,
+          ErrorTailorModule.forRoot({
+            errors: {
+              useValue: {
+                required: () => 'required error'
+              }
+            },
+            controlErrorComponent: CustomControlErrorComponent,
+            controlErrorComponentAnchorFn: controlErrorComponentAnchorFn
+          })
+        ]
+      });
+    }
+
+    describe('CustomControlErrorComponent', () => {
+      let spectator: Spectator<CustomErrorFormGroupComponent>;
+      const createComponent = getCustomErrorComponentFactory(
+        CustomErrorFormGroupComponent,
+        CustomControlErrorComponent
+      );
+
+      beforeEach(() => (spectator = createComponent()));
+
+      it('should create custom error component', () => {
+        const input = spectator.query<HTMLInputElement>(byPlaceholder('Name'));
+
+        typeInElementAndFocusOut(spectator, '', input);
+
+        expect(spectator.query('h1')).toBeTruthy();
+        expect(spectator.query(byText('required error'))).toBeTruthy();
+      });
+    });
+
+    describe('ErrorComponentAnchorFnCallback', () => {
+      let anchorFnCalled = false;
+      let anchorFnDestroyCalled = false;
+
+      let spectator: Spectator<CustomErrorFormGroupComponent>;
+      const createComponent = getCustomErrorComponentFactory(
+        CustomErrorFormGroupComponent,
+        null,
+        (hostElem: Element, errorElem: Element) => {
+          anchorFnCalled = true;
+          expect(hostElem).toBeTruthy();
+          expect(errorElem).toBeTruthy();
+          return () => {
+            anchorFnDestroyCalled = true;
+          };
+        }
+      );
+
+      beforeEach(() => (spectator = createComponent()));
+
+      it('should call error component anchor callback', () => {
+        const input = spectator.query<HTMLInputElement>(byPlaceholder('Name'));
+
+        typeInElementAndFocusOut(spectator, '', input);
+
+        expect(anchorFnCalled).toBeTruthy();
       });
     });
   });

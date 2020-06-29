@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, TemplateRef } from '@angular/core';
-import { IControlErrorComponent } from '@ngneat/error-tailor';
+import { ControlErrorComponent } from '@ngneat/error-tailor';
 import { ValidationErrors } from '@angular/forms';
 
 @Component({
@@ -23,13 +23,17 @@ import { ValidationErrors } from '@angular/forms';
     `
   ]
 })
-export class CustomControlErrorComponent implements IControlErrorComponent {
+export class CustomControlErrorComponent implements ControlErrorComponent {
   _text: string | null = null;
   _tpl: TemplateRef<{ $implicit: ValidationErrors; text: string }> | undefined;
   context: { $implicit: ValidationErrors; text: string };
   hide = true;
 
-  createTemplate(tpl: TemplateRef<any>, error: ValidationErrors, text: string) {
+  createTemplate(
+    tpl: TemplateRef<{ $implicit: ValidationErrors; text: string }>,
+    error: ValidationErrors,
+    text: string
+  ) {
     this._tpl = tpl;
     this.context = { $implicit: error, text };
     this.cdr.markForCheck();
