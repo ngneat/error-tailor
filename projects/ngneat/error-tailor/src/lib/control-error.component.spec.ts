@@ -1,10 +1,10 @@
 import { Spectator, createComponentFactory, byText } from '@ngneat/spectator';
 
-import { ControlErrorComponent } from './control-error.component';
+import { DefaultControlErrorComponent } from './control-error.component';
 
 describe('ControlErrorComponent', () => {
-  let spectator: Spectator<ControlErrorComponent>;
-  const createComponent = createComponentFactory(ControlErrorComponent);
+  let spectator: Spectator<DefaultControlErrorComponent>;
+  const createComponent = createComponentFactory(DefaultControlErrorComponent);
 
   beforeEach(() => (spectator = createComponent()));
 

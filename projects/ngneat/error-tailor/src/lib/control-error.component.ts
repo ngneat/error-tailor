@@ -1,10 +1,14 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, TemplateRef } from '@angular/core';
 import { ValidationErrors } from '@angular/forms';
 
-export interface IControlErrorComponent {
+export interface ControlErrorComponent {
   customClass: string;
   text: string | null;
-  createTemplate?(tpl: TemplateRef<any>, error: ValidationErrors, text: string): void;
+  createTemplate?(
+    tpl: TemplateRef<{ $implicit: ValidationErrors; text: string }>,
+    error: ValidationErrors,
+    text: string
+  ): void;
 }
 
 @Component({
@@ -26,13 +30,17 @@ export interface IControlErrorComponent {
     `
   ]
 })
-export class ControlErrorComponent implements IControlErrorComponent {
+export class DefaultControlErrorComponent implements ControlErrorComponent {
   _text: string | null = null;
   _tpl: TemplateRef<{ $implicit: ValidationErrors; text: string }> | undefined;
   context: { $implicit: ValidationErrors; text: string };
   hide = true;
 
-  createTemplate(tpl: TemplateRef<any>, error: ValidationErrors, text: string) {
+  createTemplate(
+    tpl: TemplateRef<{ $implicit: ValidationErrors; text: string }>,
+    error: ValidationErrors,
+    text: string
+  ) {
     this._tpl = tpl;
     this.context = { $implicit: error, text };
     this.cdr.markForCheck();

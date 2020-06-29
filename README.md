@@ -200,43 +200,101 @@ The library adds a `form-submitted` to the submitted form. You can use it to sty
 }
 ```
 - `controlErrorComponent` - Optional. Allows changing the default component that is used to reflect 
-  the errors. This component should implement the `IControlErrorComponent` interface.  Defaults to
-  `ControlErrorComponent`.
+  the errors. This component should implement the `ControlErrorComponent` interface.  Defaults to
+  `DefaultControlErrorComponent`.
 
   For example:
   ```ts
-  {
-      controlErrorComponent: CustomControlErrorComponent
+  // Custom error component that will replace the standard DefaultControlErrorComponent.
+  // Use an HTML fragment that suits your UI framework of choice. Example below shows
+  // error text wrapped in an <ion-item> which best serves a typical Ionic form layout
+  // where each form field is enclosed in an <ion-item>, all of which are wrapped in
+  // an <ion-list>.
+  @Component({
+    template: `
+    <ion-item lines='none' class='ion-text-wrap'>
+      <ion-label color='danger' class='ion-no-margin ion-text-wrap' stacked>
+        {{ _text }}
+      </ion-label>
+    </ion-item>
+    `
+  })
+  export class IonicControlErrorComponent implements ControlErrorComponent {
+
+      set customClass(className: string) {
+          this.host.nativeElement.classList.add(className);
+      }
+
+      set text(value: string|null) {
+          this._text = value;
+          this.hide = !value;
+          this.cdr.markForCheck();
+      }
   }
+
+  @NgModule({
+    declarations: [AppComponent, IonicControlErrorComponent],
+    imports: [
+      ReactiveFormsModule,
+      ErrorTailorModule.forRoot({
+        errors: {
+          useValue: {
+            required: 'This field is required'
+          }
+        },
+        controlErrorComponent: IonicControlErrorComponent
+      })
+    ],
+    bootstrap: [AppComponent]
+  })
+  export class AppModule {}
   ```
+- `controlErrorComponentAnchorFn` - Optional. A hook function that allows the error component's 
+  HTML element to be repositioned in the DOM. By default error components are inserted at the
+  bottom of the form field with error. If your UI layout dictates a different positioning 
+  scheme, you may use this hook.
 
-  `CustomControlErrorComponent` is declared as:
-  ```ts
-    @Component(...)
-    export class CustomControlErrorComponent implements IControlErrorComponent {
+  A note about manipulating DOM directly. Since this error element can be placed anywhere in
+  the DOM, it also has to be removed when the error component is destroyed. To provide
+  for this, this function should return a function that will then be called when the 
+  error component is destroyed. You may use this to remove the error HTML element
+  that you inserted into the DOM yourself.
 
-        set customClass(className: string) {
-            this.host.nativeElement.classList.add(className);
-        }
-
-        set text(value: string|null) {
-            this._text = value;
-            this.hide = !value;
-            this.cdr.markForCheck();
-        }
-    }
-  ```
-- `controlErrorComponentAnchorFn` - Optional. A hook function that allows the error component to be 
-  repositioned in the DOM. By default error components are inserted at the bottom of the form field
-  with error. If your UI layout dictates a different positioning scheme, you may use this hook.
-
-  In the following example, the error component is attached to the form field's 
-  grandparent element.
+  For example:
 ```ts
-    controlErrorComponentAnchorFn(host: ElementRef, errorComponent: ComponentRef<IControlErrorComponent>) {
-        let errorComponentElem = (errorComponent.hostView as EmbeddedViewRef<any>).rootNodes[0] as HTMLElement;
-        (host.nativeElement as HTMLElement).parentElement.parentElement.append(errorComponentElem);
-    }
+  // Extending the Ionic example above, since the control error element have to be 
+  // attached to the control's grandparent, we provide a custom anchor function that 
+  // will be called with the control's error component HTML element.
+  // hostElem is the HTML element for the control and errorElem is the HTML for the
+  // error component.
+  //
+  // The function returns a function that will be called when the error component is 
+  // destroyed, giving you a chance to remove the HTML fragment that you added to 
+  // the DOM earlier.
+  anchorIonicErrorComponent(hostElem: Element, errorElem: Element) {
+      hostElem.parentElement.parentElement.append(errorElem);
+      return () => {
+        hostElem.parentElement.parentElement.removeChild(errorElem);
+      }
+  }
+
+  @NgModule({
+    declarations: [AppComponent, IonicControlErrorComponent],
+    imports: [
+      ReactiveFormsModule,
+      ErrorTailorModule.forRoot({
+        errors: {
+          useValue: {
+            required: 'This field is required'
+          }
+        },
+        controlErrorComponent: IonicControlErrorComponent,
+        controlErrorComponentAnchorFn: anchorIonicErrorComponent
+      })
+    ],
+    bootstrap: [AppComponent]
+  })
+  export class AppModule {}
 ```
 
 ### Per Control Config

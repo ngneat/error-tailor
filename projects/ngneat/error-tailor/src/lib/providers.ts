@@ -1,6 +1,6 @@
-import { InjectionToken, ValueSansProvider, FactorySansProvider, ElementRef, ComponentRef, Type } from '@angular/core';
+import { InjectionToken, ValueSansProvider, FactorySansProvider, Type } from '@angular/core';
 import { ErrorsMap } from './types';
-import { IControlErrorComponent } from './control-error.component';
+import { ControlErrorComponent } from './control-error.component';
 
 export const FORM_ERRORS = new InjectionToken('FORM_ERRORS', {
   providedIn: 'root',
@@ -22,8 +22,8 @@ export type ErrorsProvider = ErrorsUseValue | ErrorsUseFactory;
 export type ErrorTailorConfig = {
   errors?: ErrorsProvider;
   blurPredicate?: (element: Element) => boolean;
-  controlErrorComponent?: Type<IControlErrorComponent>;
-  controlErrorComponentAnchorFn?: (host: ElementRef, errorComponent: ComponentRef<IControlErrorComponent>) => void;
+  controlErrorComponent?: Type<ControlErrorComponent>;
+  controlErrorComponentAnchorFn?: (hostElement: Element, errorElement: Element) => () => void;
 };
 
 export const ErrorTailorConfigProvider = new InjectionToken<ErrorTailorConfig>('ErrorTailorConfigProvider');
