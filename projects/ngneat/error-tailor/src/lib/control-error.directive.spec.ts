@@ -1,8 +1,19 @@
 import { Component, Type } from '@angular/core';
-import { FormArray, FormBuilder, FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormArray,
+  FormBuilder,
+  FormControl,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+  AbstractControl,
+  ValidationErrors
+} from '@angular/forms';
 import { byPlaceholder, byText, createComponentFactory, Spectator } from '@ngneat/spectator';
 import { ErrorTailorModule } from '@ngneat/error-tailor';
 import { tick, fakeAsync } from '@angular/core/testing';
+import { Observable, asyncScheduler, scheduled } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 function getComponentFactory<C>(component: Type<C>) {
   return createComponentFactory({
@@ -47,6 +58,8 @@ describe('ControlErrorDirective', () => {
             </div>
           </div>
 
+          <input formControlName="username" placeholder="Username" />
+
           <button type="submit">Submit</button>
         </form>
       `
@@ -56,7 +69,8 @@ describe('ControlErrorDirective', () => {
         name: this.createName(),
         terms: [false, Validators.requiredTrue],
         ignored: ['', Validators.required],
-        names: this.builder.array([this.createName(), this.createName()], this.validator)
+        names: this.builder.array([this.createName(), this.createName()], this.validator),
+        username: ['', null, this.usernameValidator.bind(this)]
       });
 
       constructor(private builder: FormBuilder) {}
@@ -67,6 +81,20 @@ describe('ControlErrorDirective', () => {
 
       validator({ controls }: FormArray) {
         return controls.some(control => control.valid) ? null : { requiredone: true };
+      }
+
+      usernameValidator(ctrl: AbstractControl): Observable<ValidationErrors | null> {
+        return scheduled([ctrl.value], asyncScheduler).pipe(
+          map(value => {
+            if (value === 'error') {
+              return {
+                serverError: 'async validation error'
+              };
+            }
+
+            return null;
+          })
+        );
       }
     }
 
@@ -136,6 +164,35 @@ describe('ControlErrorDirective', () => {
       spectator.detectChanges();
 
       expect(spectator.query(byText(serverError))).toBeTruthy();
+    }));
+
+    it('should show errors from async validators', fakeAsync(() => {
+      const serverError = 'async validation error';
+      const usernameInput = spectator.query<HTMLInputElement>(byPlaceholder('Username'));
+
+      spectator.typeInElement('no error', usernameInput);
+
+      tick();
+
+      spectator.detectChanges();
+
+      expect(spectator.query(byText(serverError))).toBeFalsy();
+
+      spectator.typeInElement('error', usernameInput);
+
+      tick();
+
+      spectator.detectChanges();
+
+      expect(spectator.query(byText(serverError))).toBeTruthy();
+
+      spectator.typeInElement('no error', usernameInput);
+
+      tick();
+
+      spectator.detectChanges();
+
+      expect(spectator.query(byText(serverError))).toBeFalsy();
     }));
   });
 
