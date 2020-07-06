@@ -20,7 +20,6 @@ import { ErrorTailorConfig, ErrorTailorConfigProvider, FORM_ERRORS } from './pro
 import { distinctUntilChanged, startWith, switchMap, takeUntil } from 'rxjs/operators';
 import { FormSubmitDirective } from './form-submit.directive';
 import { ErrorsMap } from './types';
-import { threadId } from 'worker_threads';
 
 @Directive({
   selector:
