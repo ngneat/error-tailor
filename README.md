@@ -177,6 +177,24 @@ One typical case when to use it is radio buttons in the same radio group where i
 </div>
 ```
 
+- `controlErrorsOnAsync` - To modify the error display behavior to not show errors from async validators, set the following input:
+
+```html
+<input [controlErrorsOnAsync]="false" formControlName="name" />
+```
+
+- To modify the error display behavior and show the errors on submission alone, set the following input:
+
+```html
+<input [controlErrorsOnBlur]="false" [controlErrorsOnAsync]="false" formControlName="name" />
+```
+
+- `controlErrorsOnBlur` - To modify the error display behavior to not show errors on blur, set the following input:
+
+```html
+<input [controlErrorsOnBlur]="false" formControlName="name" />
+```
+
 ## CSS Styling
 
 The library adds a `form-submitted` to the submitted form. You can use it to style your inputs:
@@ -198,24 +216,6 @@ The library adds a `form-submitted` to the submitted form. You can use it to sty
     return element.tagName === 'INPUT' || element.tagName === 'SELECT';
   }
 }
-```
-
-- `controlErrorsOnBlur` - To modify the error display behavior to not show errors on blur, set the following input:
-
-```html
-<input [controlErrorsOnBlur]="false" formControlName="name" />
-```
-
-- `controlErrorsOnAsync` - To modify the error display behavior to not show errors from async validators, set the following input:
-
-```html
-<input [controlErrorsOnAsync]="false" formControlName="name" />
-```
-
-- To modify the error display behavior and show the errors on submission alone, set the following input:
-
-```html
-<input [controlErrorsOnBlur]="false" [controlErrorsOnAsync]="false" formControlName="name" />
 ```
 
 ## Recipes
