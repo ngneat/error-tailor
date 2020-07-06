@@ -20,6 +20,7 @@ import { ErrorTailorConfig, ErrorTailorConfigProvider, FORM_ERRORS } from './pro
 import { distinctUntilChanged, startWith, switchMap, takeUntil } from 'rxjs/operators';
 import { FormSubmitDirective } from './form-submit.directive';
 import { ErrorsMap } from './types';
+import { threadId } from 'worker_threads';
 
 @Directive({
   selector:
@@ -29,6 +30,7 @@ export class ControlErrorsDirective implements OnInit, OnDestroy {
   @Input('controlErrors') customErrors: ErrorsMap = {};
   @Input() controlErrorsClass: string | undefined;
   @Input() controlErrorsTpl: TemplateRef<any> | undefined;
+  @Input() controlErrorsOnAsync = true;
   @Input() controlErrorsOnBlur = true;
   @Input() controlErrorAnchor: ControlErrorAnchorDirective;
 
@@ -57,23 +59,30 @@ export class ControlErrorsDirective implements OnInit, OnDestroy {
   ngOnInit() {
     this.anchor = this.resolveAnchor();
     this.control = (this.controlContainer || this.ngControl).control;
+    const hasAsyncValidator = !!this.control.asyncValidator;
     const isInput = this.mergedConfig.blurPredicate(this.host.nativeElement);
 
     const statusChanges$ = this.control.statusChanges.pipe(distinctUntilChanged());
     const valueChanges$ = this.control.valueChanges;
     const controlChanges$ = merge(statusChanges$, valueChanges$);
+    let changesOnAsync$: Observable<any> = EMPTY;
     let changesOnBlur$: Observable<any> = EMPTY;
+
+    if (this.controlErrorsOnAsync && hasAsyncValidator) {
+      // hasAsyncThenUponStatusChange
+      changesOnAsync$ = statusChanges$.pipe(startWith(true));
+    }
 
     if (this.controlErrorsOnBlur && isInput) {
       const blur$ = fromEvent(this.host.nativeElement, 'focusout');
-      // blurFirstThanUponChange
+      // blurFirstThenUponChange
       changesOnBlur$ = blur$.pipe(switchMap(() => valueChanges$.pipe(startWith(true))));
     }
 
-    // submitFirstThanUponChanges
+    // submitFirstThenUponChanges
     const changesOnSubmit$ = this.submit$.pipe(switchMap(() => controlChanges$.pipe(startWith(true))));
 
-    merge(changesOnSubmit$, changesOnBlur$)
+    merge(changesOnAsync$, changesOnBlur$, changesOnSubmit$)
       .pipe(takeUntil(this.destroy))
       .subscribe(() => this.valueChanges());
   }
