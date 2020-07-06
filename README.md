@@ -107,13 +107,12 @@ The directive will show all errors for a form field automatically in two instanc
 
 - `controlErrorsClass` - A custom class that'll be added to the control error component, a component that is added after the form field when an error needs to be displayed:
 
-```html
-<input class="form-control" formControlName="city" placeholder="City" controlErrorsClass="my-class" />
+````html
+<input class="form-control" formControlName="city" 
+       placeholder="City" controlErrorsClass="my-class" />
 ```
 
-- `controlErrorsTpl` - A custom error template to be used instead of the control error component's default view:
-
-```html
+- `controlErrorsTpl` - A custom error template to be used instead of the control error component's default view: ```html
 <form errorTailor>
   <ng-template let-error let-text="text" #tpl> {{ error | json }} {{ text }} </ng-template>
 
@@ -123,7 +122,7 @@ The directive will show all errors for a form field automatically in two instanc
 
   <button class="btn btn-success">Submit</button>
 </form>
-```
+````
 
 - `controlErrorAnchor` - A custom `anchor` element for the control error component. The default anchor is the form field element:
 
@@ -150,31 +149,31 @@ The custom `anchor` can also be added as a directive, in which case it'll act as
 
 - `controlErrors` - Additional errors to use for the form field, that aren't specified in the config:
 
-<!-- prettier-ignore-start -->
 ```html
 <input class="form-control" formControlName="country" placeholder="Country"
        [controlErrors]="extraErrors" />
 ```
-<!-- prettier-ignore-end -->
 
 - `controlErrorsIgnore` - A custom attribute on a form field element to skip instantiating of a control error component on it.
 
 One typical case when to use it is radio buttons in the same radio group where it's enough to show only one error message and not all of them for each separate radio button.
 
-<!-- prettier-ignore-start -->
 ```html
 <div class="form-group">
   Communication language: &nbsp;
-  <input type="radio" name="languages" formControlName="languages" value="en" id="en" [controlErrorAnchor]="anchorRadio" />
+  <input type="radio" name="languages" formControlName="languages" 
+         value="en" id="en"    [controlErrorAnchor]="anchorRadio" />
   <label class="form-radio-label" for="en">English</label>
-  <input type="radio" name="languages" formControlName="languages" value="de" id="de" controlErrorsIgnore />
+  <input type="radio" name="languages" formControlName="languages" 
+         value="de" id="de" controlErrorsIgnore />
   <label class="form-radio-label" for="de">German</label>
-  <input type="radio" name="languages" formControlName="languages" value="cs" id="cs" controlErrorsIgnore />
+  <input type="radio" name="languages" formControlName="languages" 
+         value="cs" id="cs" controlErrorsIgnore />
   <label class="form-radio-label" for="cs">Czech</label>
+
   <ng-template controlErrorAnchor #anchorRadio="controlErrorAnchor"></ng-template>
 </div>
 ```
-<!-- prettier-ignore-end -->
 
 ## CSS Styling
 
@@ -266,6 +265,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 
 <!-- markdownlint-enable -->
 <!-- prettier-ignore-end -->
+
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
