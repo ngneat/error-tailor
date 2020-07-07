@@ -1,9 +1,9 @@
-import { Component, Type, ElementRef, ChangeDetectorRef } from '@angular/core';
+import { Component, Type } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { byPlaceholder, byText, createComponentFactory, Spectator } from '@ngneat/spectator';
 import { ErrorTailorModule } from '@ngneat/error-tailor';
 import { tick, fakeAsync } from '@angular/core/testing';
-import { ControlErrorComponent } from './control-error.component';
+import { DefaultControlErrorComponent } from './control-error.component';
 
 function getComponentFactory<C>(component: Type<C>) {
   return createComponentFactory({
@@ -319,9 +319,10 @@ describe('ControlErrorDirective', () => {
 
   describe('GlobalConfig', () => {
     @Component({
+      selector: 'custom-error-form-group',
       template: `
         <form [formGroup]="form" errorTailor>
-          <input formControlName="name" placeholder="Name" />
+          <input formControlName="name" placeholder="Name" *ngIf="showName" />
         </form>
       `
     })
@@ -329,40 +330,20 @@ describe('ControlErrorDirective', () => {
       form = this.builder.group({
         name: new FormControl('', [Validators.required])
       });
-
-      customErrors = {
-        required: 'required error'
-      };
-
+      showName = true;
       constructor(private builder: FormBuilder) {}
     }
 
     @Component({
+      selector: 'custom-error-component',
       template: `
         <h1>{{ _text }}</h1>
       `
     })
-    class CustomControlErrorComponent implements ControlErrorComponent {
-      _text: string | null;
-      hide = true;
-
-      set customClass(className: string) {
-        this.host.nativeElement.classList.add(className);
-      }
-
-      set text(value: string | null) {
-        if (value !== this._text) {
-          this._text = value;
-          this.hide = !value;
-          this.cdr.markForCheck();
-        }
-      }
-      constructor(private cdr: ChangeDetectorRef, private host: ElementRef<HTMLElement>) {}
-    }
+    class CustomControlErrorComponent extends DefaultControlErrorComponent {}
 
     function getCustomErrorComponentFactory<C>(
       component: Type<C>,
-      controlErrorComponent: Type<any> = null,
       controlErrorComponentAnchorFn: (hostElem: Element, errorElem: Element) => () => void = null
     ) {
       return createComponentFactory({
@@ -386,10 +367,7 @@ describe('ControlErrorDirective', () => {
 
     describe('CustomControlErrorComponent', () => {
       let spectator: Spectator<CustomErrorFormGroupComponent>;
-      const createComponent = getCustomErrorComponentFactory(
-        CustomErrorFormGroupComponent,
-        CustomControlErrorComponent
-      );
+      const createComponent = getCustomErrorComponentFactory(CustomErrorFormGroupComponent);
 
       beforeEach(() => (spectator = createComponent()));
 
@@ -410,7 +388,6 @@ describe('ControlErrorDirective', () => {
       let spectator: Spectator<CustomErrorFormGroupComponent>;
       const createComponent = getCustomErrorComponentFactory(
         CustomErrorFormGroupComponent,
-        null,
         (hostElem: Element, errorElem: Element) => {
           anchorFnCalled = true;
           expect(hostElem).toBeTruthy();
@@ -423,12 +400,29 @@ describe('ControlErrorDirective', () => {
 
       beforeEach(() => (spectator = createComponent()));
 
-      it('should call error component anchor callback', () => {
+      it('should call error component anchor fn', () => {
         const input = spectator.query<HTMLInputElement>(byPlaceholder('Name'));
 
         typeInElementAndFocusOut(spectator, '', input);
 
         expect(anchorFnCalled).toBeTruthy();
+      });
+
+      it('should call error component anchor fn destroy callback', () => {
+        anchorFnCalled = false; // reset values, just to be safe
+        anchorFnDestroyCalled = false;
+
+        const input = spectator.query<HTMLInputElement>(byPlaceholder('Name'));
+        typeInElementAndFocusOut(spectator, '', input);
+        expect(anchorFnCalled).toBeTruthy();
+
+        // This will remove the name input field, which should also remove the
+        // custom control error component created earlier. And removal of the
+        // custom control error component, should result in a call to the anchor function's
+        // destroy callback.
+        spectator.component.showName = false;
+        spectator.detectChanges();
+        expect(anchorFnDestroyCalled).toBeTruthy();
       });
     });
   });
