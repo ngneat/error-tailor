@@ -109,12 +109,14 @@ The directive will show all errors for a form field automatically in two instanc
 
 - `controlErrorsClass` - A custom class that'll be added to the control error component, a component that is added after the form field when an error needs to be displayed:
 
-````html
+```html
 <input class="form-control" formControlName="city" 
        placeholder="City" controlErrorsClass="my-class" />
 ```
 
-- `controlErrorsTpl` - A custom error template to be used instead of the control error component's default view: ```html
+- `controlErrorsTpl` - A custom error template to be used instead of the control error component's default view: 
+
+```html
 <form errorTailor>
   <ng-template let-error let-text="text" #tpl> {{ error | json }} {{ text }} </ng-template>
 
@@ -124,7 +126,7 @@ The directive will show all errors for a form field automatically in two instanc
 
   <button class="btn btn-success">Submit</button>
 </form>
-````
+```
 
 - `controlErrorAnchor` - A custom `anchor` element for the control error component. The default anchor is the form field element:
 
