@@ -22,8 +22,4 @@ import { DefaultControlErrorComponent } from '@ngneat/error-tailor';
     `
   ]
 })
-export class CustomControlErrorComponent extends DefaultControlErrorComponent {
-  constructor(cdr: ChangeDetectorRef, host: ElementRef<HTMLElement>) {
-    super(cdr, host);
-  }
-}
+export class CustomControlErrorComponent extends DefaultControlErrorComponent {}

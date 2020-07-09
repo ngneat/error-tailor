@@ -234,9 +234,9 @@ The library adds a `form-submitted` to the submitted form. You can use it to sty
   // Custom error component that will replace the standard DefaultControlErrorComponent.
   @Component({
     template: `
-    <ion-item lines="none" class="ion-text-wrap" [class.hide-control]="hide">
+    <ion-item lines="none" class="ion-text-wrap" [class.hide-control]="hideError">
       <ion-label color="danger" class="ion-no-margin ion-text-wrap" stacked>
-        {{ _text }}
+        {{ errorText }}
       </ion-label>
     </ion-item>
     `

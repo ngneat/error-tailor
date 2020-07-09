@@ -12,8 +12,8 @@ export interface ControlErrorComponent {
 @Component({
   selector: 'control-error',
   template: `
-    <label class="control-error" [class.hide-control]="hide" *ngIf="!_tpl">{{ _text }}</label>
-    <ng-template *ngTemplateOutlet="_tpl; context: context"></ng-template>
+    <label class="control-error" [class.hide-control]="hideError" *ngIf="!errorTemplate">{{ errorText }}</label>
+    <ng-template *ngTemplateOutlet="errorTemplate; context: errorContext"></ng-template>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   styles: [
@@ -29,14 +29,14 @@ export interface ControlErrorComponent {
   ]
 })
 export class DefaultControlErrorComponent implements ControlErrorComponent {
-  _text: string | null = null;
-  _tpl: ErrorComponentTemplate | undefined;
-  context: { $implicit: ValidationErrors; text: string };
-  hide = true;
+  errorText: string | null = null;
+  errorTemplate: ErrorComponentTemplate | undefined;
+  errorContext: { $implicit: ValidationErrors; text: string };
+  hideError = true;
 
   createTemplate(tpl: ErrorComponentTemplate, error: ValidationErrors, text: string) {
-    this._tpl = tpl;
-    this.context = { $implicit: error, text };
+    this.errorTemplate = tpl;
+    this.errorContext = { $implicit: error, text };
     this.cdr.markForCheck();
   }
 
@@ -45,9 +45,9 @@ export class DefaultControlErrorComponent implements ControlErrorComponent {
   }
 
   set text(value: string | null) {
-    if (value !== this._text) {
-      this._text = value;
-      this.hide = !value;
+    if (value !== this.errorText) {
+      this.errorText = value;
+      this.hideError = !value;
       this.cdr.markForCheck();
     }
   }

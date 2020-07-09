@@ -18,8 +18,8 @@ describe('ControlErrorComponent', () => {
 
       spectator.detectChanges();
 
-      expect(spectator.component._text).toBe('test');
-      expect(spectator.component.hide).toBeFalse();
+      expect(spectator.component.errorText).toBe('test');
+      expect(spectator.component.hideError).toBeFalse();
       expect(spectator.query(byText('test'))).toBeTruthy();
     });
 
@@ -32,8 +32,8 @@ describe('ControlErrorComponent', () => {
 
       spectator.detectChanges();
 
-      expect(spectator.component._text).toBe('');
-      expect(spectator.component.hide).toBeTrue();
+      expect(spectator.component.errorText).toBe('');
+      expect(spectator.component.hideError).toBeTrue();
       expect(spectator.query(byText('test'))).toBeNull();
     });
 
@@ -67,11 +67,11 @@ describe('ControlErrorComponent', () => {
     const { component } = spectator;
     component.createTemplate('fakeTemplate' as any, { testError: 'test' }, 'test error');
 
-    expect(component.context).toEqual({
+    expect(component.errorContext).toEqual({
       $implicit: { testError: 'test' },
       text: 'test error'
     });
 
-    expect(component._tpl).toBe('fakeTemplate' as any);
+    expect(component.errorTemplate).toBe('fakeTemplate' as any);
   });
 });

@@ -39,9 +39,9 @@ function controlErrorComponentAnchorFn(hostElem: Element, errorElem: Element) {
           };
         },
         deps: []
-      },
-      controlErrorComponent: CustomControlErrorComponent, // Uncomment to see errors being rendered using a custom component
-      controlErrorComponentAnchorFn: controlErrorComponentAnchorFn // Uncomment to see errors being positioned differently
+      }
+      //controlErrorComponent: CustomControlErrorComponent, // Uncomment to see errors being rendered using a custom component
+      //controlErrorComponentAnchorFn: controlErrorComponentAnchorFn // Uncomment to see errors being positioned differently
     })
   ],
   providers: [],

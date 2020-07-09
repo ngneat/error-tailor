@@ -394,7 +394,7 @@ describe('ControlErrorDirective', () => {
     @Component({
       selector: 'custom-error-component',
       template: `
-        <h1>{{ _text }}</h1>
+        <h1>{{ errorText }}</h1>
       `
     })
     class CustomControlErrorComponent extends DefaultControlErrorComponent {}
