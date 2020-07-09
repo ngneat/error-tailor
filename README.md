@@ -303,7 +303,7 @@ The library adds a `form-submitted` to the submitted form. You can use it to sty
     bootstrap: [AppComponent]
   })
   export class AppModule {}
-```
+  ```
 
 ### Per Control Config
 - `controlErrorsOnBlur` - To modify the error display behavior and show the errors on submission alone, set the following input:
