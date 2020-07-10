@@ -10,10 +10,11 @@ import {
   Optional,
   Self,
   TemplateRef,
-  ViewContainerRef
+  ViewContainerRef,
+  EmbeddedViewRef
 } from '@angular/core';
 import { AbstractControl, ControlContainer, NgControl, ValidationErrors } from '@angular/forms';
-import { ControlErrorComponent } from './control-error.component';
+import { DefaultControlErrorComponent, ControlErrorComponent } from './control-error.component';
 import { ControlErrorAnchorDirective } from './control-error-anchor.directive';
 import { EMPTY, fromEvent, merge, Observable, Subject } from 'rxjs';
 import { ErrorTailorConfig, ErrorTailorConfigProvider, FORM_ERRORS } from './providers';
@@ -39,6 +40,7 @@ export class ControlErrorsDirective implements OnInit, OnDestroy {
   private control: AbstractControl;
   private destroy = new Subject();
   private mergedConfig: ErrorTailorConfig = {};
+  private customAnchorDestroyFn: () => void;
 
   constructor(
     private vcr: ViewContainerRef,
@@ -88,8 +90,10 @@ export class ControlErrorsDirective implements OnInit, OnDestroy {
 
   private setError(text: string, error?: ValidationErrors) {
     if (!this.ref) {
-      const factory = this.resolver.resolveComponentFactory(ControlErrorComponent);
-      this.ref = this.anchor.createComponent(factory);
+      const factory = this.resolver.resolveComponentFactory<ControlErrorComponent>(
+        this.mergedConfig.controlErrorComponent
+      );
+      this.ref = this.anchor.createComponent<ControlErrorComponent>(factory);
     }
     const instance = this.ref.instance;
 
@@ -102,10 +106,21 @@ export class ControlErrorsDirective implements OnInit, OnDestroy {
     if (this.controlErrorsClass) {
       instance.customClass = this.controlErrorsClass;
     }
+
+    if (this.mergedConfig.controlErrorComponentAnchorFn) {
+      this.customAnchorDestroyFn = this.mergedConfig.controlErrorComponentAnchorFn(
+        this.host.nativeElement as HTMLElement,
+        (this.ref.hostView as EmbeddedViewRef<any>).rootNodes[0] as HTMLElement
+      );
+    }
   }
 
   ngOnDestroy() {
     this.destroy.next();
+    if (this.customAnchorDestroyFn) {
+      this.customAnchorDestroyFn();
+      this.customAnchorDestroyFn = null;
+    }
     if (this.ref) this.ref.destroy();
     this.ref = null;
   }
@@ -142,7 +157,8 @@ export class ControlErrorsDirective implements OnInit, OnDestroy {
       ...{
         blurPredicate(element) {
           return element.tagName === 'INPUT' || element.tagName === 'SELECT';
-        }
+        },
+        controlErrorComponent: DefaultControlErrorComponent
       },
       ...this.config
     };

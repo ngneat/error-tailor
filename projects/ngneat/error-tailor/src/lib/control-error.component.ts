@@ -1,11 +1,19 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, TemplateRef } from '@angular/core';
 import { ValidationErrors } from '@angular/forms';
 
+export type ErrorComponentTemplate = TemplateRef<{ $implicit: ValidationErrors; text: string }>;
+
+export interface ControlErrorComponent {
+  customClass: string;
+  text: string | null;
+  createTemplate?(tpl: ErrorComponentTemplate, error: ValidationErrors, text: string): void;
+}
+
 @Component({
   selector: 'control-error',
   template: `
-    <label class="control-error" [class.hide-control]="hide" *ngIf="!_tpl">{{ _text }}</label>
-    <ng-template *ngTemplateOutlet="_tpl; context: context"></ng-template>
+    <label class="control-error" [class.hide-control]="hideError" *ngIf="!errorTemplate">{{ errorText }}</label>
+    <ng-template *ngTemplateOutlet="errorTemplate; context: errorContext"></ng-template>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   styles: [
@@ -20,15 +28,15 @@ import { ValidationErrors } from '@angular/forms';
     `
   ]
 })
-export class ControlErrorComponent {
-  _text: string | null = null;
-  _tpl: TemplateRef<{ $implicit: ValidationErrors; text: string }> | undefined;
-  context: { $implicit: ValidationErrors; text: string };
-  hide = true;
+export class DefaultControlErrorComponent implements ControlErrorComponent {
+  errorText: string | null = null;
+  errorTemplate: ErrorComponentTemplate | undefined;
+  errorContext: { $implicit: ValidationErrors; text: string };
+  hideError = true;
 
-  createTemplate(tpl: TemplateRef<any>, error: ValidationErrors, text: string) {
-    this._tpl = tpl;
-    this.context = { $implicit: error, text };
+  createTemplate(tpl: ErrorComponentTemplate, error: ValidationErrors, text: string) {
+    this.errorTemplate = tpl;
+    this.errorContext = { $implicit: error, text };
     this.cdr.markForCheck();
   }
 
@@ -37,9 +45,9 @@ export class ControlErrorComponent {
   }
 
   set text(value: string | null) {
-    if (value !== this._text) {
-      this._text = value;
-      this.hide = !value;
+    if (value !== this.errorText) {
+      this.errorText = value;
+      this.hideError = !value;
       this.cdr.markForCheck();
     }
   }

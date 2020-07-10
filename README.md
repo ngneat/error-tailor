@@ -219,6 +219,96 @@ The library adds a `form-submitted` to the submitted form. You can use it to sty
   }
 }
 ```
+- `controlErrorComponent` - Optional. Allows changing the default component that is used to render 
+  the errors. This component should implement the `ControlErrorComponent` interface. If you only need to
+  replace the error component's template, you may derive it from the default component, 
+  `DefaultControlErrorComponent`, and provide the requisite HTML template.
+
+  A common example is when using Ionic forms where each form field is wrapped in an `ion-item` and errors
+  are best displayed as a sibling `ion-item` of the field. Example below shows how this can be done using 
+  a custom control error component.
+
+  For example:
+  ```ts
+  // Custom error component that will replace the standard DefaultControlErrorComponent.
+  @Component({
+    template: `
+    <ion-item lines="none" class="ion-text-wrap" [class.hide-control]="hideError">
+      <ion-label color="danger" class="ion-no-margin ion-text-wrap" stacked>
+        {{ errorText }}
+      </ion-label>
+    </ion-item>
+    `
+  })
+  export class IonicControlErrorComponent extends DefaultControlErrorComponent {
+  }
+
+  @NgModule({
+    declarations: [AppComponent, IonicControlErrorComponent],
+    imports: [
+      ReactiveFormsModule,
+      ErrorTailorModule.forRoot({
+        errors: {
+          useValue: {
+            required: 'This field is required'
+          }
+        },
+        controlErrorComponent: IonicControlErrorComponent
+      })
+    ],
+    bootstrap: [AppComponent]
+  })
+  export class AppModule {}
+  ```
+- `controlErrorComponentAnchorFn` - Optional. A hook function that allows the error component's 
+  HTML element to be repositioned in the DOM. By default error components are inserted at the
+  bottom of the field with error. If your UI layout dictates a different positioning 
+  scheme, you may use this hook.
+
+  Since this error element can be placed anywhere in the DOM, it also has to be
+  removed when the error component is destroyed. To provide for this, this
+  function should return a callback that will then be invoked when the error component
+  is destroyed. You may use this to remove the error HTML element that you inserted
+  into the DOM yourself.
+
+  Example below shows how the Ionic specific error component is repositioned in the DOM
+  to suit Ionic's form layout. `hostElem` is the HTML element for the form control and
+  `errorElem` is the HTML element for the error component. 
+  ```ts
+  anchorIonicErrorComponent(hostElem: Element, errorElem: Element) {
+    hostElement.parentElement.insertAdjacentElement('afterend', errorElement);
+    return () => {
+      let errorNode = hostElement.parentElement.querySelector('custom-control-error');
+      if (errorNode) {
+        errorNode.remove();
+      }
+    };
+  }
+
+  @NgModule({
+    declarations: [AppComponent, IonicControlErrorComponent],
+    imports: [
+      ReactiveFormsModule,
+      ErrorTailorModule.forRoot({
+        errors: {
+          useValue: {
+            required: 'This field is required'
+          }
+        },
+        controlErrorComponent: IonicControlErrorComponent,
+        controlErrorComponentAnchorFn: anchorIonicErrorComponent
+      })
+    ],
+    bootstrap: [AppComponent]
+  })
+  export class AppModule {}
+  ```
+
+- `controlErrorsOnBlur` - To modify the error display behavior and show the errors on submission alone, set the following input:
+
+```html
+<input [controlErrorsOnBlur]="false" formControlName="name" />
+```
 
 ## Recipes
 
@@ -274,14 +364,14 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     <td align="center"><a href="https://github.com/tonivj5"><img src="https://avatars2.githubusercontent.com/u/7110786?v=4" width="100px;" alt=""/><br /><sub><b>Toni Villena</b></sub></a><br /><a href="https://github.com/@ngneat/error-tailor/commits?author=tonivj5" title="Code">💻</a> <a href="https://github.com/@ngneat/error-tailor/commits?author=tonivj5" title="Tests">⚠️</a></td>
     <td align="center"><a href="https://github.com/theblushingcrow"><img src="https://avatars3.githubusercontent.com/u/638818?v=4" width="100px;" alt=""/><br /><sub><b>Inbal Sinai</b></sub></a><br /><a href="https://github.com/@ngneat/error-tailor/commits?author=theblushingcrow" title="Documentation">📖</a></td>
     <td align="center"><a href="https://twitter.com/dmorosinotto"><img src="https://avatars2.githubusercontent.com/u/3982050?v=4" width="100px;" alt=""/><br /><sub><b>Daniele Morosinotto</b></sub></a><br /><a href="https://github.com/@ngneat/error-tailor/commits?author=dmorosinotto" title="Code">💻</a> <a href="https://github.com/@ngneat/error-tailor/commits?author=dmorosinotto" title="Documentation">📖</a> <a href="#example-dmorosinotto" title="Examples">💡</a></td>
-    <td align="center"><a href="https://github.com/rhutchison"><img src="https://avatars3.githubusercontent.com/u/1460261?v=4" width="100px;" alt=""/><br /><sub><b>Ryan Hutchison</b></sub></a><br /><a href="https://github.com/@ngneat/error-tailor/issues?q=author%3Arhutchison" title="Bug reports">🐛</a> <a href="https://github.com/@ngneat/error-tailor/commits?author=rhutchison" title="Code">💻</a> <a href="https://github.com/@ngneat/error-tailor/commits?author=rhutchison" title="Tests">⚠️</a></td>
+    <td align="center"><a href="https://github.com/rhutchison"><img src="https://avatars3.githubusercontent.com/u/1460261?v=4" width="100px;" alt=""/><br /><sub><b>Ryan Hutchison</b></sub></a><br /><a href="https://github.com/@ngneat/error-tailor/issues?q=author%3Arhutchison" title="Bug reports">🐛</a> <a href="https://github.com/@ngneat/error-tailor/commits?author=rhutchison" title="Documentation">📖</a> <a href="https://github.com/@ngneat/error-tailor/commits?author=rhutchison" title="Code">💻</a> <a href="https://github.com/@ngneat/error-tailor/commits?author=rhutchison" title="Tests">⚠️</a></td>
     <td align="center"><a href="http://www.mlc.cz"><img src="https://avatars3.githubusercontent.com/u/5693835?v=4" width="100px;" alt=""/><br /><sub><b>Miloš Lapiš</b></sub></a><br /><a href="https://github.com/@ngneat/error-tailor/commits?author=mlc-mlapis" title="Code">💻</a></td>
+    <td align="center"><a href="http://www.smallpearl.com"><img src="https://avatars3.githubusercontent.com/u/6202401?v=4" width="100px;" alt=""/><br /><sub><b>Hari Mahadevan</b></sub></a><br /><a href="https://github.com/@ngneat/error-tailor/commits?author=harikvpy" title="Code">💻</a></td>
   </tr>
 </table>
 
 <!-- markdownlint-enable -->
 <!-- prettier-ignore-end -->
-
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
