@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.3.0](https://github.com/ngneat/error-tailor/compare/v1.2.0...v1.3.0) (2020-07-10)
+
+
+### Features
+
+* **config:** Support for custom error component & positioning ([#15](https://github.com/ngneat/error-tailor/issues/15)) ([c9d7776](https://github.com/ngneat/error-tailor/commit/c9d7776fc1c7c42e943deff08d70445453a174ad))
+
 ## [1.2.0](https://github.com/ngneat/error-tailor/compare/v1.1.0...v1.2.0) (2020-07-06)
 
 
