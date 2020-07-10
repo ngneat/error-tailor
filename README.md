@@ -210,7 +210,6 @@ The library adds a `form-submitted` to the submitted form. You can use it to sty
 
 ## Config
 
-### Global Config
 - `blurPredicate` - Elements that should listen the `focusout` event. The default predicate is:
 
 ```ts
@@ -305,7 +304,6 @@ The library adds a `form-submitted` to the submitted form. You can use it to sty
   export class AppModule {}
   ```
 
-### Per Control Config
 - `controlErrorsOnBlur` - To modify the error display behavior and show the errors on submission alone, set the following input:
 
 ```html
