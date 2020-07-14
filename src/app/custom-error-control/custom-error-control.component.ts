@@ -4,10 +4,10 @@ import { DefaultControlErrorComponent } from '@ngneat/error-tailor';
 @Component({
   selector: 'custom-control-error',
   template: `
-    <div class="control-error" [class.hide-control]="hide" *ngIf="!_tpl">
-      <h3>{{ _text }}</h3>
+    <div class="control-error" [class.hide-control]="hideError" *ngIf="!errorTemplate">
+      <h3>{{ errorText }}</h3>
     </div>
-    <ng-template *ngTemplateOutlet="_tpl; context: context"></ng-template>
+    <ng-template *ngTemplateOutlet="errorTemplate; context: errorContext"></ng-template>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   styles: [
