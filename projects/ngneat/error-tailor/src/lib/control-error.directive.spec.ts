@@ -1,4 +1,4 @@
-import { Component, Type } from '@angular/core';
+import { Component, Type, ViewChild, ViewChildren, QueryList } from '@angular/core';
 import {
   FormArray,
   FormBuilder,
@@ -10,7 +10,7 @@ import {
   ValidationErrors
 } from '@angular/forms';
 import { byPlaceholder, byText, createComponentFactory, Spectator } from '@ngneat/spectator';
-import { ErrorTailorModule } from '@ngneat/error-tailor';
+import { ControlErrorsDirective, ErrorTailorModule } from '@ngneat/error-tailor';
 import { tick, fakeAsync } from '@angular/core/testing';
 import { DefaultControlErrorComponent } from './control-error.component';
 import { Observable, asyncScheduler, scheduled } from 'rxjs';
@@ -53,6 +53,8 @@ describe('ControlErrorDirective', () => {
 
           <input formControlName="ignored" placeholder="Ignored" controlErrorsIgnore />
 
+          <input formControlName="explicit" placeholder="Explicit" #explicitErrorTailor="errorTailor" />
+
           <div formArrayName="names">
             <div *ngFor="let name of form.controls.names.controls; index as i">
               <input [formControl]="name" placeholder="Name {{ i }}" />
@@ -70,9 +72,12 @@ describe('ControlErrorDirective', () => {
         name: this.createName(),
         terms: [false, Validators.requiredTrue],
         ignored: ['', Validators.required],
+        explicit: [''],
         names: this.builder.array([this.createName(), this.createName()], this.validator),
         username: ['', null, this.usernameValidator.bind(this)]
       });
+
+      @ViewChild('explicitErrorTailor', { static: true }) explicitErrorTailor: ControlErrorsDirective;
 
       constructor(private builder: FormBuilder) {}
 
@@ -142,6 +147,18 @@ describe('ControlErrorDirective', () => {
       typeInElementAndFocusOut(spectator, '', ignoredInput);
 
       expect(spectator.query(byText('required error'))).toBeFalsy();
+    });
+
+    it('should show errors on programmatic access', () => {
+      const explicitInput = spectator.query<HTMLInputElement>(byPlaceholder('Explicit'));
+      typeInElementAndFocusOut(spectator, '', explicitInput);
+      expect(spectator.query(byText('required error'))).toBeFalsy();
+
+      spectator.component.form.get('explicit').setValidators(Validators.required);
+      typeInElementAndFocusOut(spectator, '', explicitInput);
+      expect(spectator.query(byText('required error'))).toBeTruthy();
+
+      spectator.component.explicitErrorTailor.hideError();
     });
 
     it('should show errors on async statusChanges', fakeAsync(() => {

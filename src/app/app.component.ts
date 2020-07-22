@@ -41,7 +41,12 @@ export class AppComponent {
       ),
       gdpr: [false, Validators.requiredTrue]
     });
-    this.form.get('gdpr').setErrors({ required: true });
+    /**
+     * It's not necessary to set errors directly. It's done via the validator itself.
+     * If it would be necessary to use, then: this.form.get('gdpr').setErrors({ required: true });
+     * The already existed validation error on controls is the basic condition
+     * for sensible use of methods showError/hideError.
+     */
   }
 
   showError(): void {
