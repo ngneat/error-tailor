@@ -197,6 +197,28 @@ One typical case when to use it is radio buttons in the same radio group where i
 <input [controlErrorsOnBlur]="false" formControlName="name" />
 ```
 
+## Methods
+
+- `showError()` - Allows programmatic access to show a control error component, even when no other invoking event had been happened (like a blur or a submit). There should be a validation error on such an element, of course.
+  
+The key is the published `exportAs` reference of `errorTailor` to a directive instance of `ControlErrorsDirective` and calling its public method `showError()`.
+
+```html
+<input type="checkbox" formControlName="gdpr" #gdprErrorTailor="errorTailor" />
+```
+
+For getting of the property with the reference, it's possible to use standard syntax of `@ViewChild('gdprErrorTailor', { static: true }) gdprErrorTailor: ControlErrorsDirective;` and then call the method on it `this.gdprErrorTailor.showError();`.
+
+- `hideError()` - Allows programmatic access to hide a control error component, even there is a validation error on such an element and a usual invoking event had been happened (like a blur or a submit).
+
+Similarly, the published `exportAs` reference of `errorTailor` to a directive instance of `ControlErrorsDirective` allows calling its public method `hideError()`.
+
+```html
+<input type="checkbox" formControlName="gdpr" #gdprErrorTailor="errorTailor" />
+```
+
+Again, use standard syntax of `@ViewChild('gdprErrorTailor', { static: true }) gdprErrorTailor: ControlErrorsDirective;` and then call the method on it `this.gdprErrorTailor.hideError();`.
+
 ## CSS Styling
 
 The library adds a `form-submitted` to the submitted form. You can use it to style your inputs:
