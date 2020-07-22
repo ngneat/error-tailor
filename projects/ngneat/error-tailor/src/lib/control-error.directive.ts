@@ -24,7 +24,8 @@ import { ErrorsMap } from './types';
 
 @Directive({
   selector:
-    '[formControlName]:not([controlErrorsIgnore]), [formControl]:not([controlErrorsIgnore]), [formGroup]:not([controlErrorsIgnore]), [formGroupName]:not([controlErrorsIgnore]), [formArrayName]:not([controlErrorsIgnore]), [ngModel]:not([controlErrorsIgnore])'
+    '[formControlName]:not([controlErrorsIgnore]), [formControl]:not([controlErrorsIgnore]), [formGroup]:not([controlErrorsIgnore]), [formGroupName]:not([controlErrorsIgnore]), [formArrayName]:not([controlErrorsIgnore]), [ngModel]:not([controlErrorsIgnore])',
+  exportAs: 'controlErrorsInstance'
 })
 export class ControlErrorsDirective implements OnInit, OnDestroy {
   @Input('controlErrors') customErrors: ErrorsMap = {};
@@ -39,6 +40,7 @@ export class ControlErrorsDirective implements OnInit, OnDestroy {
   private submit$: Observable<Event>;
   private control: AbstractControl;
   private destroy = new Subject();
+  private showError$ = new Subject();
   private mergedConfig: ErrorTailorConfig = {};
   private customAnchorDestroyFn: () => void;
 
@@ -83,7 +85,7 @@ export class ControlErrorsDirective implements OnInit, OnDestroy {
     // submitFirstThenUponChanges
     const changesOnSubmit$ = this.submit$.pipe(switchMap(() => controlChanges$.pipe(startWith(true))));
 
-    merge(changesOnAsync$, changesOnBlur$, changesOnSubmit$)
+    merge(changesOnAsync$, changesOnBlur$, changesOnSubmit$, this.showError$)
       .pipe(takeUntil(this.destroy))
       .subscribe(() => this.valueChanges());
   }
@@ -113,6 +115,20 @@ export class ControlErrorsDirective implements OnInit, OnDestroy {
         (this.ref.hostView as EmbeddedViewRef<any>).rootNodes[0] as HTMLElement
       );
     }
+  }
+
+  /**
+   * Explicit showing of a control error via some custom application code.
+   */
+  showError(): void {
+    this.showError$.next();
+  }
+
+  /**
+   * Explicit hiding of a control error via some custom application code.
+   */
+  hideError(): void {
+    this.setError(null);
   }
 
   ngOnDestroy() {

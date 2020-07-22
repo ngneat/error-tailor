@@ -1,5 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+
+import { ControlErrorsDirective } from '@ngneat/error-tailor';
 
 @Component({
   selector: 'app-root',
@@ -20,6 +22,8 @@ export class AppComponent {
     maxlength: 'Use country abbreviation! (max 3 chars)'
   };
 
+  @ViewChild('gdprControlErrorsInstance', { static: true }) gdprControlErrorsInstance: ControlErrorsDirective;
+
   constructor(private builder: FormBuilder) {}
 
   ngOnInit() {
@@ -34,8 +38,18 @@ export class AppComponent {
           country: ['', [Validators.minLength(2), Validators.maxLength(3)]]
         },
         { validator: addressValidator }
-      )
+      ),
+      gdpr: [false, Validators.requiredTrue]
     });
+    this.form.get('gdpr').setErrors({ required: true });
+  }
+
+  showError(): void {
+    this.gdprControlErrorsInstance.showError();
+  }
+
+  hideError(): void {
+    this.gdprControlErrorsInstance.hideError();
   }
 }
 
