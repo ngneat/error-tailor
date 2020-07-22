@@ -22,7 +22,7 @@ export class AppComponent {
     maxlength: 'Use country abbreviation! (max 3 chars)'
   };
 
-  @ViewChild('gdprControlErrorsInstance', { static: true }) gdprControlErrorsInstance: ControlErrorsDirective;
+  @ViewChild('gdprErrorTailor', { static: true }) gdprErrorTailor: ControlErrorsDirective;
 
   constructor(private builder: FormBuilder) {}
 
@@ -45,11 +45,11 @@ export class AppComponent {
   }
 
   showError(): void {
-    this.gdprControlErrorsInstance.showError();
+    this.gdprErrorTailor.showError();
   }
 
   hideError(): void {
-    this.gdprControlErrorsInstance.hideError();
+    this.gdprErrorTailor.hideError();
   }
 }
 

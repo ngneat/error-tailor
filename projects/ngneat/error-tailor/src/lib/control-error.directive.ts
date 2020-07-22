@@ -25,7 +25,7 @@ import { ErrorsMap } from './types';
 @Directive({
   selector:
     '[formControlName]:not([controlErrorsIgnore]), [formControl]:not([controlErrorsIgnore]), [formGroup]:not([controlErrorsIgnore]), [formGroupName]:not([controlErrorsIgnore]), [formArrayName]:not([controlErrorsIgnore]), [ngModel]:not([controlErrorsIgnore])',
-  exportAs: 'controlErrorsInstance'
+  exportAs: 'errorTailor'
 })
 export class ControlErrorsDirective implements OnInit, OnDestroy {
   @Input('controlErrors') customErrors: ErrorsMap = {};
