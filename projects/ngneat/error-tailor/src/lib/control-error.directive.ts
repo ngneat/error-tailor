@@ -16,9 +16,9 @@ import {
 import { AbstractControl, ControlContainer, NgControl, ValidationErrors } from '@angular/forms';
 import { DefaultControlErrorComponent, ControlErrorComponent } from './control-error.component';
 import { ControlErrorAnchorDirective } from './control-error-anchor.directive';
-import { EMPTY, fromEvent, merge, Observable, Subject } from 'rxjs';
+import { EMPTY, fromEvent, merge, NEVER, Observable, Subject } from 'rxjs';
 import { ErrorTailorConfig, ErrorTailorConfigProvider, FORM_ERRORS } from './providers';
-import { distinctUntilChanged, startWith, switchMap, takeUntil } from 'rxjs/operators';
+import { distinctUntilChanged, mapTo, startWith, switchMap, takeUntil, tap } from 'rxjs/operators';
 import { FormSubmitDirective } from './form-submit.directive';
 import { ErrorsMap } from './types';
 
@@ -37,6 +37,7 @@ export class ControlErrorsDirective implements OnInit, OnDestroy {
   private ref: ComponentRef<ControlErrorComponent>;
   private anchor: ViewContainerRef;
   private submit$: Observable<Event>;
+  private reset$: Observable<Event>;
   private control: AbstractControl;
   private destroy = new Subject();
   private mergedConfig: ErrorTailorConfig = {};
@@ -54,6 +55,7 @@ export class ControlErrorsDirective implements OnInit, OnDestroy {
     @Optional() @Self() private controlContainer: ControlContainer
   ) {
     this.submit$ = this.form ? this.form.submit$ : EMPTY;
+    this.reset$ = this.form ? this.form.reset$ : EMPTY;
     this.mergedConfig = this.buildConfig();
   }
 
@@ -80,8 +82,18 @@ export class ControlErrorsDirective implements OnInit, OnDestroy {
       changesOnBlur$ = blur$.pipe(switchMap(() => valueChanges$.pipe(startWith(true))));
     }
 
-    // submitFirstThenUponChanges
-    const changesOnSubmit$ = this.submit$.pipe(switchMap(() => controlChanges$.pipe(startWith(true))));
+    const submitted$ = merge(this.submit$.pipe(mapTo(true)), this.reset$.pipe(mapTo(false)));
+
+    // when submitted, submitFirstThenUponChanges
+    const changesOnSubmit$ = submitted$.pipe(
+      switchMap(submitted => (submitted ? controlChanges$.pipe(startWith(true)) : NEVER))
+    );
+
+    // on reset, clear ViewContainerRef and ComponentRef
+    this.reset$.pipe(takeUntil(this.destroy)).subscribe(() => {
+      this.anchor.clear();
+      this.ref = null;
+    });
 
     merge(changesOnAsync$, changesOnBlur$, changesOnSubmit$)
       .pipe(takeUntil(this.destroy))

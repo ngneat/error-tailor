@@ -15,6 +15,13 @@ export class FormSubmitDirective {
     shareReplay({ refCount: true, bufferSize: 1 })
   );
 
+  reset$: Observable<Event> = fromEvent(this.element, 'reset').pipe(
+    tap(() => {
+      this.element.classList.remove('form-submitted');
+    }),
+    shareReplay({ refCount: true, bufferSize: 1 })
+  );
+
   constructor(private host: ElementRef<HTMLFormElement>) {}
 
   get element() {
