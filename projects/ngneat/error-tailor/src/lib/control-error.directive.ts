@@ -19,7 +19,7 @@ import { ControlErrorAnchorDirective } from './control-error-anchor.directive';
 import { EMPTY, fromEvent, merge, NEVER, Observable, Subject } from 'rxjs';
 import { ErrorTailorConfig, ErrorTailorConfigProvider, FORM_ERRORS } from './providers';
 import { distinctUntilChanged, mapTo, startWith, switchMap, takeUntil, tap } from 'rxjs/operators';
-import { FormSubmitDirective } from './form-submit.directive';
+import { FormActionDirective } from './form-action.directive';
 import { ErrorsMap } from './types';
 
 @Directive({
@@ -50,7 +50,7 @@ export class ControlErrorsDirective implements OnInit, OnDestroy {
     @Inject(ErrorTailorConfigProvider) private config: ErrorTailorConfig,
     @Inject(FORM_ERRORS) private globalErrors,
     @Optional() private controlErrorAnchorParent: ControlErrorAnchorDirective,
-    @Optional() private form: FormSubmitDirective,
+    @Optional() private form: FormActionDirective,
     @Optional() @Self() private ngControl: NgControl,
     @Optional() @Self() private controlContainer: ControlContainer
   ) {

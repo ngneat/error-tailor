@@ -1,10 +1,10 @@
 import { SpectatorDirective, createDirectiveFactory } from '@ngneat/spectator';
 
-import { FormSubmitDirective } from './form-submit.directive';
+import { FormActionDirective } from './form-action.directive';
 
-describe('FormSubmitDirective', () => {
-  let spectator: SpectatorDirective<FormSubmitDirective>;
-  const createDirective = createDirectiveFactory(FormSubmitDirective);
+describe('FormActionDirective', () => {
+  let spectator: SpectatorDirective<FormActionDirective>;
+  const createDirective = createDirectiveFactory(FormActionDirective);
 
   beforeEach(() => {
     spectator = createDirective(`

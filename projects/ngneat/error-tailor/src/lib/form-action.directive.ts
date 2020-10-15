@@ -5,7 +5,7 @@ import { shareReplay, tap } from 'rxjs/operators';
 @Directive({
   selector: 'form[errorTailor]'
 })
-export class FormSubmitDirective {
+export class FormActionDirective {
   submit$: Observable<Event> = fromEvent(this.element, 'submit').pipe(
     tap(() => {
       if (this.element.classList.contains('form-submitted') === false) {
