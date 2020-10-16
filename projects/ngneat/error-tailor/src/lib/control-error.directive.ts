@@ -82,11 +82,11 @@ export class ControlErrorsDirective implements OnInit, OnDestroy {
       changesOnBlur$ = blur$.pipe(switchMap(() => valueChanges$.pipe(startWith(true))));
     }
 
-    const submitted$ = merge(this.submit$.pipe(mapTo(true)), this.reset$.pipe(mapTo(false)));
+    const submit$ = merge(this.submit$.pipe(mapTo(true)), this.reset$.pipe(mapTo(false)));
 
     // when submitted, submitFirstThenUponChanges
-    const changesOnSubmit$ = submitted$.pipe(
-      switchMap(submitted => (submitted ? controlChanges$.pipe(startWith(true)) : NEVER))
+    const changesOnSubmit$ = submit$.pipe(
+      switchMap(submit => (submit ? controlChanges$.pipe(startWith(true)) : NEVER))
     );
 
     // on reset, clear ViewContainerRef and ComponentRef
