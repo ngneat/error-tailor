@@ -89,11 +89,8 @@ export class ControlErrorsDirective implements OnInit, OnDestroy {
       switchMap(submit => (submit ? controlChanges$.pipe(startWith(true)) : NEVER))
     );
 
-    // on reset, clear ViewContainerRef and ComponentRef
-    this.reset$.pipe(takeUntil(this.destroy)).subscribe(() => {
-      this.anchor.clear();
-      this.ref = null;
-    });
+    // on reset, clear ComponentRef and customAnchorDestroyFn
+    this.reset$.pipe(takeUntil(this.destroy)).subscribe(() => this.clearRefs());
 
     merge(changesOnAsync$, changesOnBlur$, changesOnSubmit$)
       .pipe(takeUntil(this.destroy))
@@ -129,11 +126,17 @@ export class ControlErrorsDirective implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.destroy.next();
+    this.clearRefs();
+  }
+
+  private clearRefs(): void {
     if (this.customAnchorDestroyFn) {
       this.customAnchorDestroyFn();
       this.customAnchorDestroyFn = null;
     }
-    if (this.ref) this.ref.destroy();
+    if (this.ref) {
+      this.ref.destroy();
+    }
     this.ref = null;
   }
 
