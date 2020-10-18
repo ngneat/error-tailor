@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.1](https://github.com/ngneat/error-tailor/compare/v1.3.0...v1.3.1) (2020-10-18)
+
+
+### Bug Fixes
+
+* update test app custom error component's property names ([#20](https://github.com/ngneat/error-tailor/issues/20)) ([4bb5d68](https://github.com/ngneat/error-tailor/commit/4bb5d68b32b2f07e5e1752705c4ecb1e839fd55b))
+
 ## [1.3.0](https://github.com/ngneat/error-tailor/compare/v1.2.0...v1.3.0) (2020-07-10)
 
 
