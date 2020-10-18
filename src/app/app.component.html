@@ -74,3 +74,20 @@
   </div>
   <button class="btn btn-success">Submit</button>
 </form>
+
+<h1>Show Errors On Submit (with Reset)</h1>
+
+<form errorTailor>
+  <div class="form-group">
+    <input
+      class="form-control"
+      ngModel
+      required
+      name="name"
+      [controlErrorsOnBlur]="false"
+      [controlErrorsOnAsync]="false"
+    />
+  </div>
+  <button class="btn btn-success" type="submit">Submit</button>
+  <button class="btn btn-default" type="reset">Reset</button>
+</form>

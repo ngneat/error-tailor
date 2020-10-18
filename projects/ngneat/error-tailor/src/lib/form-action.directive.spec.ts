@@ -1,10 +1,10 @@
 import { SpectatorDirective, createDirectiveFactory } from '@ngneat/spectator';
 
-import { FormSubmitDirective } from './form-submit.directive';
+import { FormActionDirective } from './form-action.directive';
 
-describe('FormSubmitDirective', () => {
-  let spectator: SpectatorDirective<FormSubmitDirective>;
-  const createDirective = createDirectiveFactory(FormSubmitDirective);
+describe('FormActionDirective', () => {
+  let spectator: SpectatorDirective<FormActionDirective>;
+  const createDirective = createDirectiveFactory(FormActionDirective);
 
   beforeEach(() => {
     spectator = createDirective(`
@@ -34,5 +34,24 @@ describe('FormSubmitDirective', () => {
 
     expect(submitted).toBeTrue();
     expect(form.classList.contains('form-submitted')).toBeTrue();
+  });
+
+  it('should emit reset when form is reset and remove class `form-submitted` after submit', () => {
+    let reset = false;
+
+    spectator.directive.reset$.subscribe({
+      next: () => (reset = true)
+    });
+
+    const form = spectator.query<HTMLButtonElement>('form');
+
+    spectator.dispatchFakeEvent(form, 'submit');
+
+    spectator.detectChanges();
+
+    spectator.dispatchFakeEvent(form, 'reset');
+
+    expect(reset).toBeTrue();
+    expect(form.classList.contains('form-submitted')).toBeFalse();
   });
 });
