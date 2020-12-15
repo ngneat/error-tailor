@@ -275,7 +275,7 @@ The library adds a `form-submitted` to the submitted form. You can use it to sty
   to suit Ionic's form layout. `hostElem` is the HTML element for the form control and
   `errorElem` is the HTML element for the error component. 
   ```ts
-  anchorIonicErrorComponent(hostElem: Element, errorElem: Element) {
+  anchorIonicErrorComponent(hostElement: Element, errorElement: Element) {
     hostElement.parentElement.insertAdjacentElement('afterend', errorElement);
     return () => {
       let errorNode = hostElement.parentElement.querySelector('custom-control-error');
