@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-root',
@@ -20,6 +20,33 @@ export class AppComponent {
     maxlength: 'Use country abbreviation! (max 3 chars)'
   };
 
+  formGroup = this.builder.group({
+    name: [null, Validators.required],
+    emailAddresses: this.builder.array([this.initEmailAddressFields()])
+  });
+
+  get emailAddresses() {
+    return this.formGroup.get('emailAddresses') as FormArray;
+  }
+
+  initEmailAddressFields(): FormGroup {
+    return this.builder.group({
+      label: [null, Validators.required],
+      emailAddress: [null, [Validators.required, Validators.email]]
+    });
+  }
+
+  addNewInputField(): void {
+    const control = this.formGroup.controls.emailAddresses as FormArray;
+    const group = this.initEmailAddressFields();
+    control.push(group);
+  }
+
+  removeInputField(i: number): void {
+    const control = this.formGroup.controls.emailAddresses as FormArray;
+    control.removeAt(i);
+  }
+
   constructor(private builder: FormBuilder) {}
 
   ngOnInit() {
@@ -37,6 +64,8 @@ export class AppComponent {
       )
     });
   }
+
+  submit() {}
 }
 
 function addressValidator(addr: FormGroup) {
