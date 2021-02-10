@@ -63,7 +63,6 @@ export class ControlErrorsDirective implements OnInit, OnDestroy {
     this.anchor = this.resolveAnchor();
     this.control = (this.controlContainer || this.ngControl).control;
     const hasAsyncValidator = !!this.control.asyncValidator;
-    const isInput = this.mergedConfig.blurPredicate(this.host.nativeElement);
 
     const statusChanges$ = this.control.statusChanges.pipe(distinctUntilChanged());
     const valueChanges$ = this.control.valueChanges;
@@ -76,7 +75,7 @@ export class ControlErrorsDirective implements OnInit, OnDestroy {
       changesOnAsync$ = statusChanges$.pipe(startWith(true));
     }
 
-    if (this.controlErrorsOnBlur && isInput) {
+    if (this.controlErrorsOnBlur && this.isInput) {
       const blur$ = fromEvent(this.host.nativeElement, 'focusout');
       // blurFirstThenUponChange
       changesOnBlur$ = blur$.pipe(switchMap(() => valueChanges$.pipe(startWith(true))));
@@ -129,6 +128,10 @@ export class ControlErrorsDirective implements OnInit, OnDestroy {
     this.clearRefs();
   }
 
+  private get isInput() {
+    return this.mergedConfig.blurPredicate(this.host.nativeElement);
+  }
+
   private clearRefs(): void {
     if (this.customAnchorDestroyFn) {
       this.customAnchorDestroyFn();
@@ -150,6 +153,9 @@ export class ControlErrorsDirective implements OnInit, OnDestroy {
       }
 
       const text = typeof getError === 'function' ? getError(controlErrors[firstKey]) : getError;
+      if (this.isInput) {
+        this.host.nativeElement.parentElement.classList.add('error-tailor-has-error');
+      }
       this.setError(text, controlErrors);
     } else if (this.ref) {
       this.setError(null);
