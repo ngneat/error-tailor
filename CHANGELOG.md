@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.4.0](https://github.com/ngneat/error-tailor/compare/v1.3.1...v1.4.0) (2021-02-10)
+
+
+### Features
+
+* 🎸 add error class to input's parent ([84949c3](https://github.com/ngneat/error-tailor/commit/84949c3d15ee2150e1c119ae137bb18c2fa248a1))
+
 ### [1.3.1](https://github.com/ngneat/error-tailor/compare/v1.3.0...v1.3.1) (2020-10-18)
 
 
