@@ -9,8 +9,10 @@ body {
   color: #dc3545;
 }
 
-.form-submitted input.ng-invalid,
-.form-submitted select.ng-invalid {
-  border-color: #dc3545;
-  padding-right: calc(1.5em + 0.75rem);
+.on-submit.form-submitted,
+form:not(.on-submit) {
+  .ng-touched.ng-invalid {
+    border-color: #dc3545;
+    padding-right: calc(1.5em + 0.75rem);
+  }
 }
