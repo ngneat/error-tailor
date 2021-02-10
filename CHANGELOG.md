@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.4.1](https://github.com/ngneat/error-tailor/compare/v1.4.0...v1.4.1) (2021-02-10)
+
+
+### Bug Fixes
+
+* 🐛 remove class from parent when no error ([9cb99ff](https://github.com/ngneat/error-tailor/commit/9cb99ff44cb7755d611e7d0aecf1942b1d5db2e4))
+
 ## [1.4.0](https://github.com/ngneat/error-tailor/compare/v1.3.1...v1.4.0) (2021-02-10)
 
 
