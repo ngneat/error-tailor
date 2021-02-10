@@ -158,6 +158,9 @@ export class ControlErrorsDirective implements OnInit, OnDestroy {
       }
       this.setError(text, controlErrors);
     } else if (this.ref) {
+      if (this.isInput) {
+        this.host.nativeElement.parentElement.classList.remove('error-tailor-has-error');
+      }
       this.setError(null);
     }
   }
