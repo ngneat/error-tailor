@@ -115,7 +115,7 @@ export class ControlErrorsDirective implements OnInit, OnDestroy {
       instance.customClass = this.controlErrorsClass;
     }
 
-    if (this.mergedConfig.controlErrorComponentAnchorFn) {
+    if (!this.controlErrorAnchor && this.mergedConfig.controlErrorComponentAnchorFn) {
       this.customAnchorDestroyFn = this.mergedConfig.controlErrorComponentAnchorFn(
         this.host.nativeElement as HTMLElement,
         (this.ref.hostView as EmbeddedViewRef<any>).rootNodes[0] as HTMLElement
