@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.4.2](https://github.com/ngneat/error-tailor/compare/v1.4.1...v1.4.2) (2021-02-18)
+
+
+### Bug Fixes
+
+* 🐛 inline anchor should be chosen over global ([c06154d](https://github.com/ngneat/error-tailor/commit/c06154dc458d16fd9ad41ed24fc4a051f3658b61))
+
 ### [1.4.1](https://github.com/ngneat/error-tailor/compare/v1.4.0...v1.4.1) (2021-02-10)
 
 
