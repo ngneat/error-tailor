@@ -1,4 +1,3 @@
-<!--<h1>Reactive</h1>-->
 <form [formGroup]="form" errorTailor>
   <div class="form-group">
     <input class="form-control" formControlName="name" placeholder="Name" />
@@ -95,3 +94,38 @@
   </div>
   <button class="btn btn-success">Submit</button>
 </form>
+
+<h1>Show Errors On Submit (with Reset)</h1>
+
+<form class="on-submit" errorTailor>
+  <div class="form-group on-submit">
+    <input
+      class="form-control"
+      ngModel
+      required
+      name="name"
+      [controlErrorsOnBlur]="false"
+      [controlErrorsOnAsync]="false"
+    />
+  </div>
+  <button class="btn btn-success" type="submit">Submit</button>
+  <button class="btn btn-default" type="reset">Reset</button>
+</form>
+
+<!-- <h1>Form Array</h1>
+
+<form [formGroup]="formGroup" errorTailor>
+  <ng-container formArrayName="emailAddresses">
+    <section [formGroupName]="i"
+              *ngFor="let email of emailAddresses.controls; let i = index;">
+              <input formControlName="emailAddress" placeholder="emailAddress">
+              <input formControlName="label" placeholder="label">
+  </section>
+  </ng-container>
+
+  <button (click)="addNewInputField()" type="button">Add</button>
+  <button (click)="submit()">Submit</button>
+
+</form> -->
+
+<!-- {{ formGroup.value | json }} -->

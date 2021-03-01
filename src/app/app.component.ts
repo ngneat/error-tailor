@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { ControlErrorsDirective } from '@ngneat/error-tailor';
 
@@ -23,6 +23,33 @@ export class AppComponent {
   };
 
   @ViewChild('gdprErrorTailor', { static: true }) gdprErrorTailor: ControlErrorsDirective;
+
+  formGroup = this.builder.group({
+    name: [null, Validators.required],
+    emailAddresses: this.builder.array([this.initEmailAddressFields()])
+  });
+
+  get emailAddresses() {
+    return this.formGroup.get('emailAddresses') as FormArray;
+  }
+
+  initEmailAddressFields(): FormGroup {
+    return this.builder.group({
+      label: [null, Validators.required],
+      emailAddress: [null, [Validators.required, Validators.email]]
+    });
+  }
+
+  addNewInputField(): void {
+    const control = this.formGroup.controls.emailAddresses as FormArray;
+    const group = this.initEmailAddressFields();
+    control.push(group);
+  }
+
+  removeInputField(i: number): void {
+    const control = this.formGroup.controls.emailAddresses as FormArray;
+    control.removeAt(i);
+  }
 
   constructor(private builder: FormBuilder) {}
 
@@ -56,6 +83,8 @@ export class AppComponent {
   hideError(): void {
     this.gdprErrorTailor.hideError();
   }
+
+  submit() {}
 }
 
 function addressValidator(addr: FormGroup) {

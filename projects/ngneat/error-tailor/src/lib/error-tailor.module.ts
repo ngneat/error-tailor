@@ -3,17 +3,17 @@ import { ControlErrorsDirective } from './control-error.directive';
 import { ControlErrorAnchorDirective } from './control-error-anchor.directive';
 import { DefaultControlErrorComponent } from './control-error.component';
 import { CommonModule } from '@angular/common';
-import { FormSubmitDirective } from './form-submit.directive';
+import { FormActionDirective } from './form-action.directive';
 import { ErrorTailorConfig, ErrorTailorConfigProvider, FORM_ERRORS } from './providers';
 
-const api = [DefaultControlErrorComponent, ControlErrorAnchorDirective, ControlErrorsDirective, FormSubmitDirective];
+const api = [DefaultControlErrorComponent, ControlErrorAnchorDirective, ControlErrorsDirective, FormActionDirective];
 
 @NgModule({
   declarations: [
     ControlErrorsDirective,
     ControlErrorAnchorDirective,
     DefaultControlErrorComponent,
-    FormSubmitDirective
+    FormActionDirective
   ],
   imports: [CommonModule],
   exports: [api],

@@ -2,6 +2,34 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.4.2](https://github.com/ngneat/error-tailor/compare/v1.4.1...v1.4.2) (2021-02-18)
+
+
+### Bug Fixes
+
+* 🐛 inline anchor should be chosen over global ([c06154d](https://github.com/ngneat/error-tailor/commit/c06154dc458d16fd9ad41ed24fc4a051f3658b61))
+
+### [1.4.1](https://github.com/ngneat/error-tailor/compare/v1.4.0...v1.4.1) (2021-02-10)
+
+
+### Bug Fixes
+
+* 🐛 remove class from parent when no error ([9cb99ff](https://github.com/ngneat/error-tailor/commit/9cb99ff44cb7755d611e7d0aecf1942b1d5db2e4))
+
+## [1.4.0](https://github.com/ngneat/error-tailor/compare/v1.3.1...v1.4.0) (2021-02-10)
+
+
+### Features
+
+* 🎸 add error class to input's parent ([84949c3](https://github.com/ngneat/error-tailor/commit/84949c3d15ee2150e1c119ae137bb18c2fa248a1))
+
+### [1.3.1](https://github.com/ngneat/error-tailor/compare/v1.3.0...v1.3.1) (2020-10-18)
+
+
+### Bug Fixes
+
+* update test app custom error component's property names ([#20](https://github.com/ngneat/error-tailor/issues/20)) ([4bb5d68](https://github.com/ngneat/error-tailor/commit/4bb5d68b32b2f07e5e1752705c4ecb1e839fd55b))
+
 ## [1.3.0](https://github.com/ngneat/error-tailor/compare/v1.2.0...v1.3.0) (2020-07-10)
 
 

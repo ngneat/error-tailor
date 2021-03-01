@@ -16,10 +16,10 @@ import {
 import { AbstractControl, ControlContainer, NgControl, ValidationErrors } from '@angular/forms';
 import { DefaultControlErrorComponent, ControlErrorComponent } from './control-error.component';
 import { ControlErrorAnchorDirective } from './control-error-anchor.directive';
-import { EMPTY, fromEvent, merge, Observable, Subject } from 'rxjs';
+import { EMPTY, fromEvent, merge, NEVER, Observable, Subject } from 'rxjs';
 import { ErrorTailorConfig, ErrorTailorConfigProvider, FORM_ERRORS } from './providers';
-import { distinctUntilChanged, startWith, switchMap, takeUntil } from 'rxjs/operators';
-import { FormSubmitDirective } from './form-submit.directive';
+import { distinctUntilChanged, mapTo, startWith, switchMap, takeUntil, tap } from 'rxjs/operators';
+import { FormActionDirective } from './form-action.directive';
 import { ErrorsMap } from './types';
 
 @Directive({
@@ -38,6 +38,7 @@ export class ControlErrorsDirective implements OnInit, OnDestroy {
   private ref: ComponentRef<ControlErrorComponent>;
   private anchor: ViewContainerRef;
   private submit$: Observable<Event>;
+  private reset$: Observable<Event>;
   private control: AbstractControl;
   private destroy = new Subject();
   private showError$ = new Subject();
@@ -51,11 +52,12 @@ export class ControlErrorsDirective implements OnInit, OnDestroy {
     @Inject(ErrorTailorConfigProvider) private config: ErrorTailorConfig,
     @Inject(FORM_ERRORS) private globalErrors,
     @Optional() private controlErrorAnchorParent: ControlErrorAnchorDirective,
-    @Optional() private form: FormSubmitDirective,
+    @Optional() private form: FormActionDirective,
     @Optional() @Self() private ngControl: NgControl,
     @Optional() @Self() private controlContainer: ControlContainer
   ) {
     this.submit$ = this.form ? this.form.submit$ : EMPTY;
+    this.reset$ = this.form ? this.form.reset$ : EMPTY;
     this.mergedConfig = this.buildConfig();
   }
 
@@ -63,7 +65,6 @@ export class ControlErrorsDirective implements OnInit, OnDestroy {
     this.anchor = this.resolveAnchor();
     this.control = (this.controlContainer || this.ngControl).control;
     const hasAsyncValidator = !!this.control.asyncValidator;
-    const isInput = this.mergedConfig.blurPredicate(this.host.nativeElement);
 
     const statusChanges$ = this.control.statusChanges.pipe(distinctUntilChanged());
     const valueChanges$ = this.control.valueChanges;
@@ -76,14 +77,21 @@ export class ControlErrorsDirective implements OnInit, OnDestroy {
       changesOnAsync$ = statusChanges$.pipe(startWith(true));
     }
 
-    if (this.controlErrorsOnBlur && isInput) {
+    if (this.controlErrorsOnBlur && this.isInput) {
       const blur$ = fromEvent(this.host.nativeElement, 'focusout');
       // blurFirstThenUponChange
       changesOnBlur$ = blur$.pipe(switchMap(() => valueChanges$.pipe(startWith(true))));
     }
 
-    // submitFirstThenUponChanges
-    const changesOnSubmit$ = this.submit$.pipe(switchMap(() => controlChanges$.pipe(startWith(true))));
+    const submit$ = merge(this.submit$.pipe(mapTo(true)), this.reset$.pipe(mapTo(false)));
+
+    // when submitted, submitFirstThenUponChanges
+    const changesOnSubmit$ = submit$.pipe(
+      switchMap(submit => (submit ? controlChanges$.pipe(startWith(true)) : NEVER))
+    );
+
+    // on reset, clear ComponentRef and customAnchorDestroyFn
+    this.reset$.pipe(takeUntil(this.destroy)).subscribe(() => this.clearRefs());
 
     merge(changesOnAsync$, changesOnBlur$, changesOnSubmit$, this.showError$)
       .pipe(takeUntil(this.destroy))
@@ -109,7 +117,7 @@ export class ControlErrorsDirective implements OnInit, OnDestroy {
       instance.customClass = this.controlErrorsClass;
     }
 
-    if (this.mergedConfig.controlErrorComponentAnchorFn) {
+    if (!this.controlErrorAnchor && this.mergedConfig.controlErrorComponentAnchorFn) {
       this.customAnchorDestroyFn = this.mergedConfig.controlErrorComponentAnchorFn(
         this.host.nativeElement as HTMLElement,
         (this.ref.hostView as EmbeddedViewRef<any>).rootNodes[0] as HTMLElement
@@ -133,11 +141,21 @@ export class ControlErrorsDirective implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.destroy.next();
+    this.clearRefs();
+  }
+
+  private get isInput() {
+    return this.mergedConfig.blurPredicate(this.host.nativeElement);
+  }
+
+  private clearRefs(): void {
     if (this.customAnchorDestroyFn) {
       this.customAnchorDestroyFn();
       this.customAnchorDestroyFn = null;
     }
-    if (this.ref) this.ref.destroy();
+    if (this.ref) {
+      this.ref.destroy();
+    }
     this.ref = null;
   }
 
@@ -151,8 +169,14 @@ export class ControlErrorsDirective implements OnInit, OnDestroy {
       }
 
       const text = typeof getError === 'function' ? getError(controlErrors[firstKey]) : getError;
+      if (this.isInput) {
+        this.host.nativeElement.parentElement.classList.add('error-tailor-has-error');
+      }
       this.setError(text, controlErrors);
     } else if (this.ref) {
+      if (this.isInput) {
+        this.host.nativeElement.parentElement.classList.remove('error-tailor-has-error');
+      }
       this.setError(null);
     }
   }
