@@ -6,6 +6,7 @@ import {
   FormsModule,
   ReactiveFormsModule,
   Validators,
+  ValidatorFn,
   AbstractControl,
   ValidationErrors
 } from '@angular/forms';
@@ -26,6 +27,7 @@ function getComponentFactory<C>(component: Type<C>) {
         errors: {
           useValue: {
             required: () => 'required error',
+            requireExplicit: () => 'required explicit error',
             minlength: () => 'min error',
             requiredone: () => 'required one error',
             serverError: error => error
@@ -149,16 +151,48 @@ describe('ControlErrorDirective', () => {
       expect(spectator.query(byText('required error'))).toBeFalsy();
     });
 
-    it('should show errors on programmatic access', () => {
+    it('should show/hide errors on programmatic access', () => {
+      /**
+       * Explicitly defined validator to simplify testing on unique conditions.
+       */
+      const requiredExplicit = (control: AbstractControl): ValidationErrors | null => {
+        if (control.value || control.value === '') {
+          return {
+            requireExplicit: true
+          };
+        }
+        return null;
+      };
+      /**
+       * The first step, check without setting the explicit required validator.
+       */
+      const shownErrorMessage = 'required explicit error';
       const explicitInput = spectator.query<HTMLInputElement>(byPlaceholder('Explicit'));
       typeInElementAndFocusOut(spectator, '', explicitInput);
-      expect(spectator.query(byText('required error'))).toBeFalsy();
+      expect(spectator.query(byText(shownErrorMessage))).toBeFalsy();
 
-      spectator.component.form.get('explicit').setValidators(Validators.required);
+      /**
+       * Set the explicit required validator and check it again.
+       */
+      spectator.component.form.get('explicit').setValidators(requiredExplicit);
       typeInElementAndFocusOut(spectator, '', explicitInput);
-      expect(spectator.query(byText('required error'))).toBeTruthy();
+      expect(spectator.query(byText(shownErrorMessage))).toBeTruthy();
 
+      /**
+       * Hide programmatically the shown error message and check.
+       */
       spectator.component.explicitErrorTailor.hideError();
+      spectator.detectChanges();
+      const queryByTextFalsy = spectator.query(byText(shownErrorMessage));
+      expect(queryByTextFalsy).toBeFalsy();
+
+      /**
+       * Show programmatically the shown error message again and check.
+       */
+      spectator.component.explicitErrorTailor.showError();
+      spectator.detectChanges();
+      const queryByTextTruthy = spectator.query(byText(shownErrorMessage));
+      expect(queryByTextTruthy).toBeTruthy();
     });
 
     it('should show errors on async statusChanges', fakeAsync(() => {
