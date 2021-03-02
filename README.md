@@ -199,25 +199,15 @@ One typical case when to use it is radio buttons in the same radio group where i
 
 ## Methods
 
-- `showError()` - Allows programmatic access to show a control error component, even when no other invoking event had been happened (like a blur or a submit). There should be a validation error on such an element, of course.
+- `showError()` - Programmatic access to show a control error component (without a blur or a submit event). A validation error should still exist on that element. The key is the published `exportAs` reference of `errorTailor` to a directive instance of `ControlErrorsDirective` and calling its public method `showError()`.
   
-The key is the published `exportAs` reference of `errorTailor` to a directive instance of `ControlErrorsDirective` and calling its public method `showError()`.
+Syntax as `@ViewChild('gdprErrorTailor', { static: true }) gdprErrorTailor: ControlErrorsDirective;` is used to get the reference and later call `this.gdprErrorTailor.showError()`.
+
+- `hideError()` - Programmatic access to hide an already shown control error component with the same logic as `showError()`, so for example: `this.gdprErrorTailor.hideError()`.
 
 ```html
 <input type="checkbox" formControlName="gdpr" #gdprErrorTailor="errorTailor" />
 ```
-
-For getting of the property with the reference, it's possible to use standard syntax of `@ViewChild('gdprErrorTailor', { static: true }) gdprErrorTailor: ControlErrorsDirective;` and then call the method on it `this.gdprErrorTailor.showError();`.
-
-- `hideError()` - Allows programmatic access to hide a control error component, even there is a validation error on such an element and a usual invoking event had been happened (like a blur or a submit).
-
-Similarly, the published `exportAs` reference of `errorTailor` to a directive instance of `ControlErrorsDirective` allows calling its public method `hideError()`.
-
-```html
-<input type="checkbox" formControlName="gdpr" #gdprErrorTailor="errorTailor" />
-```
-
-Again, use standard syntax of `@ViewChild('gdprErrorTailor', { static: true }) gdprErrorTailor: ControlErrorsDirective;` and then call the method on it `this.gdprErrorTailor.hideError();`.
 
 ## CSS Styling
 
