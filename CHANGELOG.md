@@ -2,6 +2,8 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.4.3](https://github.com/ngneat/error-tailor/compare/v1.4.2...v1.4.3) (2021-03-17)
+
 ### [1.4.2](https://github.com/ngneat/error-tailor/compare/v1.4.1...v1.4.2) (2021-02-18)
 
 
