@@ -16,7 +16,7 @@ import {
 import { AbstractControl, ControlContainer, NgControl, ValidationErrors } from '@angular/forms';
 import { DefaultControlErrorComponent, ControlErrorComponent } from './control-error.component';
 import { ControlErrorAnchorDirective } from './control-error-anchor.directive';
-import { EMPTY, fromEvent, merge, NEVER, Observable, Subject } from 'rxjs';
+import { EMPTY, fromEvent, isObservable, merge, NEVER, Observable, of, Subject } from 'rxjs';
 import { ErrorTailorConfig, ErrorTailorConfigProvider, FORM_ERRORS } from './providers';
 import { distinctUntilChanged, mapTo, startWith, switchMap, takeUntil, tap } from 'rxjs/operators';
 import { FormActionDirective } from './form-action.directive';
@@ -98,7 +98,7 @@ export class ControlErrorsDirective implements OnInit, OnDestroy {
       .subscribe(() => this.valueChanges());
   }
 
-  private setError(text: string, error?: ValidationErrors) {
+  private setError(text: string | Observable<string>, error?: ValidationErrors) {
     if (!this.ref) {
       const factory = this.resolver.resolveComponentFactory<ControlErrorComponent>(
         this.mergedConfig.controlErrorComponent
@@ -106,11 +106,12 @@ export class ControlErrorsDirective implements OnInit, OnDestroy {
       this.ref = this.anchor.createComponent<ControlErrorComponent>(factory);
     }
     const instance = this.ref.instance;
+    const text$ = isObservable(text) ? text : of(text);
 
     if (this.controlErrorsTpl) {
-      instance.createTemplate(this.controlErrorsTpl, error, text);
+      instance.createTemplate(this.controlErrorsTpl, error, text$);
     } else {
-      instance.text = text;
+      instance.text$ = text$;
     }
 
     if (this.controlErrorsClass) {

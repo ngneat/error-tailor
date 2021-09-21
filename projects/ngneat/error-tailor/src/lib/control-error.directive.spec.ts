@@ -327,8 +327,8 @@ describe('ControlErrorDirective', () => {
         <form [formGroup]="form" errorTailor>
           <input formControlName="customErrors" placeholder="Custom errors" [controlErrors]="customErrors" />
 
-          <ng-template #customTpl let-errors let-text="text">
-            custom template {{ errors | json }} {{ text }}
+          <ng-template #customTpl let-errors let-text$="text$">
+            custom template {{ errors | json }} {{ text$ | async }}
           </ng-template>
           <input formControlName="customTemplate" placeholder="Custom template" [controlErrorsTpl]="customTpl" />
 
@@ -444,7 +444,7 @@ describe('ControlErrorDirective', () => {
     @Component({
       selector: 'custom-error-component',
       template: `
-        <h1>{{ errorText }}</h1>
+        <h1>{{ errorText$ | async }}</h1>
       `
     })
     class CustomControlErrorComponent extends DefaultControlErrorComponent {}
