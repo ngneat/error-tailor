@@ -5,7 +5,7 @@ import { DefaultControlErrorComponent } from '@ngneat/error-tailor';
   selector: 'custom-control-error',
   template: `
     <div class="control-error" [class.hide-control]="hideError" *ngIf="!errorTemplate">
-      <h3>{{ errorText }}</h3>
+      <h3>{{ errorText$ | async }}</h3>
     </div>
     <ng-template *ngTemplateOutlet="errorTemplate; context: errorContext"></ng-template>
   `,
