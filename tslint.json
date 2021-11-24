@@ -80,6 +80,9 @@
     "template-banana-in-box": true,
     "template-no-negated-async": true,
     "use-lifecycle-interface": true,
+    "variable-name": {
+      "options": ["ban-keywords", "check-format", "allow-pascal-case"]
+    },
     "use-pipe-transform-interface": true
   }
 }

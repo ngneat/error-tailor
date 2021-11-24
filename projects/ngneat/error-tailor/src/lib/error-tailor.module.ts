@@ -20,7 +20,7 @@ const api = [DefaultControlErrorComponent, ControlErrorAnchorDirective, ControlE
   entryComponents: [DefaultControlErrorComponent]
 })
 export class ErrorTailorModule {
-  static forRoot(config: ErrorTailorConfig = {}): ModuleWithProviders {
+  static forRoot(config: ErrorTailorConfig = {}): ModuleWithProviders<ErrorTailorModule> {
     return {
       ngModule: ErrorTailorModule,
       providers: [
