@@ -24,7 +24,7 @@ Sit back, relax, and let the Error Tailor do all the work!
 
 ## Getting Started
 
-Run `ng add @ngneat/error-tailor`. This command updates the `AppModule`, and adds the `ErrorTailorModule` dependency:
+Run `npm install @ngneat/error-tailor` and add the module to your application:
 
 <!-- prettier-ignore-start -->
 ```ts
