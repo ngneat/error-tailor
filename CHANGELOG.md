@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.0.0](https://github.com/ngneat/error-tailor/compare/v1.4.3...v2.0.0) (2021-11-24)
+
+
+### ⚠ BREAKING CHANGES
+
+* Peer dep of v13
+
+### Features
+
+* 🎸 upgrade to ngv13 ([b555618](https://github.com/ngneat/error-tailor/commit/b55561803c6bb13d31a2b1288ed9660537537f83))
+
 ### [1.4.3](https://github.com/ngneat/error-tailor/compare/v1.4.2...v1.4.3) (2021-03-17)
 
 ### [1.4.2](https://github.com/ngneat/error-tailor/compare/v1.4.1...v1.4.2) (2021-02-18)
