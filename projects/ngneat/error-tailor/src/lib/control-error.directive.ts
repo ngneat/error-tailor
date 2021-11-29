@@ -29,7 +29,7 @@ import { ErrorsMap } from './types';
 })
 export class ControlErrorsDirective implements OnInit, OnDestroy {
   @Input('controlErrors') customErrors: ErrorsMap = {};
-  @Input() controlErrorsClass: string | undefined;
+  @Input() controlErrorsClass: string | string[] | undefined;
   @Input() controlErrorsTpl: TemplateRef<any> | undefined;
   @Input() controlErrorsOnAsync = true;
   @Input() controlErrorsOnBlur = true;

@@ -4,7 +4,7 @@ import { ValidationErrors } from '@angular/forms';
 export type ErrorComponentTemplate = TemplateRef<{ $implicit: ValidationErrors; text: string }>;
 
 export interface ControlErrorComponent {
-  customClass: string;
+  customClass: string | string[];
   text: string | null;
   createTemplate?(tpl: ErrorComponentTemplate, error: ValidationErrors, text: string): void;
 }
@@ -40,8 +40,9 @@ export class DefaultControlErrorComponent implements ControlErrorComponent {
     this.cdr.markForCheck();
   }
 
-  set customClass(className: string) {
-    this.host.nativeElement.classList.add(className);
+  set customClass(classes: string | string[]) {
+    const classesToAdd = Array.isArray(classes) ? classes : classes.split(/\s/);
+    this.host.nativeElement.classList.add(...classesToAdd);
   }
 
   set text(value: string | null) {

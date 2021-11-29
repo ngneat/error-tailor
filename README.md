@@ -107,11 +107,11 @@ The directive will show all errors for a form field automatically in two instanc
 
 ## Inputs
 
-- `controlErrorsClass` - A custom class that'll be added to the control error component, a component that is added after the form field when an error needs to be displayed:
+- `controlErrorsClass` - A custom classes that'll be added to the control error component, a component that is added after the form field when an error needs to be displayed:
 
 ```html
 <input class="form-control" formControlName="city" 
-       placeholder="City" controlErrorsClass="my-class" />
+       placeholder="City" controlErrorsClass="my-class other-class" />
 ```
 
 - `controlErrorsTpl` - A custom error template to be used instead of the control error component's default view: 
