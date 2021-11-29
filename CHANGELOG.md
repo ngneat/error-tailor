@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.1.0](https://github.com/ngneat/error-tailor/compare/v2.0.0...v2.1.0) (2021-11-29)
+
+
+### Features
+
+* multiply css classes for control error component ([#54](https://github.com/ngneat/error-tailor/issues/54)) ([c439a61](https://github.com/ngneat/error-tailor/commit/c439a610862ed14e5b69e4d95a95e10e4468ab09))
+
 ## [2.0.0](https://github.com/ngneat/error-tailor/compare/v1.4.3...v2.0.0) (2021-11-24)
 
 
