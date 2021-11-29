@@ -63,6 +63,18 @@ describe('ControlErrorComponent', () => {
     expect(spectator.element).toHaveClass('customClassTest');
   });
 
+  it('should set multiply css classes on host element', () => {
+    spectator.component.customClass = 'customClassTest1 customClassTest2';
+
+    expect(spectator.element).toHaveClass(['customClassTest1', 'customClassTest2']);
+  });
+
+  it('should set multiply css classes as array on host element', () => {
+    spectator.component.customClass = ['customClassTest1', 'customClassTest2'];
+
+    expect(spectator.element).toHaveClass(['customClassTest1', 'customClassTest2']);
+  });
+
   it('should create passed template and send its context', () => {
     const { component } = spectator;
     component.createTemplate('fakeTemplate' as any, { testError: 'test' }, 'test error');
