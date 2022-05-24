@@ -185,16 +185,22 @@ One typical case when to use it is radio buttons in the same radio group where i
 <input [controlErrorsOnAsync]="false" formControlName="name" />
 ```
 
-- To modify the error display behavior and show the errors on submission alone, set the following input:
+- `controlErrorsOnBlur` - To modify the error display behavior to not show errors on blur, set the following input:
+
+```html
+<input [controlErrorsOnBlur]="false" formControlName="name" />
+```
+
+- To modify the error display behavior and show the errors on submission alone, we can disable both `controlErrorsOnBlur` and `controlErrorsOnAsync`:
 
 ```html
 <input [controlErrorsOnBlur]="false" [controlErrorsOnAsync]="false" formControlName="name" />
 ```
 
-- `controlErrorsOnBlur` - To modify the error display behavior to not show errors on blur, set the following input:
+- `controlErrorsOnChange` - To modify the error display behavior to show/hide the errors on every change, set the following input:
 
 ```html
-<input [controlErrorsOnBlur]="false" formControlName="name" />
+<input [controlErrorsOnChange]="true" formControlName="name" />
 ```
 
 ## Methods
@@ -316,10 +322,16 @@ The library adds a `form-submitted` to the submitted form. You can use it to sty
   export class AppModule {}
   ```
 
-- `controlErrorsOnBlur` - To modify the error display behavior and show the errors on submission alone, set the following input:
+- `controlErrorsOn` - Optional. An object that allows the default behavior for showing the errors to be overridden. (each individual property in the object is optional, so it's possible to override only 1 setting)
 
-```html
-<input [controlErrorsOnBlur]="false" formControlName="name" />
+```ts
+{
+  controlErrorsOn: {
+    async: true,  // (default: true)
+    blur: true,   // (default: true)
+    change: true, // (default: false)
+  }
+}
 ```
 
 ## Recipes
