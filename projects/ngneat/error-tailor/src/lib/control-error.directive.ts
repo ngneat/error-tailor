@@ -75,17 +75,17 @@ export class ControlErrorsDirective implements OnInit, OnDestroy {
     let changesOnBlur$: Observable<any> = EMPTY;
     let changesOnChange$: Observable<any> = EMPTY;
 
-    if (this.mergedConfig.controlErrorsOn.controlErrorsOnAsync && hasAsyncValidator) {
+    if (this.mergedConfig.controlErrorsOn.async && hasAsyncValidator) {
       // hasAsyncThenUponStatusChange
       changesOnAsync$ = statusChanges$.pipe(startWith(true));
     }
 
-    if (this.isInput && this.mergedConfig.controlErrorsOn.controlErrorsOnChange) {
+    if (this.isInput && this.mergedConfig.controlErrorsOn.change) {
       // on each change
       changesOnChange$ = valueChanges$;
     }
 
-    if (this.isInput && this.mergedConfig.controlErrorsOn.controlErrorsOnBlur) {
+    if (this.isInput && this.mergedConfig.controlErrorsOn.blur) {
       const blur$ = fromEvent(this.host.nativeElement, 'focusout');
       // blurFirstThenUponChange
       changesOnBlur$ = blur$.pipe(switchMap(() => valueChanges$.pipe(startWith(true))));
@@ -212,9 +212,9 @@ export class ControlErrorsDirective implements OnInit, OnDestroy {
       ...this.config,
 
       controlErrorsOn: {
-        controlErrorsOnAsync: this.controlErrorsOnAsync ?? this.config.controlErrorsOn?.controlErrorsOnAsync ?? true,
-        controlErrorsOnBlur: this.controlErrorsOnAsync ?? this.config.controlErrorsOn?.controlErrorsOnBlur ?? true,
-        controlErrorsOnChange: this.controlErrorsOnChange ?? this.config.controlErrorsOn?.controlErrorsOnChange ?? false
+        async: this.controlErrorsOnAsync ?? this.config.controlErrorsOn?.async ?? true,
+        blur: this.controlErrorsOnAsync ?? this.config.controlErrorsOn?.blur ?? true,
+        change: this.controlErrorsOnChange ?? this.config.controlErrorsOn?.change ?? false
       }
     };
   }

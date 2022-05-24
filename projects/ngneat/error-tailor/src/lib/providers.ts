@@ -25,9 +25,9 @@ export type ErrorTailorConfig = {
   controlErrorComponent?: Type<ControlErrorComponent>;
   controlErrorComponentAnchorFn?: (hostElement: Element, errorElement: Element) => () => void;
   controlErrorsOn?: {
-    controlErrorsOnAsync?: boolean;
-    controlErrorsOnBlur?: boolean;
-    controlErrorsOnChange?: boolean;
+    async?: boolean;
+    blur?: boolean;
+    change?: boolean;
   };
 };
 
