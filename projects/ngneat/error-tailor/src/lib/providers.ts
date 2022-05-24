@@ -24,6 +24,11 @@ export type ErrorTailorConfig = {
   blurPredicate?: (element: Element) => boolean;
   controlErrorComponent?: Type<ControlErrorComponent>;
   controlErrorComponentAnchorFn?: (hostElement: Element, errorElement: Element) => () => void;
+  controlErrorsOn?: {
+    async?: boolean;
+    blur?: boolean;
+    change?: boolean;
+  };
 };
 
 export const ErrorTailorConfigProvider = new InjectionToken<ErrorTailorConfig>('ErrorTailorConfigProvider');

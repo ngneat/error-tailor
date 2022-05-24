@@ -18,7 +18,7 @@ import { DefaultControlErrorComponent, ControlErrorComponent } from './control-e
 import { ControlErrorAnchorDirective } from './control-error-anchor.directive';
 import { EMPTY, fromEvent, merge, NEVER, Observable, Subject } from 'rxjs';
 import { ErrorTailorConfig, ErrorTailorConfigProvider, FORM_ERRORS } from './providers';
-import { distinctUntilChanged, mapTo, startWith, switchMap, takeUntil, tap } from 'rxjs/operators';
+import { distinctUntilChanged, mapTo, startWith, switchMap, takeUntil } from 'rxjs/operators';
 import { FormActionDirective } from './form-action.directive';
 import { ErrorsMap } from './types';
 
@@ -31,8 +31,9 @@ export class ControlErrorsDirective implements OnInit, OnDestroy {
   @Input('controlErrors') customErrors: ErrorsMap = {};
   @Input() controlErrorsClass: string | string[] | undefined;
   @Input() controlErrorsTpl: TemplateRef<any> | undefined;
-  @Input() controlErrorsOnAsync = true;
-  @Input() controlErrorsOnBlur = true;
+  @Input() controlErrorsOnAsync: boolean | undefined;
+  @Input() controlErrorsOnBlur: boolean | undefined;
+  @Input() controlErrorsOnChange: boolean | undefined;
   @Input() controlErrorAnchor: ControlErrorAnchorDirective;
 
   private ref: ComponentRef<ControlErrorComponent>;
@@ -58,10 +59,11 @@ export class ControlErrorsDirective implements OnInit, OnDestroy {
   ) {
     this.submit$ = this.form ? this.form.submit$ : EMPTY;
     this.reset$ = this.form ? this.form.reset$ : EMPTY;
-    this.mergedConfig = this.buildConfig();
   }
 
   ngOnInit() {
+    this.mergedConfig = this.buildConfig();
+
     this.anchor = this.resolveAnchor();
     this.control = (this.controlContainer || this.ngControl).control;
     const hasAsyncValidator = !!this.control.asyncValidator;
@@ -71,13 +73,19 @@ export class ControlErrorsDirective implements OnInit, OnDestroy {
     const controlChanges$ = merge(statusChanges$, valueChanges$);
     let changesOnAsync$: Observable<any> = EMPTY;
     let changesOnBlur$: Observable<any> = EMPTY;
+    let changesOnChange$: Observable<any> = EMPTY;
 
-    if (this.controlErrorsOnAsync && hasAsyncValidator) {
+    if (this.mergedConfig.controlErrorsOn.async && hasAsyncValidator) {
       // hasAsyncThenUponStatusChange
       changesOnAsync$ = statusChanges$.pipe(startWith(true));
     }
 
-    if (this.controlErrorsOnBlur && this.isInput) {
+    if (this.isInput && this.mergedConfig.controlErrorsOn.change) {
+      // on each change
+      changesOnChange$ = valueChanges$;
+    }
+
+    if (this.isInput && this.mergedConfig.controlErrorsOn.blur) {
       const blur$ = fromEvent(this.host.nativeElement, 'focusout');
       // blurFirstThenUponChange
       changesOnBlur$ = blur$.pipe(switchMap(() => valueChanges$.pipe(startWith(true))));
@@ -93,7 +101,7 @@ export class ControlErrorsDirective implements OnInit, OnDestroy {
     // on reset, clear ComponentRef and customAnchorDestroyFn
     this.reset$.pipe(takeUntil(this.destroy)).subscribe(() => this.clearRefs());
 
-    merge(changesOnAsync$, changesOnBlur$, changesOnSubmit$, this.showError$)
+    merge(changesOnAsync$, changesOnBlur$, changesOnChange$, changesOnSubmit$, this.showError$)
       .pipe(takeUntil(this.destroy))
       .subscribe(() => this.valueChanges());
   }
@@ -200,7 +208,14 @@ export class ControlErrorsDirective implements OnInit, OnDestroy {
         },
         controlErrorComponent: DefaultControlErrorComponent
       },
-      ...this.config
+
+      ...this.config,
+
+      controlErrorsOn: {
+        async: this.controlErrorsOnAsync ?? this.config.controlErrorsOn?.async ?? true,
+        blur: this.controlErrorsOnAsync ?? this.config.controlErrorsOn?.blur ?? true,
+        change: this.controlErrorsOnChange ?? this.config.controlErrorsOn?.change ?? false
+      }
     };
   }
 }

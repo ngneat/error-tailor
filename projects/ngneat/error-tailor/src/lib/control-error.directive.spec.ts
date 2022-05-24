@@ -64,6 +64,9 @@ describe('ControlErrorDirective', () => {
 
           <input formControlName="username" placeholder="Username" />
 
+          <input formControlName="onSubmitOnly" placeholder="On submit only" [controlErrorsOnBlur]="false" />
+          <input formControlName="onEveryChange" placeholder="On every change" [controlErrorsOnChange]="true" />
+
           <button type="submit">Submit</button>
         </form>
       `
@@ -75,7 +78,9 @@ describe('ControlErrorDirective', () => {
         ignored: ['', Validators.required],
         explicit: [''],
         names: this.builder.array([this.createName(), this.createName()], this.validator),
-        username: ['', null, this.usernameValidator.bind(this)]
+        username: ['', null, this.usernameValidator.bind(this)],
+        onSubmitOnly: ['', [Validators.required]],
+        onEveryChange: ['', [Validators.required]]
       });
 
       @ViewChild('explicitErrorTailor', { static: true }) explicitErrorTailor: ControlErrorsDirective;
@@ -131,6 +136,11 @@ describe('ControlErrorDirective', () => {
       const oneNameInput = spectator.query<HTMLInputElement>(byPlaceholder('Name 0'));
       const oneNameInput1 = spectator.query<HTMLInputElement>(byPlaceholder('Name 1'));
 
+      const onSubmitOnly = spectator.query<HTMLInputElement>(byPlaceholder('On submit only'));
+      const onEveryChange = spectator.query<HTMLInputElement>(byPlaceholder('On every change'));
+      typeInElementAndFocusOut(spectator, 'test', onSubmitOnly);
+      typeInElementAndFocusOut(spectator, 'test', onEveryChange);
+
       spectator.click('button');
 
       expect(spectator.query(byText('required one error'))).toBeTruthy();
@@ -140,6 +150,33 @@ describe('ControlErrorDirective', () => {
       spectator.click('input[type=checkbox]');
 
       expect(spectator.query(byText(/error/))).toBeNull();
+    });
+
+    it('should show errors only on submit when controlErrorsOnBlur is disabled', () => {
+      const onSubmitOnly = spectator.query<HTMLInputElement>(byPlaceholder('On submit only'));
+
+      typeInElementAndFocusOut(spectator, 'test', onSubmitOnly);
+
+      expect(spectator.query(byText('required error'))).toBeFalsy();
+
+      spectator.click('button');
+
+      expect(spectator.query(byText('required error'))).toBeTruthy();
+    });
+
+    it('should show errors on every change when controlErrorsOnChange is enabled', () => {
+      const onEveryChange = spectator.query<HTMLInputElement>(byPlaceholder('On every change'));
+
+      expect(spectator.query(byText('required error'))).toBeFalsy();
+
+      spectator.typeInElement('t', onEveryChange);
+      expect(spectator.query(byText('required error'))).toBeFalsy();
+
+      spectator.typeInElement('', onEveryChange);
+      expect(spectator.query(byText('required error'))).toBeTruthy();
+
+      spectator.typeInElement('t', onEveryChange);
+      expect(spectator.query(byText('required error'))).toBeFalsy();
     });
 
     it('should not show errors on interactions', () => {
@@ -340,8 +377,6 @@ describe('ControlErrorDirective', () => {
           <div controlErrorAnchor>
             <input formControlName="withParentAnchor" placeholder="With parent anchor" />
           </div>
-
-          <input formControlName="onEveryChange" placeholder="On every change" [controlErrorsOnBlur]="false" />
         </form>
       `
     })
@@ -351,8 +386,7 @@ describe('ControlErrorDirective', () => {
         customTemplate: ['', Validators.required],
         customClass: ['', Validators.required],
         withAnchor: ['', Validators.required],
-        withParentAnchor: ['', Validators.required],
-        onEveryChange: ['', [Validators.required, Validators.minLength(3)]]
+        withParentAnchor: ['', Validators.required]
       });
 
       customErrors = {
@@ -466,7 +500,10 @@ describe('ControlErrorDirective', () => {
               }
             },
             controlErrorComponent: CustomControlErrorComponent,
-            controlErrorComponentAnchorFn: controlErrorComponentAnchorFn
+            controlErrorComponentAnchorFn: controlErrorComponentAnchorFn,
+            controlErrorsOn: {
+              change: true
+            }
           })
         ]
       });
@@ -530,6 +567,28 @@ describe('ControlErrorDirective', () => {
         spectator.component.showName = false;
         spectator.detectChanges();
         expect(anchorFnDestroyCalled).toBeTruthy();
+      });
+    });
+
+    describe('controlErrorsOn', () => {
+      let spectator: Spectator<CustomErrorFormGroupComponent>;
+      const createComponent = getCustomErrorComponentFactory(CustomErrorFormGroupComponent);
+
+      beforeEach(() => (spectator = createComponent()));
+
+      it('should override default behavior for showing errors', () => {
+        const input = spectator.query<HTMLInputElement>(byPlaceholder('Name'));
+
+        expect(spectator.query(byText('required error'))).toBeFalsy();
+
+        spectator.typeInElement('test', input);
+        expect(spectator.query(byText('required error'))).toBeFalsy();
+
+        spectator.typeInElement('', input);
+        expect(spectator.query(byText('required error'))).toBeTruthy();
+
+        spectator.typeInElement('t', input);
+        expect(spectator.query(byText('required error'))).toBeFalsy();
       });
     });
   });
