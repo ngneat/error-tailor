@@ -502,7 +502,7 @@ describe('ControlErrorDirective', () => {
             controlErrorComponent: CustomControlErrorComponent,
             controlErrorComponentAnchorFn: controlErrorComponentAnchorFn,
             controlErrorsOn: {
-              controlErrorsOnChange: true
+              change: true
             }
           })
         ]
