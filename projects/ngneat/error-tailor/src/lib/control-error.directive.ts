@@ -65,7 +65,7 @@ export class ControlErrorsDirective implements OnInit, OnDestroy {
     this.mergedConfig = this.buildConfig();
 
     this.anchor = this.resolveAnchor();
-    this.control = (this.controlContainer || this.ngControl).control;
+    this.control = (this.ngControl || this.controlContainer).control;
     const hasAsyncValidator = !!this.control.asyncValidator;
 
     const statusChanges$ = this.control.statusChanges.pipe(distinctUntilChanged());
