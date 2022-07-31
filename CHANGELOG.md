@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.2.0](https://github.com/ngneat/error-tailor/compare/v2.1.0...v2.2.0) (2022-07-31)
+
+
+### Features
+
+* add option to show errors always on change ([#71](https://github.com/ngneat/error-tailor/issues/71)) ([5892c75](https://github.com/ngneat/error-tailor/commit/5892c753fc24c1e2d96b409bd68886233b84b07f))
+
+
+### Bug Fixes
+
+* fix onblur config issue ([#76](https://github.com/ngneat/error-tailor/issues/76)) ([0a2cc53](https://github.com/ngneat/error-tailor/commit/0a2cc53076916e1672b690379e8bde737e91a119))
+
 ## [2.1.0](https://github.com/ngneat/error-tailor/compare/v2.0.0...v2.1.0) (2021-11-29)
 
 
