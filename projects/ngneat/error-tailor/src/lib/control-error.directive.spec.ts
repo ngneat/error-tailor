@@ -370,7 +370,12 @@ describe('ControlErrorDirective', () => {
           </ng-template>
           <input formControlName="customTemplate" placeholder="Custom template" [controlErrorsTpl]="customTpl" />
 
-          <input formControlName="customClass" placeholder="Custom class" controlErrorsClass="customClass" />
+          <input
+            formControlName="customClass"
+            placeholder="Custom class"
+            controlErrorsClass="customClass"
+            controlCustomClass="customControlClass"
+          />
 
           <ng-template controlErrorAnchor #anchor="controlErrorAnchor"></ng-template>
           <input formControlName="withAnchor" placeholder="With anchor" [controlErrorAnchor]="anchor" />
@@ -429,6 +434,14 @@ describe('ControlErrorDirective', () => {
       typeInElementAndFocusOut(spectator, '', input);
 
       expect(spectator.query('.customClass')).toBeTruthy();
+    });
+
+    it('should set custom class for control when it is provided', () => {
+      const input = spectator.query<HTMLInputElement>(byPlaceholder('Custom class'));
+
+      typeInElementAndFocusOut(spectator, '', input);
+
+      expect(spectator.query('.customControlClass')).toBeTruthy();
     });
 
     describe('when anchor is provided', () => {
@@ -501,6 +514,7 @@ describe('ControlErrorDirective', () => {
               }
             },
             controlErrorsClass: ['global', 'config'],
+            controlCustomClass: 'control custom',
             controlErrorComponent: CustomControlErrorComponent,
             controlErrorComponentAnchorFn: controlErrorComponentAnchorFn,
             controlErrorsOn: {
@@ -532,6 +546,14 @@ describe('ControlErrorDirective', () => {
         typeInElementAndFocusOut(spectator, '', input);
 
         expect(spectator.query('.global.config')).toBeTruthy();
+      });
+
+      it('should set global custom class for component when it is provided', () => {
+        const input = spectator.query<HTMLInputElement>(byPlaceholder('Name'));
+
+        typeInElementAndFocusOut(spectator, '', input);
+
+        expect(spectator.query('.control.custom')).toBeTruthy();
       });
     });
 

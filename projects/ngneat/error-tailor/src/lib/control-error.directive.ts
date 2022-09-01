@@ -83,6 +83,12 @@ export class ControlErrorsDirective implements OnInit, OnDestroy {
       }
     }
 
+    if (!this.controlCustomClass || this.controlCustomClass?.length === 0) {
+      if (this.mergedConfig.controlCustomClass && this.mergedConfig.controlCustomClass) {
+        this.controlCustomClass = this.mergedConfig.controlCustomClass;
+      }
+    }
+
     if (this.mergedConfig.controlErrorsOn.async && hasAsyncValidator) {
       // hasAsyncThenUponStatusChange
       changesOnAsync$ = statusChanges$.pipe(startWith(true));
