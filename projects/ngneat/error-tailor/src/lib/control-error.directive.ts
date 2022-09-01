@@ -3,6 +3,7 @@ import {
   ComponentRef,
   Directive,
   ElementRef,
+  EmbeddedViewRef,
   Inject,
   Input,
   OnDestroy,
@@ -10,16 +11,16 @@ import {
   Optional,
   Self,
   TemplateRef,
-  ViewContainerRef,
-  EmbeddedViewRef
+  ViewContainerRef
 } from '@angular/core';
 import { AbstractControl, ControlContainer, NgControl, ValidationErrors } from '@angular/forms';
-import { DefaultControlErrorComponent, ControlErrorComponent } from './control-error.component';
-import { ControlErrorAnchorDirective } from './control-error-anchor.directive';
 import { EMPTY, fromEvent, merge, NEVER, Observable, Subject } from 'rxjs';
-import { ErrorTailorConfig, ErrorTailorConfigProvider, FORM_ERRORS } from './providers';
 import { distinctUntilChanged, mapTo, startWith, switchMap, takeUntil } from 'rxjs/operators';
+
+import { ControlErrorAnchorDirective } from './control-error-anchor.directive';
+import { ControlErrorComponent, DefaultControlErrorComponent } from './control-error.component';
 import { FormActionDirective } from './form-action.directive';
+import { ErrorTailorConfig, ErrorTailorConfigProvider, FORM_ERRORS } from './providers';
 import { ErrorsMap } from './types';
 
 @Directive({
@@ -30,6 +31,7 @@ import { ErrorsMap } from './types';
 export class ControlErrorsDirective implements OnInit, OnDestroy {
   @Input('controlErrors') customErrors: ErrorsMap = {};
   @Input() controlErrorsClass: string | string[] | undefined;
+  @Input() controlCustomClass: string | string[] | undefined;
   @Input() controlErrorsTpl: TemplateRef<any> | undefined;
   @Input() controlErrorsOnAsync: boolean | undefined;
   @Input() controlErrorsOnBlur: boolean | undefined;
@@ -74,6 +76,18 @@ export class ControlErrorsDirective implements OnInit, OnDestroy {
     let changesOnAsync$: Observable<any> = EMPTY;
     let changesOnBlur$: Observable<any> = EMPTY;
     let changesOnChange$: Observable<any> = EMPTY;
+
+    if (!this.controlErrorsClass || this.controlErrorsClass?.length === 0) {
+      if (this.mergedConfig.controlErrorsClass && this.mergedConfig.controlErrorsClass) {
+        this.controlErrorsClass = this.mergedConfig.controlErrorsClass;
+      }
+    }
+
+    if (!this.controlCustomClass || this.controlCustomClass?.length === 0) {
+      if (this.mergedConfig.controlCustomClass && this.mergedConfig.controlCustomClass) {
+        this.controlCustomClass = this.mergedConfig.controlCustomClass;
+      }
+    }
 
     if (this.mergedConfig.controlErrorsOn.async && hasAsyncValidator) {
       // hasAsyncThenUponStatusChange
@@ -169,6 +183,9 @@ export class ControlErrorsDirective implements OnInit, OnDestroy {
 
   private valueChanges() {
     const controlErrors = this.control.errors;
+    const classesAdd = Array.isArray(this.controlCustomClass)
+      ? this.controlCustomClass
+      : this.controlCustomClass?.split(/\s/) ?? [];
     if (controlErrors) {
       const [firstKey] = Object.keys(controlErrors);
       const getError = this.customErrors[firstKey] || this.globalErrors[firstKey];
@@ -179,11 +196,17 @@ export class ControlErrorsDirective implements OnInit, OnDestroy {
       const text = typeof getError === 'function' ? getError(controlErrors[firstKey]) : getError;
       if (this.isInput) {
         this.host.nativeElement.parentElement.classList.add('error-tailor-has-error');
+        if (this.controlCustomClass) {
+          (this.host.nativeElement as HTMLElement).classList.add(...classesAdd);
+        }
       }
       this.setError(text, controlErrors);
     } else if (this.ref) {
       if (this.isInput) {
         this.host.nativeElement.parentElement.classList.remove('error-tailor-has-error');
+        if (this.controlCustomClass) {
+          (this.host.nativeElement as HTMLElement).classList.remove(...classesAdd);
+        }
       }
       this.setError(null);
     }

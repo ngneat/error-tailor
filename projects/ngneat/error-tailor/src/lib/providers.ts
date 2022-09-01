@@ -22,6 +22,8 @@ export type ErrorsProvider = ErrorsUseValue | ErrorsUseFactory;
 export type ErrorTailorConfig = {
   errors?: ErrorsProvider;
   blurPredicate?: (element: Element) => boolean;
+  controlErrorsClass?: string | string[] | undefined;
+  controlCustomClass?: string | string[] | undefined;
   controlErrorComponent?: Type<ControlErrorComponent>;
   controlErrorComponentAnchorFn?: (hostElement: Element, errorElement: Element) => () => void;
   controlErrorsOn?: {

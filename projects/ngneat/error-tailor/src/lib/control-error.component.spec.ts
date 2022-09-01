@@ -58,21 +58,42 @@ describe('ControlErrorComponent', () => {
   });
 
   it('should set custom class on host element', () => {
+    spectator.component.text = 'test';
     spectator.component.customClass = 'customClassTest';
 
     expect(spectator.element).toHaveClass('customClassTest');
   });
 
   it('should set multiply css classes on host element', () => {
+    spectator.component.text = 'test';
     spectator.component.customClass = 'customClassTest1 customClassTest2';
 
     expect(spectator.element).toHaveClass(['customClassTest1', 'customClassTest2']);
   });
 
   it('should set multiply css classes as array on host element', () => {
+    spectator.component.text = 'test';
     spectator.component.customClass = ['customClassTest1', 'customClassTest2'];
 
     expect(spectator.element).toHaveClass(['customClassTest1', 'customClassTest2']);
+  });
+
+  it('should not add custom class on host element if text unset', () => {
+    spectator.component.customClass = 'customClassTest';
+
+    expect(spectator.element.classList.contains('customClassTest')).toBeFalse();
+  });
+
+  it('should remove custom class on host element if text unset', () => {
+    spectator.component.text = 'text';
+    spectator.component.customClass = 'customClassTest';
+    spectator.detectChanges();
+
+    spectator.component.text = undefined;
+
+    spectator.detectChanges();
+
+    expect(spectator.element.classList.contains('customClassTest')).toBeFalse();
   });
 
   it('should create passed template and send its context', () => {
