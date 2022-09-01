@@ -107,11 +107,20 @@ The directive will show all errors for a form field automatically in two instanc
 
 ## Inputs
 
-- `controlErrorsClass` - A custom classes that'll be added to the control error component, a component that is added after the form field when an error needs to be displayed:
+- `controlErrorsClass` - A custom classes that'll be added to the control error component and override custom classes from global config, a component that is added after the form field when an error needs to be displayed:
 
 ```html
 <input class="form-control" formControlName="city" 
        placeholder="City" controlErrorsClass="my-class other-class" />
+       
+```
+
+- `controlCustomClass` - A custom classes that'll be added to the control if control has error.
+
+```html
+<input class="form-control" formControlName="city" 
+       placeholder="City" controlCustomClass="my-custom-class other-custom-class" />
+       
 ```
 
 - `controlErrorsTpl` - A custom error template to be used instead of the control error component's default view: 
@@ -237,6 +246,8 @@ The library adds a `form-submitted` to the submitted form. You can use it to sty
   }
 }
 ```
+- `controlErrorsClass` - Optional. A custom classes that'll be added to the control error component. Can be override if you set attribute `controlErrorsClass` on control
+- `controlCustomClass` - Optional. A custom classes that'll be added to the control if control has error. Can be override if you set attribute `controlCustomClass` on control
 - `controlErrorComponent` - Optional. Allows changing the default component that is used to render 
   the errors. This component should implement the `ControlErrorComponent` interface. If you only need to
   replace the error component's template, you may derive it from the default component, 

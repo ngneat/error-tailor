@@ -34,6 +34,8 @@ export class DefaultControlErrorComponent implements ControlErrorComponent {
   errorContext: { $implicit: ValidationErrors; text: string };
   hideError = true;
 
+  private _addClasses: string[] = [];
+
   createTemplate(tpl: ErrorComponentTemplate, error: ValidationErrors, text: string) {
     this.errorTemplate = tpl;
     this.errorContext = { $implicit: error, text };
@@ -41,14 +43,19 @@ export class DefaultControlErrorComponent implements ControlErrorComponent {
   }
 
   set customClass(classes: string | string[]) {
-    const classesToAdd = Array.isArray(classes) ? classes : classes.split(/\s/);
-    this.host.nativeElement.classList.add(...classesToAdd);
+    if (!this.hideError) {
+      this._addClasses = Array.isArray(classes) ? classes : classes.split(/\s/);
+      this.host.nativeElement.classList.add(...this._addClasses);
+    }
   }
 
   set text(value: string | null) {
     if (value !== this.errorText) {
       this.errorText = value;
       this.hideError = !value;
+      if (this.hideError) {
+        this.host.nativeElement.classList.remove(...this._addClasses);
+      }
       this.cdr.markForCheck();
     }
   }

@@ -31,7 +31,8 @@ function getComponentFactory<C>(component: Type<C>) {
             requiredone: () => 'required one error',
             serverError: error => error
           }
-        }
+        },
+        controlErrorsClass: ['global', 'config']
       })
     ]
   });
@@ -499,6 +500,7 @@ describe('ControlErrorDirective', () => {
                 required: () => 'required error'
               }
             },
+            controlErrorsClass: ['global', 'config'],
             controlErrorComponent: CustomControlErrorComponent,
             controlErrorComponentAnchorFn: controlErrorComponentAnchorFn,
             controlErrorsOn: {
@@ -522,6 +524,14 @@ describe('ControlErrorDirective', () => {
 
         expect(spectator.query('h1')).toBeTruthy();
         expect(spectator.query(byText('required error'))).toBeTruthy();
+      });
+
+      it('should set global custom class when it is provided', () => {
+        const input = spectator.query<HTMLInputElement>(byPlaceholder('Name'));
+
+        typeInElementAndFocusOut(spectator, '', input);
+
+        expect(spectator.query('.global.config')).toBeTruthy();
       });
     });
 
