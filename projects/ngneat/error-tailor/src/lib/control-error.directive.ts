@@ -64,7 +64,6 @@ export class ControlErrorsDirective implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    console.log({ ...this.config });
     this.mergedConfig = this.buildConfig();
 
     this.anchor = this.resolveAnchor();
