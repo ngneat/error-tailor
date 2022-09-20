@@ -79,7 +79,7 @@ describe('ControlErrorDirective', () => {
         ignored: ['', Validators.required],
         explicit: [''],
         names: this.builder.array([this.createName(), this.createName()], this.validator),
-        username: ['', null, this.usernameValidator.bind(this)],
+        username: ['', Validators.required, this.usernameValidator.bind(this)],
         onSubmitOnly: ['', [Validators.required]],
         onEveryChange: ['', [Validators.required]]
       });
@@ -123,6 +123,8 @@ describe('ControlErrorDirective', () => {
 
     it('should show errors on interactions', () => {
       const nameInput = spectator.query<HTMLInputElement>(byPlaceholder('Name'));
+      const usernameInput = spectator.query<HTMLInputElement>(byPlaceholder('Username'));
+      typeInElementAndFocusOut(spectator, 'async', usernameInput);
 
       typeInElementAndFocusOut(spectator, 't', nameInput);
 
