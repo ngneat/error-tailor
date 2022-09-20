@@ -91,7 +91,7 @@ export class ControlErrorsDirective implements OnInit, OnDestroy {
 
     if (this.mergedConfig.controlErrorsOn.async && hasAsyncValidator) {
       // hasAsyncThenUponStatusChange
-      changesOnAsync$ = statusChanges$.pipe(startWith(true));
+      changesOnAsync$ = statusChanges$.pipe();
     }
 
     if (this.isInput && this.mergedConfig.controlErrorsOn.change) {
