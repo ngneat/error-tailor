@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.2.2](https://github.com/ngneat/error-tailor/compare/v2.2.1...v2.2.2) (2022-09-23)
+
+
+### Bug Fixes
+
+* async validator work ([#84](https://github.com/ngneat/error-tailor/issues/84)) ([3f5b4dd](https://github.com/ngneat/error-tailor/commit/3f5b4dd9cf76acc0169169e192ded71c562ccc17))
+
 ### [2.2.1](https://github.com/ngneat/error-tailor/compare/v2.2.0...v2.2.1) (2022-07-31)
 
 
