@@ -1,28 +1,27 @@
-import { Component, Type, ViewChild, ViewChildren, QueryList } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Component, Type, ViewChild } from '@angular/core';
+import { fakeAsync, tick } from '@angular/core/testing';
 import {
-  FormArray,
-  FormBuilder,
-  FormControl,
+  AbstractControl,
   FormsModule,
   ReactiveFormsModule,
-  Validators,
-  AbstractControl,
-  ValidationErrors
+  UntypedFormArray,
+  UntypedFormBuilder,
+  UntypedFormControl,
+  ValidationErrors,
+  Validators
 } from '@angular/forms';
+import { ControlErrorsDirective, errorTailorImports, provideErrorTailorConfig } from '@ngneat/error-tailor';
 import { byPlaceholder, byText, createComponentFactory, Spectator } from '@ngneat/spectator';
-import { ControlErrorsDirective, ErrorTailorModule } from '@ngneat/error-tailor';
-import { tick, fakeAsync } from '@angular/core/testing';
-import { DefaultControlErrorComponent } from './control-error.component';
-import { Observable, asyncScheduler, scheduled } from 'rxjs';
+import { asyncScheduler, Observable, scheduled } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { DefaultControlErrorComponent } from './control-error.component';
 
 function getComponentFactory<C>(component: Type<C>) {
   return createComponentFactory({
     component,
-    imports: [
-      FormsModule,
-      ReactiveFormsModule,
-      ErrorTailorModule.forRoot({
+    providers: [
+      provideErrorTailorConfig({
         errors: {
           useValue: {
             required: () => 'required error',
@@ -34,7 +33,8 @@ function getComponentFactory<C>(component: Type<C>) {
         },
         controlErrorsClass: ['global', 'config']
       })
-    ]
+    ],
+    imports: [FormsModule, ReactiveFormsModule, errorTailorImports]
   });
 }
 
@@ -46,6 +46,8 @@ function typeInElementAndFocusOut(spectator: Spectator<any>, text: string, input
 describe('ControlErrorDirective', () => {
   describe('FormGroup', () => {
     @Component({
+      standalone: true,
+      imports: [ReactiveFormsModule, errorTailorImports, CommonModule],
       template: `
         <form [formGroup]="form" errorTailor>
           <input formControlName="name" placeholder="Name" />
@@ -86,13 +88,13 @@ describe('ControlErrorDirective', () => {
 
       @ViewChild('explicitErrorTailor', { static: true }) explicitErrorTailor: ControlErrorsDirective;
 
-      constructor(private builder: FormBuilder) {}
+      constructor(private builder: UntypedFormBuilder) {}
 
       createName() {
-        return new FormControl('', [Validators.required, Validators.minLength(3)]);
+        return new UntypedFormControl('', [Validators.required, Validators.minLength(3)]);
       }
 
-      validator({ controls }: FormArray) {
+      validator({ controls }: UntypedFormArray) {
         return controls.some(control => control.valid) ? null : { requiredone: true };
       }
 
@@ -294,7 +296,7 @@ describe('ControlErrorDirective', () => {
       `
     })
     class FormControlComponent {
-      name = new FormControl('', [Validators.required, Validators.minLength(3)]);
+      name = new UntypedFormControl('', [Validators.required, Validators.minLength(3)]);
     }
 
     let spectator: Spectator<FormControlComponent>;
@@ -326,6 +328,8 @@ describe('ControlErrorDirective', () => {
 
   describe('NgModel', () => {
     @Component({
+      standalone: true,
+      imports: [FormsModule, errorTailorImports],
       template: `
         <input [(ngModel)]="name" placeholder="Name" required minlength="3" />
       `
@@ -363,6 +367,8 @@ describe('ControlErrorDirective', () => {
 
   describe('common', () => {
     @Component({
+      standalone: true,
+      imports: [ReactiveFormsModule, errorTailorImports, CommonModule],
       template: `
         <form [formGroup]="form" errorTailor>
           <input formControlName="customErrors" placeholder="Custom errors" [controlErrors]="customErrors" />
@@ -390,7 +396,7 @@ describe('ControlErrorDirective', () => {
     })
     class CommonFormGroupComponent {
       form = this.builder.group({
-        customErrors: new FormControl('', [Validators.required, Validators.minLength(3)]),
+        customErrors: new UntypedFormControl('', [Validators.required, Validators.minLength(3)]),
         customTemplate: ['', Validators.required],
         customClass: ['', Validators.required],
         withAnchor: ['', Validators.required],
@@ -401,7 +407,7 @@ describe('ControlErrorDirective', () => {
         required: 'custom required error'
       };
 
-      constructor(private builder: FormBuilder) {}
+      constructor(private builder: UntypedFormBuilder) {}
     }
 
     let spectator: Spectator<CommonFormGroupComponent>;
@@ -477,6 +483,8 @@ describe('ControlErrorDirective', () => {
   describe('GlobalConfig', () => {
     @Component({
       selector: 'custom-error-form-group',
+      standalone: true,
+      imports: [ReactiveFormsModule, errorTailorImports, CommonModule],
       template: `
         <form [formGroup]="form" errorTailor>
           <input formControlName="name" placeholder="Name" *ngIf="showName" />
@@ -485,13 +493,14 @@ describe('ControlErrorDirective', () => {
     })
     class CustomErrorFormGroupComponent {
       form = this.builder.group({
-        name: new FormControl('', [Validators.required])
+        name: new UntypedFormControl('', [Validators.required])
       });
       showName = true;
-      constructor(private builder: FormBuilder) {}
+      constructor(private builder: UntypedFormBuilder) {}
     }
 
     @Component({
+      standalone: true,
       selector: 'custom-error-component',
       template: `
         <h1>{{ errorText }}</h1>
@@ -505,11 +514,8 @@ describe('ControlErrorDirective', () => {
     ) {
       return createComponentFactory({
         component,
-        declarations: [CustomControlErrorComponent],
-        imports: [
-          FormsModule,
-          ReactiveFormsModule,
-          ErrorTailorModule.forRoot({
+        providers: [
+          provideErrorTailorConfig({
             errors: {
               useValue: {
                 required: () => 'required error'
@@ -523,7 +529,8 @@ describe('ControlErrorDirective', () => {
               change: true
             }
           })
-        ]
+        ],
+        imports: [FormsModule, CustomControlErrorComponent, ReactiveFormsModule, errorTailorImports]
       });
     }
 

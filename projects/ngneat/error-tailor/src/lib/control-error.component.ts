@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, TemplateRef } from '@angular/core';
 import { ValidationErrors } from '@angular/forms';
 
@@ -11,6 +12,8 @@ export interface ControlErrorComponent {
 
 @Component({
   selector: 'control-error',
+  standalone: true,
+  imports: [CommonModule],
   template: `
     <label class="control-error" [class.hide-control]="hideError" *ngIf="!errorTemplate">{{ errorText }}</label>
     <ng-template *ngTemplateOutlet="errorTemplate; context: errorContext"></ng-template>

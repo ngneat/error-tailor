@@ -3,6 +3,7 @@ import { fromEvent, Observable } from 'rxjs';
 import { shareReplay, tap } from 'rxjs/operators';
 
 @Directive({
+  standalone: true,
   selector: 'form[errorTailor]'
 })
 export class FormActionDirective {

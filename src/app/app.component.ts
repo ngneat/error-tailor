@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormArray, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 
 import { ControlErrorsDirective } from '@ngneat/error-tailor';
 
@@ -9,7 +9,7 @@ import { ControlErrorsDirective } from '@ngneat/error-tailor';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  form: FormGroup;
+  form: UntypedFormGroup;
   model = 'Hey';
 
   options = Array.from(Array(5), (_, i) => ({
@@ -30,10 +30,10 @@ export class AppComponent {
   });
 
   get emailAddresses() {
-    return this.formGroup.get('emailAddresses') as FormArray;
+    return this.formGroup.get('emailAddresses') as UntypedFormArray;
   }
 
-  initEmailAddressFields(): FormGroup {
+  initEmailAddressFields(): UntypedFormGroup {
     return this.builder.group({
       label: [null, Validators.required],
       emailAddress: [null, [Validators.required, Validators.email]]
@@ -41,17 +41,17 @@ export class AppComponent {
   }
 
   addNewInputField(): void {
-    const control = this.formGroup.controls.emailAddresses as FormArray;
+    const control = this.formGroup.controls.emailAddresses as UntypedFormArray;
     const group = this.initEmailAddressFields();
     control.push(group);
   }
 
   removeInputField(i: number): void {
-    const control = this.formGroup.controls.emailAddresses as FormArray;
+    const control = this.formGroup.controls.emailAddresses as UntypedFormArray;
     control.removeAt(i);
   }
 
-  constructor(private builder: FormBuilder) {}
+  constructor(private builder: UntypedFormBuilder) {}
 
   ngOnInit() {
     this.form = this.builder.group({
@@ -87,6 +87,6 @@ export class AppComponent {
   submit() {}
 }
 
-function addressValidator(addr: FormGroup) {
+function addressValidator(addr: UntypedFormGroup) {
   return addr.value && addr.value.country && addr.value.city ? null : { invalidAddress: true };
 }

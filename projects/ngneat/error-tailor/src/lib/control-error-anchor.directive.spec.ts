@@ -5,7 +5,8 @@ import { ControlErrorAnchorDirective } from './control-error-anchor.directive';
 
 @Component({
   selector: 'get-anchor',
-  template: ''
+  template: '',
+  standalone: true
 })
 class GetAnchorComponent {
   @Input()
@@ -16,7 +17,7 @@ describe('ControlErrorAnchorDirective', () => {
   let spectator: SpectatorDirective<ControlErrorAnchorDirective>;
   const createDirective = createDirectiveFactory({
     directive: ControlErrorAnchorDirective,
-    declarations: [GetAnchorComponent]
+    imports: [GetAnchorComponent]
   });
 
   beforeEach(() => {
