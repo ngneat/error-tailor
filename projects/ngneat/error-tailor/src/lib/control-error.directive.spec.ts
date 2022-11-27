@@ -1,8 +1,8 @@
 import { Component, Type, ViewChild, ViewChildren, QueryList } from '@angular/core';
 import {
-  FormArray,
-  FormBuilder,
-  FormControl,
+  UntypedFormArray,
+  UntypedFormBuilder,
+  UntypedFormControl,
   FormsModule,
   ReactiveFormsModule,
   Validators,
@@ -86,13 +86,13 @@ describe('ControlErrorDirective', () => {
 
       @ViewChild('explicitErrorTailor', { static: true }) explicitErrorTailor: ControlErrorsDirective;
 
-      constructor(private builder: FormBuilder) {}
+      constructor(private builder: UntypedFormBuilder) {}
 
       createName() {
-        return new FormControl('', [Validators.required, Validators.minLength(3)]);
+        return new UntypedFormControl('', [Validators.required, Validators.minLength(3)]);
       }
 
-      validator({ controls }: FormArray) {
+      validator({ controls }: UntypedFormArray) {
         return controls.some(control => control.valid) ? null : { requiredone: true };
       }
 
@@ -294,7 +294,7 @@ describe('ControlErrorDirective', () => {
       `
     })
     class FormControlComponent {
-      name = new FormControl('', [Validators.required, Validators.minLength(3)]);
+      name = new UntypedFormControl('', [Validators.required, Validators.minLength(3)]);
     }
 
     let spectator: Spectator<FormControlComponent>;
@@ -390,7 +390,7 @@ describe('ControlErrorDirective', () => {
     })
     class CommonFormGroupComponent {
       form = this.builder.group({
-        customErrors: new FormControl('', [Validators.required, Validators.minLength(3)]),
+        customErrors: new UntypedFormControl('', [Validators.required, Validators.minLength(3)]),
         customTemplate: ['', Validators.required],
         customClass: ['', Validators.required],
         withAnchor: ['', Validators.required],
@@ -401,7 +401,7 @@ describe('ControlErrorDirective', () => {
         required: 'custom required error'
       };
 
-      constructor(private builder: FormBuilder) {}
+      constructor(private builder: UntypedFormBuilder) {}
     }
 
     let spectator: Spectator<CommonFormGroupComponent>;
@@ -485,10 +485,10 @@ describe('ControlErrorDirective', () => {
     })
     class CustomErrorFormGroupComponent {
       form = this.builder.group({
-        name: new FormControl('', [Validators.required])
+        name: new UntypedFormControl('', [Validators.required])
       });
       showName = true;
-      constructor(private builder: FormBuilder) {}
+      constructor(private builder: UntypedFormBuilder) {}
     }
 
     @Component({

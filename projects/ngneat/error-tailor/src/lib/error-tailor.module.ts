@@ -16,8 +16,7 @@ const api = [DefaultControlErrorComponent, ControlErrorAnchorDirective, ControlE
     FormActionDirective
   ],
   imports: [CommonModule],
-  exports: [api],
-  entryComponents: [DefaultControlErrorComponent]
+  exports: [api]
 })
 export class ErrorTailorModule {
   static forRoot(config: ErrorTailorConfig = {}): ModuleWithProviders<ErrorTailorModule> {
