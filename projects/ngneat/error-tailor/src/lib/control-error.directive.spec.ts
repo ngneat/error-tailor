@@ -1,28 +1,27 @@
-import { Component, Type, ViewChild, ViewChildren, QueryList } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Component, Type, ViewChild } from '@angular/core';
+import { fakeAsync, tick } from '@angular/core/testing';
 import {
+  AbstractControl,
+  FormsModule,
+  ReactiveFormsModule,
   UntypedFormArray,
   UntypedFormBuilder,
   UntypedFormControl,
-  FormsModule,
-  ReactiveFormsModule,
-  Validators,
-  AbstractControl,
-  ValidationErrors
+  ValidationErrors,
+  Validators
 } from '@angular/forms';
+import { ControlErrorsDirective, errorTailorImports, provideErrorTailorConfig } from '@ngneat/error-tailor';
 import { byPlaceholder, byText, createComponentFactory, Spectator } from '@ngneat/spectator';
-import { ControlErrorsDirective, ErrorTailorModule } from '@ngneat/error-tailor';
-import { tick, fakeAsync } from '@angular/core/testing';
-import { DefaultControlErrorComponent } from './control-error.component';
-import { Observable, asyncScheduler, scheduled } from 'rxjs';
+import { asyncScheduler, Observable, scheduled } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { DefaultControlErrorComponent } from './control-error.component';
 
 function getComponentFactory<C>(component: Type<C>) {
   return createComponentFactory({
     component,
-    imports: [
-      FormsModule,
-      ReactiveFormsModule,
-      ErrorTailorModule.forRoot({
+    providers: [
+      provideErrorTailorConfig({
         errors: {
           useValue: {
             required: () => 'required error',
@@ -34,7 +33,8 @@ function getComponentFactory<C>(component: Type<C>) {
         },
         controlErrorsClass: ['global', 'config']
       })
-    ]
+    ],
+    imports: [FormsModule, ReactiveFormsModule, errorTailorImports]
   });
 }
 
@@ -46,6 +46,8 @@ function typeInElementAndFocusOut(spectator: Spectator<any>, text: string, input
 describe('ControlErrorDirective', () => {
   describe('FormGroup', () => {
     @Component({
+      standalone: true,
+      imports: [ReactiveFormsModule, errorTailorImports, CommonModule],
       template: `
         <form [formGroup]="form" errorTailor>
           <input formControlName="name" placeholder="Name" />
@@ -326,6 +328,8 @@ describe('ControlErrorDirective', () => {
 
   describe('NgModel', () => {
     @Component({
+      standalone: true,
+      imports: [FormsModule, errorTailorImports],
       template: `
         <input [(ngModel)]="name" placeholder="Name" required minlength="3" />
       `
@@ -363,6 +367,8 @@ describe('ControlErrorDirective', () => {
 
   describe('common', () => {
     @Component({
+      standalone: true,
+      imports: [ReactiveFormsModule, errorTailorImports, CommonModule],
       template: `
         <form [formGroup]="form" errorTailor>
           <input formControlName="customErrors" placeholder="Custom errors" [controlErrors]="customErrors" />
@@ -477,6 +483,8 @@ describe('ControlErrorDirective', () => {
   describe('GlobalConfig', () => {
     @Component({
       selector: 'custom-error-form-group',
+      standalone: true,
+      imports: [ReactiveFormsModule, errorTailorImports, CommonModule],
       template: `
         <form [formGroup]="form" errorTailor>
           <input formControlName="name" placeholder="Name" *ngIf="showName" />
@@ -492,6 +500,7 @@ describe('ControlErrorDirective', () => {
     }
 
     @Component({
+      standalone: true,
       selector: 'custom-error-component',
       template: `
         <h1>{{ errorText }}</h1>
@@ -505,11 +514,8 @@ describe('ControlErrorDirective', () => {
     ) {
       return createComponentFactory({
         component,
-        declarations: [CustomControlErrorComponent],
-        imports: [
-          FormsModule,
-          ReactiveFormsModule,
-          ErrorTailorModule.forRoot({
+        providers: [
+          provideErrorTailorConfig({
             errors: {
               useValue: {
                 required: () => 'required error'
@@ -523,7 +529,8 @@ describe('ControlErrorDirective', () => {
               change: true
             }
           })
-        ]
+        ],
+        imports: [FormsModule, CustomControlErrorComponent, ReactiveFormsModule, errorTailorImports]
       });
     }
 

@@ -4,10 +4,9 @@ import { NgModule } from '@angular/core';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { ErrorTailorModule } from '@ngneat/error-tailor';
+import { errorTailorImports, provideErrorTailorConfig } from '@ngneat/error-tailor';
 import { CommonModule } from '@angular/common';
 import { CustomErrorControlModule } from './custom-error-control/custom-error-control.module';
-import { CustomControlErrorComponent } from './custom-error-control/custom-error-control.component';
 
 /**
  * Hook function to attach error messages to the control's grandparent rather than its parent.
@@ -29,7 +28,10 @@ function controlErrorComponentAnchorFn(hostElem: Element, errorElem: Element) {
     FormsModule,
     ReactiveFormsModule,
     CustomErrorControlModule,
-    ErrorTailorModule.forRoot({
+    errorTailorImports
+  ],
+  providers: [
+    provideErrorTailorConfig({
       errors: {
         useFactory() {
           return {
@@ -44,7 +46,6 @@ function controlErrorComponentAnchorFn(hostElem: Element, errorElem: Element) {
       //controlErrorComponentAnchorFn: controlErrorComponentAnchorFn // Uncomment to see errors being positioned differently
     })
   ],
-  providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule {}

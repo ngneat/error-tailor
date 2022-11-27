@@ -24,15 +24,15 @@ Sit back, relax, and let the Error Tailor do all the work!
 
 ## Getting Started
 
-Run `npm install @ngneat/error-tailor` and add the module to your application:
+Run `npm install @ngneat/error-tailor` and add the imports to your application:
 
 <!-- prettier-ignore-start -->
 ```ts
-@NgModule({
-  declarations: [AppComponent],
-  imports: [
-    ReactiveFormsModule,
-    ErrorTailorModule.forRoot({
+import { provideErrorTailorConfig } from '@ngneat/error-tailor';
+
+bootstrapApplication(AppComponent, {
+  providers: [
+    provideErrorTailorConfig({
       errors: {
         useValue: {
           required: 'This field is required',
@@ -42,10 +42,8 @@ Run `npm install @ngneat/error-tailor` and add the module to your application:
         }
       }
     })
-  ],
-  bootstrap: [AppComponent]
+  ]
 })
-export class AppModule {}
 ```
 <!-- prettier-ignore-end -->
 
@@ -81,10 +79,16 @@ Now the only thing you need to add is the `errorTailor` directive to your form:
 ```
 
 ```ts
-export class AppComponent {
-  form: FormGroup;
+import { errorTailorImports } from '@ngneat/error-tailor';
 
-  constructor(private builder: FormBuilder) {}
+@Component({
+  selector: 'app-root',
+  standalone: true,
+  imports: [errorTailorImports, ReactiveFormsModule]
+})
+export class AppComponent {
+  private builder = inject(FormBuilder);
+  form: FormGroup;
 
   ngOnInit() {
     this.form = this.builder.group({
@@ -258,9 +262,12 @@ The library adds a `form-submitted` to the submitted form. You can use it to sty
   a custom control error component.
 
   For example:
-  ```ts
+
+```ts
   // Custom error component that will replace the standard DefaultControlErrorComponent.
   @Component({
+    standalone: true,
+    imports: [errorTailorImports],
     template: `
     <ion-item lines="none" class="ion-text-wrap" [class.hide-control]="hideError">
       <ion-label color="danger" class="ion-no-margin ion-text-wrap" stacked>
@@ -272,23 +279,20 @@ The library adds a `form-submitted` to the submitted form. You can use it to sty
   export class IonicControlErrorComponent extends DefaultControlErrorComponent {
   }
 
-  @NgModule({
-    declarations: [AppComponent, IonicControlErrorComponent],
-    imports: [
-      ReactiveFormsModule,
-      ErrorTailorModule.forRoot({
-        errors: {
-          useValue: {
-            required: 'This field is required'
-          }
-        },
-        controlErrorComponent: IonicControlErrorComponent
-      })
-    ],
-    bootstrap: [AppComponent]
-  })
-  export class AppModule {}
-  ```
+bootstrapApplication(AppComponent, {
+  providers: [
+    provideErrorTailorConfig({
+      errors: {
+        useValue: {
+          required: 'This field is required'
+        }
+      },
+      controlErrorComponent: IonicControlErrorComponent
+    })
+  ]
+})
+```
+
 - `controlErrorComponentAnchorFn` - Optional. A hook function that allows the error component's 
   HTML element to be repositioned in the DOM. By default error components are inserted at the
   bottom of the field with error. If your UI layout dictates a different positioning 
@@ -303,7 +307,8 @@ The library adds a `form-submitted` to the submitted form. You can use it to sty
   Example below shows how the Ionic specific error component is repositioned in the DOM
   to suit Ionic's form layout. `hostElem` is the HTML element for the form control and
   `errorElem` is the HTML element for the error component. 
-  ```ts
+  
+```ts
   anchorIonicErrorComponent(hostElement: Element, errorElement: Element) {
     hostElement.parentElement.insertAdjacentElement('afterend', errorElement);
     return () => {
@@ -314,23 +319,20 @@ The library adds a `form-submitted` to the submitted form. You can use it to sty
     };
   }
 
-  @NgModule({
-    declarations: [AppComponent, IonicControlErrorComponent],
-    imports: [
-      ReactiveFormsModule,
-      ErrorTailorModule.forRoot({
-        errors: {
-          useValue: {
-            required: 'This field is required'
-          }
-        },
-        controlErrorComponent: IonicControlErrorComponent,
-        controlErrorComponentAnchorFn: anchorIonicErrorComponent
-      })
-    ],
-    bootstrap: [AppComponent]
-  })
-  export class AppModule {}
+bootstrapApplication(AppComponent, {
+  providers: [
+    provideErrorTailorConfig({
+      errors: {
+        useValue: {
+          required: 'This field is required'
+        }
+      },
+      controlErrorComponent: IonicControlErrorComponent,
+      controlErrorComponentAnchorFn: anchorIonicErrorComponent
+    })
+  ]
+})
+
   ```
 
 - `controlErrorsOn` - Optional. An object that allows the default behavior for showing the errors to be overridden. (each individual property in the object is optional, so it's possible to override only 1 setting)
@@ -354,10 +356,9 @@ Here's how to support i18n:
 ```ts
 import { TranslocoService } from '@ngneat/transloco';
 
-@NgModule({
-  declarations: [AppComponent],
-  imports: [
-    ErrorTailorModule.forRoot({
+bootstrapApplication(AppComponent, {
+  providers: [
+    provideErrorTailorConfig({
       errors: {
         useFactory(service: TranslocoService) {
           return {
@@ -367,10 +368,8 @@ import { TranslocoService } from '@ngneat/transloco';
         deps: [TranslocoService]
       }
     })
-  ],
-  bootstrap: [AppComponent]
+  ]
 })
-export class AppModule {}
 ```
 
 ### Control Error Style
@@ -385,30 +384,3 @@ Here's a default style you can use for the error component:
   color: #dc3545;
 }
 ```
-
-## Contributors ✨
-
-Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
-
-<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
-<!-- prettier-ignore-start -->
-<!-- markdownlint-disable -->
-<table>
-  <tr>
-    <td align="center"><a href="https://www.netbasal.com"><img src="https://avatars1.githubusercontent.com/u/6745730?v=4" width="100px;" alt=""/><br /><sub><b>Netanel Basal</b></sub></a><br /><a href="https://github.com/@ngneat/error-tailor/commits?author=NetanelBasal" title="Code">💻</a> <a href="https://github.com/@ngneat/error-tailor/commits?author=NetanelBasal" title="Documentation">📖</a> <a href="#ideas-NetanelBasal" title="Ideas, Planning, & Feedback">🤔</a> <a href="#infra-NetanelBasal" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a></td>
-    <td align="center"><a href="https://github.com/tonivj5"><img src="https://avatars2.githubusercontent.com/u/7110786?v=4" width="100px;" alt=""/><br /><sub><b>Toni Villena</b></sub></a><br /><a href="https://github.com/@ngneat/error-tailor/commits?author=tonivj5" title="Code">💻</a> <a href="https://github.com/@ngneat/error-tailor/commits?author=tonivj5" title="Tests">⚠️</a></td>
-    <td align="center"><a href="https://github.com/theblushingcrow"><img src="https://avatars3.githubusercontent.com/u/638818?v=4" width="100px;" alt=""/><br /><sub><b>Inbal Sinai</b></sub></a><br /><a href="https://github.com/@ngneat/error-tailor/commits?author=theblushingcrow" title="Documentation">📖</a></td>
-    <td align="center"><a href="https://twitter.com/dmorosinotto"><img src="https://avatars2.githubusercontent.com/u/3982050?v=4" width="100px;" alt=""/><br /><sub><b>Daniele Morosinotto</b></sub></a><br /><a href="https://github.com/@ngneat/error-tailor/commits?author=dmorosinotto" title="Code">💻</a> <a href="https://github.com/@ngneat/error-tailor/commits?author=dmorosinotto" title="Documentation">📖</a> <a href="#example-dmorosinotto" title="Examples">💡</a></td>
-    <td align="center"><a href="https://github.com/rhutchison"><img src="https://avatars3.githubusercontent.com/u/1460261?v=4" width="100px;" alt=""/><br /><sub><b>Ryan Hutchison</b></sub></a><br /><a href="https://github.com/@ngneat/error-tailor/issues?q=author%3Arhutchison" title="Bug reports">🐛</a> <a href="https://github.com/@ngneat/error-tailor/commits?author=rhutchison" title="Documentation">📖</a> <a href="https://github.com/@ngneat/error-tailor/commits?author=rhutchison" title="Code">💻</a> <a href="https://github.com/@ngneat/error-tailor/commits?author=rhutchison" title="Tests">⚠️</a></td>
-    <td align="center"><a href="http://www.mlc.cz"><img src="https://avatars3.githubusercontent.com/u/5693835?v=4" width="100px;" alt=""/><br /><sub><b>Miloš Lapiš</b></sub></a><br /><a href="https://github.com/@ngneat/error-tailor/commits?author=mlc-mlapis" title="Code">💻</a></td>
-    <td align="center"><a href="http://www.smallpearl.com"><img src="https://avatars3.githubusercontent.com/u/6202401?v=4" width="100px;" alt=""/><br /><sub><b>Hari Mahadevan</b></sub></a><br /><a href="https://github.com/@ngneat/error-tailor/commits?author=harikvpy" title="Code">💻</a></td>
-  </tr>
-</table>
-
-<!-- markdownlint-enable -->
-<!-- prettier-ignore-end -->
-<!-- ALL-CONTRIBUTORS-LIST:END -->
-
-This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
-
-Icon made by <a href="https://www.flaticon.com/authors/nhor-phai" title="Nhor Phai">Nhor Phai</a> from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a>

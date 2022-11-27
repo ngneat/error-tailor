@@ -2,7 +2,7 @@
  * Public API Surface of error-tailor
  */
 
-export * from './lib/error-tailor.module';
+export * from './lib/error-tailor.providers';
 export * from './lib/control-error.component';
 export * from './lib/control-error-anchor.directive';
 export * from './lib/control-error.directive';

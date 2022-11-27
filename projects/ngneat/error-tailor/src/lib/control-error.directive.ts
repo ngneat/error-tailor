@@ -24,6 +24,7 @@ import { ErrorTailorConfig, ErrorTailorConfigProvider, FORM_ERRORS } from './pro
 import { ErrorsMap } from './types';
 
 @Directive({
+  standalone: true,
   selector:
     '[formControlName]:not([controlErrorsIgnore]), [formControl]:not([controlErrorsIgnore]), [formGroup]:not([controlErrorsIgnore]), [formGroupName]:not([controlErrorsIgnore]), [formArrayName]:not([controlErrorsIgnore]), [ngModel]:not([controlErrorsIgnore])',
   exportAs: 'errorTailor'

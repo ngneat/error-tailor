@@ -1,9 +1,10 @@
-import { Directive, ViewContainerRef } from '@angular/core';
+import { Directive, inject, ViewContainerRef } from '@angular/core';
 
 @Directive({
   selector: '[controlErrorAnchor]',
+  standalone: true,
   exportAs: 'controlErrorAnchor'
 })
 export class ControlErrorAnchorDirective {
-  constructor(public vcr: ViewContainerRef) {}
+  vcr = inject(ViewContainerRef);
 }
