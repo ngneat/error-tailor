@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.0.0](https://github.com/ngneat/error-tailor/compare/v2.2.2...v3.0.0) (2022-11-27)
+
+
+### ⚠ BREAKING CHANGES
+
+* upgrade to v15
+
+- peer dep is now Angular v14
+- remove `ErrorTailorModule`
+
+### Features
+
+* upgrade to v15 ([672f552](https://github.com/ngneat/error-tailor/commit/672f552f6ca26b1da5345fcb35fd07c1637f698a))
+
 ### [2.2.2](https://github.com/ngneat/error-tailor/compare/v2.2.1...v2.2.2) (2022-09-23)
 
 
