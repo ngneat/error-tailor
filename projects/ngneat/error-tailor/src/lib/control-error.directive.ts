@@ -1,5 +1,4 @@
 import {
-  ComponentFactoryResolver,
   ComponentRef,
   Directive,
   ElementRef,
@@ -51,7 +50,6 @@ export class ControlErrorsDirective implements OnInit, OnDestroy {
 
   constructor(
     private vcr: ViewContainerRef,
-    private resolver: ComponentFactoryResolver,
     private host: ElementRef,
     @Inject(ErrorTailorConfigProvider) private config: ErrorTailorConfig,
     @Inject(FORM_ERRORS) private globalErrors,
@@ -123,10 +121,7 @@ export class ControlErrorsDirective implements OnInit, OnDestroy {
 
   private setError(text: string, error?: ValidationErrors) {
     if (!this.ref) {
-      const factory = this.resolver.resolveComponentFactory<ControlErrorComponent>(
-        this.mergedConfig.controlErrorComponent
-      );
-      this.ref = this.anchor.createComponent<ControlErrorComponent>(factory);
+      this.ref = this.anchor.createComponent<ControlErrorComponent>(this.mergedConfig.controlErrorComponent);
     }
     const instance = this.ref.instance;
 
