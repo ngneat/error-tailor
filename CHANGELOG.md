@@ -2,6 +2,28 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.0.3](https://github.com/ngneat/error-tailor/compare/v2.2.2...v3.0.3) (2023-01-05)
+
+
+### ⚠ BREAKING CHANGES
+
+* upgrade to v15
+
+- peer dep is now Angular v14
+- remove `ErrorTailorModule`
+
+* chore(release): 3.0.0
+
+* chore(release): 3.0.1
+
+### Bug Fixes
+
+* 🐛 change imports array to module ([1ec93f0](https://github.com/ngneat/error-tailor/commit/1ec93f0545e80d0edd27db47cd5892b784e04f63))
+* 🐛 remove component factory usage ([2813623](https://github.com/ngneat/error-tailor/commit/2813623538f5b63210b0a474f9b739ab6a6ccc86))
+
+
+* V15 (#91) ([c7503c5](https://github.com/ngneat/error-tailor/commit/c7503c52f4cd3e319b4cec6a78ff56c7a47e6d55)), closes [#91](https://github.com/ngneat/error-tailor/issues/91)
+
 ### [3.0.1](https://github.com/ngneat/error-tailor/compare/v3.0.0...v3.0.1) (2022-11-27)
 
 ## [3.0.0](https://github.com/ngneat/error-tailor/compare/v2.2.2...v3.0.0) (2022-11-27)
