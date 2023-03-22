@@ -9,9 +9,9 @@ body {
   color: #dc3545;
 }
 
-.on-submit.form-submitted,
+.on-submit.ng-submitted,
 form:not(.on-submit) {
-  .ng-touched.ng-invalid {
+  .error-tailor-has-error .ng-invalid {
     border-color: #dc3545;
     padding-right: calc(1.5em + 0.75rem);
   }
