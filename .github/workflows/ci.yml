@@ -1,4 +1,4 @@
-name: Test
+name: CI
 
 on:
   push:
@@ -8,6 +8,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v3
 
@@ -22,6 +23,7 @@ jobs:
         run: npm run build:lib
   test:
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v3
 
@@ -33,4 +35,4 @@ jobs:
       - run: npm i
 
       - name: Run tests
-      - run: npm run test:lib:headless
+        run: npm run test:lib:headless
