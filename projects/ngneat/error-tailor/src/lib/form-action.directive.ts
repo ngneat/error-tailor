@@ -1,31 +1,23 @@
-import { Directive, ElementRef } from '@angular/core';
-import { fromEvent, Observable } from 'rxjs';
-import { shareReplay, tap } from 'rxjs/operators';
+import { Directive, ElementRef, OnInit } from '@angular/core';
+import { tap, fromEvent, Observable, Subject, takeUntil } from 'rxjs';
 
 @Directive({
   standalone: true,
   selector: 'form[errorTailor]'
 })
-export class FormActionDirective {
-  submit$: Observable<Event> = fromEvent(this.element, 'submit').pipe(
-    tap(() => {
-      if (this.element.classList.contains('form-submitted') === false) {
-        this.element.classList.add('form-submitted');
-      }
-    }),
-    shareReplay({ refCount: true, bufferSize: 1 })
-  );
+export class FormActionDirective implements OnInit {
+  private submit = new Subject<Event | null>();
+  private destroy = new Subject<void>();
 
-  reset$: Observable<Event> = fromEvent(this.element, 'reset').pipe(
-    tap(() => {
-      this.element.classList.remove('form-submitted');
-    }),
-    shareReplay({ refCount: true, bufferSize: 1 })
-  );
+  element = this.host.nativeElement;
+  submit$ = this.submit.asObservable();
+  reset$: Observable<Event> = fromEvent(this.element, 'reset').pipe(tap(() => this.submit.next(null)));
 
   constructor(private host: ElementRef<HTMLFormElement>) {}
 
-  get element() {
-    return this.host.nativeElement;
+  ngOnInit() {
+    fromEvent(this.element, 'submit')
+      .pipe(takeUntil(this.destroy))
+      .subscribe(this.submit);
   }
 }

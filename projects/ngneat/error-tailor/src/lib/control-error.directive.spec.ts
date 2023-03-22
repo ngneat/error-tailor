@@ -13,8 +13,7 @@ import {
 } from '@angular/forms';
 import { ControlErrorsDirective, errorTailorImports, provideErrorTailorConfig } from '@ngneat/error-tailor';
 import { byPlaceholder, byText, createComponentFactory, Spectator } from '@ngneat/spectator';
-import { asyncScheduler, Observable, scheduled } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, asyncScheduler, Observable, scheduled } from 'rxjs';
 import { DefaultControlErrorComponent } from './control-error.component';
 
 function getComponentFactory<C>(component: Type<C>) {
@@ -291,6 +290,8 @@ describe('ControlErrorDirective', () => {
 
   describe('FormControl', () => {
     @Component({
+      standalone: true,
+      imports: [ReactiveFormsModule, errorTailorImports],
       template: `
         <input [formControl]="name" placeholder="Name" />
       `
@@ -524,7 +525,7 @@ describe('ControlErrorDirective', () => {
             controlErrorsClass: ['global', 'config'],
             controlCustomClass: 'control custom',
             controlErrorComponent: CustomControlErrorComponent,
-            controlErrorComponentAnchorFn: controlErrorComponentAnchorFn,
+            controlErrorComponentAnchorFn,
             controlErrorsOn: {
               change: true
             }
