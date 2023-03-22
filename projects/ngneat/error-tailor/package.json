@@ -1,6 +1,6 @@
 {
   "name": "@ngneat/error-tailor",
-  "version": "3.0.3",
+  "version": "4.0.0",
   "description": "Seamless form errors for Angular Applications",
   "dependencies": {
     "tslib": "2.5.0"

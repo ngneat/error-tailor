@@ -2,6 +2,29 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [4.0.0](https://github.com/ngneat/error-tailor/compare/v3.0.3...v4.0.0) (2023-03-22)
+
+
+### ⚠ BREAKING CHANGES
+
+* Update angular peer dependency to v15
+* Resetting a form will now clear all the errors and reset the submit
+state
+
+### Features
+
+* 🎸 listen to status changes ([ebf51ca](https://github.com/ngneat/error-tailor/commit/ebf51caa5cb5cf58d14f12312a1e4354031bf9c4))
+
+
+### Bug Fixes
+
+* 🐛 form action submit and reset behaviour ([de2e59c](https://github.com/ngneat/error-tailor/commit/de2e59c7b84c538157e507529e618de4ffaa5ba6))
+
+
+### chore
+
+* 🤖 set angular 16 as peer dep ([920e954](https://github.com/ngneat/error-tailor/commit/920e954bfa37139544353ee9db4971dc44dcac6e))
+
 ### [3.0.3](https://github.com/ngneat/error-tailor/compare/v2.2.2...v3.0.3) (2023-01-05)
 
 - remove component factory usage
