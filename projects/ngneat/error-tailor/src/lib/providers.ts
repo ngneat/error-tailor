@@ -30,6 +30,7 @@ export type ErrorTailorConfig = {
     async?: boolean;
     blur?: boolean;
     change?: boolean;
+    status?: boolean;
   };
 };
 
