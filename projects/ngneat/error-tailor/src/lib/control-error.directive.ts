@@ -10,7 +10,7 @@ import {
   Optional,
   Self,
   TemplateRef,
-  ViewContainerRef
+  ViewContainerRef,
 } from '@angular/core';
 import { AbstractControl, ControlContainer, NgControl, ValidationErrors } from '@angular/forms';
 import {
@@ -25,13 +25,13 @@ import {
   NEVER,
   Observable,
   Subject,
-  tap
+  tap,
 } from 'rxjs';
 
 import { ControlErrorAnchorDirective } from './control-error-anchor.directive';
 import { ControlErrorComponent, DefaultControlErrorComponent } from './control-error.component';
 import { FormActionDirective } from './form-action.directive';
-import { ErrorTailorConfig, ErrorTailorConfigProvider, FORM_ERRORS } from './providers';
+import { ErrorTailorConfig, ErrorTailorConfigProvider, FORM_ERRORS } from './error-tailor.providers';
 import { ErrorsMap } from './types';
 
 const errorTailorClass = 'error-tailor-has-error';
@@ -40,7 +40,7 @@ const errorTailorClass = 'error-tailor-has-error';
   standalone: true,
   selector:
     '[formControlName]:not([controlErrorsIgnore]), [formControl]:not([controlErrorsIgnore]), [formGroup]:not([controlErrorsIgnore]), [formGroupName]:not([controlErrorsIgnore]), [formArrayName]:not([controlErrorsIgnore]), [ngModel]:not([controlErrorsIgnore])',
-  exportAs: 'errorTailor'
+  exportAs: 'errorTailor',
 })
 export class ControlErrorsDirective implements OnInit, OnDestroy {
   @Input('controlErrors') customErrors: ErrorsMap = {};
@@ -135,7 +135,7 @@ export class ControlErrorsDirective implements OnInit, OnDestroy {
 
     // when submitted, submitFirstThenUponChanges
     const changesOnSubmit$ = submit$.pipe(
-      switchMap(submit => (submit ? controlChanges$.pipe(startWith(true)) : NEVER))
+      switchMap((submit) => (submit ? controlChanges$.pipe(startWith(true)) : NEVER))
     );
 
     // on reset, clear ComponentRef and customAnchorDestroyFn
@@ -154,9 +154,11 @@ export class ControlErrorsDirective implements OnInit, OnDestroy {
   }
 
   private setError(text: string, error?: ValidationErrors) {
-    if (!this.ref) {
-      this.ref = this.anchor.createComponent<ControlErrorComponent>(this.mergedConfig.controlErrorComponent);
+    if (this.mergedConfig.controlClassOnly) {
+      return;
     }
+
+    this.ref ??= this.anchor.createComponent<ControlErrorComponent>(this.mergedConfig.controlErrorComponent);
     const instance = this.ref.instance;
 
     if (this.controlErrorsTpl) {
@@ -223,9 +225,7 @@ export class ControlErrorsDirective implements OnInit, OnDestroy {
       this.customAnchorDestroyFn();
       this.customAnchorDestroyFn = null;
     }
-    if (this.ref) {
-      this.ref.destroy();
-    }
+    this.ref?.destroy();
     this.ref = null;
   }
 
@@ -246,7 +246,7 @@ export class ControlErrorsDirective implements OnInit, OnDestroy {
         blurPredicate(element) {
           return element.tagName === 'INPUT' || element.tagName === 'SELECT';
         },
-        controlErrorComponent: DefaultControlErrorComponent
+        controlErrorComponent: DefaultControlErrorComponent,
       },
 
       ...this.config,
@@ -255,8 +255,8 @@ export class ControlErrorsDirective implements OnInit, OnDestroy {
         async: this.controlErrorsOnAsync ?? this.config.controlErrorsOn?.async ?? true,
         blur: this.controlErrorsOnBlur ?? this.config.controlErrorsOn?.blur ?? true,
         change: this.controlErrorsOnChange ?? this.config.controlErrorsOn?.change ?? false,
-        status: this.controlErrorsOnStatusChange ?? this.config.controlErrorsOn?.status ?? false
-      }
+        status: this.controlErrorsOnStatusChange ?? this.config.controlErrorsOn?.status ?? false,
+      },
     };
   }
 
