@@ -147,7 +147,7 @@ export class ControlErrorsDirective implements OnInit, OnDestroy {
         const hasErrors = !!this.control.errors;
         if (hasErrors) {
           this.showError();
-        } else if (this.ref) {
+        } else {
           this.hideError();
         }
       });
@@ -202,7 +202,9 @@ export class ControlErrorsDirective implements OnInit, OnDestroy {
    */
   hideError(): void {
     this.removeCustomClass();
-    this.setError(null);
+    if (this.ref) {
+      this.setError(null);
+    }
   }
 
   ngOnDestroy() {
