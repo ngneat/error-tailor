@@ -250,6 +250,7 @@ The library adds a `form-submitted` to the submitted form. You can use it to sty
   }
 }
 ```
+- `controlClassOnly` - Optional. If `true`, the error component won't be created and only the error class will be added to the control. Default is `false`. 
 - `controlErrorsClass` - Optional. A custom classes that'll be added to the control error component. Can be override if you set attribute `controlErrorsClass` on control
 - `controlCustomClass` - Optional. A custom classes that'll be added to the control if control has error. Can be override if you set attribute `controlCustomClass` on control
 - `controlErrorComponent` - Optional. Allows changing the default component that is used to render 

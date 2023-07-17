@@ -2,11 +2,11 @@
  * Public API Surface of error-tailor
  */
 
-export { provideErrorTailorConfig, errorTailorImports } from './lib/error-tailor.providers';
+export { errorTailorImports } from './lib/error-tailor.module';
 export {
   ControlErrorComponent,
   ErrorComponentTemplate,
-  DefaultControlErrorComponent
+  DefaultControlErrorComponent,
 } from './lib/control-error.component';
 export { ControlErrorAnchorDirective } from './lib/control-error-anchor.directive';
 export { ControlErrorsDirective } from './lib/control-error.directive';
@@ -17,5 +17,6 @@ export {
   ErrorTailorConfigProvider,
   ErrorsProvider,
   FORM_ERRORS,
-  ErrorsUseFactory
-} from './lib/providers';
+  ErrorsUseFactory,
+  provideErrorTailorConfig,
+} from './lib/error-tailor.providers';

@@ -1,32 +1,51 @@
-import { NgModule } from '@angular/core';
-import { ControlErrorAnchorDirective } from './control-error-anchor.directive';
-import { DefaultControlErrorComponent } from './control-error.component';
-import { ControlErrorsDirective } from './control-error.directive';
-import { FormActionDirective } from './form-action.directive';
-import { ErrorTailorConfig, ErrorTailorConfigProvider, FORM_ERRORS } from './providers';
+import { FactorySansProvider, InjectionToken, Type, ValueSansProvider } from '@angular/core';
+import { ErrorsMap } from './types';
+import { ControlErrorComponent } from './control-error.component';
 
-const _errorTailorImports = [
-  ControlErrorsDirective,
-  ControlErrorAnchorDirective,
-  DefaultControlErrorComponent,
-  FormActionDirective
-];
+export const FORM_ERRORS = new InjectionToken('FORM_ERRORS', {
+  providedIn: 'root',
+  factory: () => {
+    return {};
+  },
+});
 
-@NgModule({
-  imports: [_errorTailorImports],
-  exports: [_errorTailorImports]
-})
-export class errorTailorImports {}
+export interface ErrorsUseValue extends ValueSansProvider {
+  useValue: ErrorsMap;
+}
+
+export interface ErrorsUseFactory extends FactorySansProvider {
+  useFactory: (...args: any[]) => ErrorsMap;
+}
+
+export type ErrorsProvider = ErrorsUseValue | ErrorsUseFactory;
+
+export type ErrorTailorConfig = {
+  errors?: ErrorsProvider;
+  blurPredicate?: (element: Element) => boolean;
+  controlErrorsClass?: string | string[] | undefined;
+  controlCustomClass?: string | string[] | undefined;
+  controlErrorComponent?: Type<ControlErrorComponent>;
+  controlClassOnly?: boolean;
+  controlErrorComponentAnchorFn?: (hostElement: Element, errorElement: Element) => () => void;
+  controlErrorsOn?: {
+    async?: boolean;
+    blur?: boolean;
+    change?: boolean;
+    status?: boolean;
+  };
+};
+
+export const ErrorTailorConfigProvider = new InjectionToken<ErrorTailorConfig>('ErrorTailorConfigProvider');
 
 export function provideErrorTailorConfig(config: ErrorTailorConfig) {
   return [
     {
       provide: ErrorTailorConfigProvider,
-      useValue: config
+      useValue: config,
     },
     {
       provide: FORM_ERRORS,
-      ...config.errors
-    }
+      ...config.errors,
+    },
   ];
 }
