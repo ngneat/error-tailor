@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [4.1.0](https://github.com/ngneat/error-tailor/compare/v4.0.0...v4.1.0) (2023-07-17)
+
+
+### Features
+
+* 🎸 controlClassOnly ([5dfb5a8](https://github.com/ngneat/error-tailor/commit/5dfb5a874aef6d7d80b2e96528fa57bc296d8081))
+
 ## [4.0.0](https://github.com/ngneat/error-tailor/compare/v3.0.3...v4.0.0) (2023-03-22)
 
 
