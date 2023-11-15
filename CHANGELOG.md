@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [4.1.2](https://github.com/ngneat/error-tailor/compare/v4.1.1...v4.1.2) (2023-11-15)
+
+
+### Bug Fixes
+
+* 🐛 warn users on missing mapped error keys ([a206f74](https://github.com/ngneat/error-tailor/commit/a206f749cf6cf488362ab0e8ea6ee52612ecc2f5))
+
 ### [4.1.1](https://github.com/ngneat/error-tailor/compare/v4.1.0...v4.1.1) (2023-07-17)
 
 
