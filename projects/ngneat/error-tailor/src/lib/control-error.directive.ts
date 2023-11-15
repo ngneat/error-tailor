@@ -5,6 +5,7 @@ import {
   EmbeddedViewRef,
   Inject,
   Input,
+  isDevMode,
   OnDestroy,
   OnInit,
   Optional,
@@ -188,6 +189,9 @@ export class ControlErrorsDirective implements OnInit, OnDestroy {
       const [firstKey] = Object.keys(controlErrors);
       const getError = this.customErrors[firstKey] || this.globalErrors[firstKey];
       if (!getError) {
+        if (isDevMode()) {
+          console.warn(`[@ngneat/error-tailor]: Missing error message for ${firstKey}`);
+        }
         return;
       }
 
