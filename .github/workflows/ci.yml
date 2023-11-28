@@ -15,12 +15,15 @@ jobs:
       - name: Npm install
         uses: actions/setup-node@v3
         with:
-          node-version: 16
+          node-version: 18
           cache: 'npm'
       - run: npm i
 
-      - name: Run build
+      - name: Run build lib
         run: npm run build:lib
+
+      - name: Run build playground
+        run: npm run build
   test:
     runs-on: ubuntu-latest
 
@@ -30,7 +33,7 @@ jobs:
       - name: Npm install
         uses: actions/setup-node@v3
         with:
-          node-version: 16
+          node-version: 18
           cache: 'npm'
       - run: npm i
 

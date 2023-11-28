@@ -2,15 +2,11 @@
   <div class="form-group">
     <input class="form-control" formControlName="name" placeholder="Name" />
   </div>
-
   <div class="form-check form-group">
     <input class="form-check-input" type="checkbox" formControlName="terms" id="check" [controlErrorAnchor]="anchor" />
-    <label class="form-check-label" for="check">
-      I agree to the terms and conditions
-    </label>
+    <label class="form-check-label" for="check"> I agree to the terms and conditions </label>
     <ng-template controlErrorAnchor #anchor="controlErrorAnchor"></ng-template>
   </div>
-
   <div class="form-group">
     <span class="form-radio-group-label">Communication language:</span>
     <input
@@ -28,7 +24,6 @@
     <label class="form-radio-label" for="cs">Czech</label>
     <ng-template controlErrorAnchor #anchorRadio="controlErrorAnchor"></ng-template>
   </div>
-
   <section formGroupName="address">
     <div class="form-group">
       <input
@@ -39,21 +34,20 @@
         controlCustomClass="my-control-class"
       />
     </div>
-
     <div class="form-group">
       <input class="form-control" formControlName="country" placeholder="Country" [controlErrors]="extraErrors" />
     </div>
   </section>
-
   <div class="form-group">
     <select formControlName="animal" class="form-control">
       <option [ngValue]="null">- -</option>
-      <option *ngFor="let option of options; index as index" [ngValue]="option">
-        {{ option.label }}
-      </option>
+      @for (option of options; track option; let index = $index) {
+        <option [ngValue]="option">
+          {{ option.label }}
+        </option>
+      }
     </select>
   </div>
-
   <div class="form-check form-group">
     <input
       class="form-check-input"
@@ -68,7 +62,6 @@
     </label>
     <ng-template controlErrorAnchor #gdprAnchor="controlErrorAnchor"></ng-template>
   </div>
-
   <div class="text-right">
     <span>
       Showing/hiding errors on cookies validation:
@@ -79,9 +72,7 @@
   <br />
   <div class="text-right"><button class="btn btn-success btn-custom">Submit</button> <br /></div>
 </form>
-
 <h1>Template</h1>
-
 <form #f="ngForm" errorTailor>
   <div class="form-group">
     <input class="form-control" [(ngModel)]="model" required name="model" />
@@ -89,20 +80,15 @@
   <button class="btn btn-success">Submit</button>
   {{ f.value | json }}
 </form>
-
 <h1>Custom Template</h1>
-
 <form errorTailor>
   <ng-template let-error let-text="text" #tpl> {{ error | json }} {{ text }} </ng-template>
-
   <div class="form-group">
     <input class="form-control" ngModel required name="name" [controlErrorsOnBlur]="false" [controlErrorsTpl]="tpl" />
   </div>
   <button class="btn btn-success">Submit</button>
 </form>
-
 <h1>Show Errors On Submit (with Reset)</h1>
-
 <form class="on-submit" errorTailor>
   <div class="form-group on-submit">
     <input
@@ -117,21 +103,16 @@
   <button class="btn btn-success" type="submit">Submit</button>
   <button class="btn btn-default" type="reset">Reset</button>
 </form>
-
 <!-- <h1>Form Array</h1>
-
 <form [formGroup]="formGroup" errorTailor>
   <ng-container formArrayName="emailAddresses">
     <section [formGroupName]="i"
-              *ngFor="let email of emailAddresses.controls; let i = index;">
-              <input formControlName="emailAddress" placeholder="emailAddress">
-              <input formControlName="label" placeholder="label">
-  </section>
-  </ng-container>
-
-  <button (click)="addNewInputField()" type="button">Add</button>
-  <button (click)="submit()">Submit</button>
-
-</form> -->
-
+      *ngFor="let email of emailAddresses.controls; let i = index;">
+      <input formControlName="emailAddress" placeholder="emailAddress">
+        <input formControlName="label" placeholder="label">
+        </section>
+      </ng-container>
+      <button (click)="addNewInputField()" type="button">Add</button>
+      <button (click)="submit()">Submit</button>
+    </form> -->
 <!-- {{ formGroup.value | json }} -->

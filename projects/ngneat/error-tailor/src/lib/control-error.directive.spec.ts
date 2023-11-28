@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { Component, Type, ViewChild } from '@angular/core';
 import { fakeAsync, tick } from '@angular/core/testing';
 import {
@@ -9,12 +8,13 @@ import {
   UntypedFormBuilder,
   UntypedFormControl,
   ValidationErrors,
-  Validators
+  Validators,
 } from '@angular/forms';
 import { ControlErrorsDirective, errorTailorImports, provideErrorTailorConfig } from '@ngneat/error-tailor';
 import { byPlaceholder, byText, createComponentFactory, Spectator } from '@ngneat/spectator';
 import { map, asyncScheduler, Observable, scheduled } from 'rxjs';
 import { DefaultControlErrorComponent } from './control-error.component';
+import { CommonModule } from '@angular/common';
 
 function getComponentFactory<C>(component: Type<C>) {
   return createComponentFactory({
@@ -27,13 +27,13 @@ function getComponentFactory<C>(component: Type<C>) {
             requireExplicit: () => 'required explicit error',
             minlength: () => 'min error',
             requiredone: () => 'required one error',
-            serverError: error => error
-          }
+            serverError: (error) => error,
+          },
         },
-        controlErrorsClass: ['global', 'config']
-      })
+        controlErrorsClass: ['global', 'config'],
+      }),
     ],
-    imports: [FormsModule, ReactiveFormsModule, errorTailorImports]
+    imports: [FormsModule, ReactiveFormsModule, errorTailorImports],
   });
 }
 
@@ -50,28 +50,23 @@ describe('ControlErrorDirective', () => {
       template: `
         <form [formGroup]="form" errorTailor>
           <input formControlName="name" placeholder="Name" />
-
           <input type="checkbox" formControlName="terms" id="check" [controlErrorAnchor]="anchor" />
           <ng-template controlErrorAnchor #anchor="controlErrorAnchor"></ng-template>
-
           <input formControlName="ignored" placeholder="Ignored" controlErrorsIgnore />
-
           <input formControlName="explicit" placeholder="Explicit" #explicitErrorTailor="errorTailor" />
-
           <div formArrayName="names">
-            <div *ngFor="let name of form.controls.names.controls; index as i">
-              <input [formControl]="name" placeholder="Name {{ i }}" />
-            </div>
+            @for (name of form.controls.names.controls; track name; let i = $index) {
+              <div>
+                <input [formControl]="name" placeholder="Name {{ i }}" />
+              </div>
+            }
           </div>
-
           <input formControlName="username" placeholder="Username" />
-
           <input formControlName="onSubmitOnly" placeholder="On submit only" [controlErrorsOnBlur]="false" />
           <input formControlName="onEveryChange" placeholder="On every change" [controlErrorsOnChange]="true" />
-
           <button type="submit">Submit</button>
         </form>
-      `
+      `,
     })
     class FormGroupComponent {
       form = this.builder.group({
@@ -82,7 +77,7 @@ describe('ControlErrorDirective', () => {
         names: this.builder.array([this.createName(), this.createName()], this.validator),
         username: ['', Validators.required, this.usernameValidator.bind(this)],
         onSubmitOnly: ['', [Validators.required]],
-        onEveryChange: ['', [Validators.required]]
+        onEveryChange: ['', [Validators.required]],
       });
 
       @ViewChild('explicitErrorTailor', { static: true }) explicitErrorTailor: ControlErrorsDirective;
@@ -94,20 +89,20 @@ describe('ControlErrorDirective', () => {
       }
 
       validator({ controls }: UntypedFormArray) {
-        return controls.some(control => control.valid) ? null : { requiredone: true };
+        return controls.some((control) => control.valid) ? null : { requiredone: true };
       }
 
       usernameValidator(ctrl: AbstractControl): Observable<ValidationErrors | null> {
         return scheduled([ctrl.value], asyncScheduler).pipe(
-          map(value => {
+          map((value) => {
             if (value === 'error') {
               return {
-                serverError: 'async validation error'
+                serverError: 'async validation error',
               };
             }
 
             return null;
-          })
+          }),
         );
       }
     }
@@ -198,7 +193,7 @@ describe('ControlErrorDirective', () => {
       const requiredExplicit = (control: AbstractControl): ValidationErrors | null => {
         if (control.value || control.value === '') {
           return {
-            requireExplicit: true
+            requireExplicit: true,
           };
         }
         return null;
@@ -292,9 +287,7 @@ describe('ControlErrorDirective', () => {
     @Component({
       standalone: true,
       imports: [ReactiveFormsModule, errorTailorImports],
-      template: `
-        <input [formControl]="name" placeholder="Name" />
-      `
+      template: ` <input [formControl]="name" placeholder="Name" /> `,
     })
     class FormControlComponent {
       name = new UntypedFormControl('', [Validators.required, Validators.minLength(3)]);
@@ -331,9 +324,7 @@ describe('ControlErrorDirective', () => {
     @Component({
       standalone: true,
       imports: [FormsModule, errorTailorImports],
-      template: `
-        <input [(ngModel)]="name" placeholder="Name" required minlength="3" />
-      `
+      template: ` <input [(ngModel)]="name" placeholder="Name" required minlength="3" /> `,
     })
     class NgModelComponent {
       name = '';
@@ -393,7 +384,7 @@ describe('ControlErrorDirective', () => {
             <input formControlName="withParentAnchor" placeholder="With parent anchor" />
           </div>
         </form>
-      `
+      `,
     })
     class CommonFormGroupComponent {
       form = this.builder.group({
@@ -401,11 +392,11 @@ describe('ControlErrorDirective', () => {
         customTemplate: ['', Validators.required],
         customClass: ['', Validators.required],
         withAnchor: ['', Validators.required],
-        withParentAnchor: ['', Validators.required]
+        withParentAnchor: ['', Validators.required],
       });
 
       customErrors = {
-        required: 'custom required error'
+        required: 'custom required error',
       };
 
       constructor(private builder: UntypedFormBuilder) {}
@@ -488,13 +479,15 @@ describe('ControlErrorDirective', () => {
       imports: [ReactiveFormsModule, errorTailorImports, CommonModule],
       template: `
         <form [formGroup]="form" errorTailor>
-          <input formControlName="name" placeholder="Name" *ngIf="showName" />
+          @if (showName) {
+            <input formControlName="name" placeholder="Name" />
+          }
         </form>
-      `
+      `,
     })
     class CustomErrorFormGroupComponent {
       form = this.builder.group({
-        name: new UntypedFormControl('', [Validators.required])
+        name: new UntypedFormControl('', [Validators.required]),
       });
       showName = true;
       constructor(private builder: UntypedFormBuilder) {}
@@ -503,15 +496,13 @@ describe('ControlErrorDirective', () => {
     @Component({
       standalone: true,
       selector: 'custom-error-component',
-      template: `
-        <h1>{{ errorText }}</h1>
-      `
+      template: ` <h1>{{ errorText }}</h1> `,
     })
     class CustomControlErrorComponent extends DefaultControlErrorComponent {}
 
     function getCustomErrorComponentFactory<C>(
       component: Type<C>,
-      controlErrorComponentAnchorFn: (hostElem: Element, errorElem: Element) => () => void = null
+      controlErrorComponentAnchorFn: (hostElem: Element, errorElem: Element) => () => void = null,
     ) {
       return createComponentFactory({
         component,
@@ -519,19 +510,19 @@ describe('ControlErrorDirective', () => {
           provideErrorTailorConfig({
             errors: {
               useValue: {
-                required: () => 'required error'
-              }
+                required: () => 'required error',
+              },
             },
             controlErrorsClass: ['global', 'config'],
             controlCustomClass: 'control custom',
             controlErrorComponent: CustomControlErrorComponent,
             controlErrorComponentAnchorFn,
             controlErrorsOn: {
-              change: true
-            }
-          })
+              change: true,
+            },
+          }),
         ],
-        imports: [FormsModule, CustomControlErrorComponent, ReactiveFormsModule, errorTailorImports]
+        imports: [FormsModule, CustomControlErrorComponent, ReactiveFormsModule, errorTailorImports],
       });
     }
 
@@ -581,7 +572,7 @@ describe('ControlErrorDirective', () => {
           return () => {
             anchorFnDestroyCalled = true;
           };
-        }
+        },
       );
 
       beforeEach(() => (spectator = createComponent()));
