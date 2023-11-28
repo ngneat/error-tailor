@@ -66,18 +66,18 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "error-tailor-playground:build"
+            "buildTarget": "error-tailor-playground:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "error-tailor-playground:build:production"
+              "buildTarget": "error-tailor-playground:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "error-tailor-playground:build"
+            "buildTarget": "error-tailor-playground:build"
           }
         },
         "test": {

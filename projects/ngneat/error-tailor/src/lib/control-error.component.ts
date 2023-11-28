@@ -1,5 +1,13 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, TemplateRef } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  TemplateRef,
+  inject,
+  signal,
+} from '@angular/core';
 import { ValidationErrors } from '@angular/forms';
 
 export type ErrorComponentTemplate = TemplateRef<{ $implicit: ValidationErrors; text: string }>;
@@ -15,7 +23,9 @@ export interface ControlErrorComponent {
   standalone: true,
   imports: [CommonModule],
   template: `
-    <label class="control-error" [class.hide-control]="hideError" *ngIf="!errorTemplate">{{ errorText }}</label>
+    @if (!errorTemplate) {
+      <label class="control-error" [class.hide-control]="hideError">{{ errorText }}</label>
+    }
     <ng-template *ngTemplateOutlet="errorTemplate; context: errorContext"></ng-template>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -28,8 +38,8 @@ export interface ControlErrorComponent {
       :host {
         display: block;
       }
-    `
-  ]
+    `,
+  ],
 })
 export class DefaultControlErrorComponent implements ControlErrorComponent {
   errorText: string | null = null;
@@ -37,6 +47,8 @@ export class DefaultControlErrorComponent implements ControlErrorComponent {
   errorContext: { $implicit: ValidationErrors; text: string };
   hideError = true;
 
+  private cdr = inject(ChangeDetectorRef);
+  private host: ElementRef<HTMLElement> = inject(ElementRef);
   private _addClasses: string[] = [];
 
   createTemplate(tpl: ErrorComponentTemplate, error: ValidationErrors, text: string) {
@@ -56,12 +68,11 @@ export class DefaultControlErrorComponent implements ControlErrorComponent {
     if (value !== this.errorText) {
       this.errorText = value;
       this.hideError = !value;
+
       if (this.hideError) {
         this.host.nativeElement.classList.remove(...this._addClasses);
       }
       this.cdr.markForCheck();
     }
   }
-
-  constructor(private cdr: ChangeDetectorRef, private host: ElementRef<HTMLElement>) {}
 }
