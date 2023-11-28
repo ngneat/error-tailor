@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [5.0.0](https://github.com/ngneat/error-tailor/compare/v4.1.2...v5.0.0) (2023-11-28)
+
+
+### ⚠ BREAKING CHANGES
+
+* peer deps are now angular 17
+
+* Update ng 17 (#110) ([9d6eb1c](https://github.com/ngneat/error-tailor/commit/9d6eb1c766069fe31235610ac1cc9aec0d28eda2)), closes [#110](https://github.com/ngneat/error-tailor/issues/110)
+
 ### [4.1.2](https://github.com/ngneat/error-tailor/compare/v4.1.1...v4.1.2) (2023-11-15)
 
 
