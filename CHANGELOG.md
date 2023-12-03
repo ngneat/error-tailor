@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [5.0.1](https://github.com/ngneat/error-tailor/compare/v5.0.0...v5.0.1) (2023-12-03)
+
+
+### Bug Fixes
+
+* 🐛 resolve anchor on demand ([646db4f](https://github.com/ngneat/error-tailor/commit/646db4f7e14ae7ea5532025b60729bb4d453eb67))
+
 ## [5.0.0](https://github.com/ngneat/error-tailor/compare/v4.1.2...v5.0.0) (2023-11-28)
 
 
