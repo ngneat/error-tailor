@@ -55,7 +55,6 @@ export class ControlErrorsDirective implements OnInit, OnDestroy {
   @Input() controlErrorAnchor: ControlErrorAnchorDirective;
 
   private ref: ComponentRef<ControlErrorComponent>;
-  private anchor: ViewContainerRef;
   private submit$: Observable<Event>;
   private reset$: Observable<Event>;
   private control: AbstractControl;
@@ -72,7 +71,7 @@ export class ControlErrorsDirective implements OnInit, OnDestroy {
     @Optional() private controlErrorAnchorParent: ControlErrorAnchorDirective,
     @Optional() private form: FormActionDirective,
     @Optional() @Self() private ngControl: NgControl,
-    @Optional() @Self() private controlContainer: ControlContainer
+    @Optional() @Self() private controlContainer: ControlContainer,
   ) {
     this.host = elementRef.nativeElement as HTMLElement;
     this.submit$ = this.form ? this.form.submit$ : EMPTY;
@@ -82,7 +81,6 @@ export class ControlErrorsDirective implements OnInit, OnDestroy {
   ngOnInit() {
     this.mergedConfig = this.buildConfig();
 
-    this.anchor = this.resolveAnchor();
     this.control = (this.controlContainer || this.ngControl).control;
     const hasAsyncValidator = !!this.control.asyncValidator;
 
@@ -130,13 +128,13 @@ export class ControlErrorsDirective implements OnInit, OnDestroy {
       this.submit$.pipe(map(() => true)),
       this.reset$.pipe(
         map(() => false),
-        tap(() => this.hideError())
-      )
+        tap(() => this.hideError()),
+      ),
     );
 
     // when submitted, submitFirstThenUponChanges
     const changesOnSubmit$ = submit$.pipe(
-      switchMap((submit) => (submit ? controlChanges$.pipe(startWith(true)) : NEVER))
+      switchMap((submit) => (submit ? controlChanges$.pipe(startWith(true)) : NEVER)),
     );
 
     // on reset, clear ComponentRef and customAnchorDestroyFn
@@ -159,7 +157,7 @@ export class ControlErrorsDirective implements OnInit, OnDestroy {
       return;
     }
 
-    this.ref ??= this.anchor.createComponent<ControlErrorComponent>(this.mergedConfig.controlErrorComponent);
+    this.ref ??= this.resolveAnchor().createComponent<ControlErrorComponent>(this.mergedConfig.controlErrorComponent);
     const instance = this.ref.instance;
 
     if (this.controlErrorsTpl) {
@@ -175,7 +173,7 @@ export class ControlErrorsDirective implements OnInit, OnDestroy {
     if (!this.controlErrorAnchor && this.mergedConfig.controlErrorComponentAnchorFn) {
       this.customAnchorDestroyFn = this.mergedConfig.controlErrorComponentAnchorFn(
         this.host,
-        (this.ref.hostView as EmbeddedViewRef<any>).rootNodes[0] as HTMLElement
+        (this.ref.hostView as EmbeddedViewRef<any>).rootNodes[0] as HTMLElement,
       );
     }
   }
