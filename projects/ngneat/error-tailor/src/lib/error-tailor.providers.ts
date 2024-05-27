@@ -32,6 +32,7 @@ export type ErrorTailorConfig = {
     blur?: boolean;
     change?: boolean;
     status?: boolean;
+    touched?: boolean;
   };
 };
 

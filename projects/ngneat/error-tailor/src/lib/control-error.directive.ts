@@ -260,6 +260,7 @@ export class ControlErrorsDirective implements OnInit, OnDestroy {
         blur: this.controlErrorsOnBlur ?? this.config.controlErrorsOn?.blur ?? true,
         change: this.controlErrorsOnChange ?? this.config.controlErrorsOn?.change ?? false,
         status: this.controlErrorsOnStatusChange ?? this.config.controlErrorsOn?.status ?? false,
+        touched: this.controlErrorsOnTouched ?? this.config.controlErrorsOn?.touched ?? false,
       },
     };
   }
