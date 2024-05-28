@@ -1,6 +1,7 @@
 import {
   ComponentRef,
   Directive,
+  DoCheck,
   ElementRef,
   EmbeddedViewRef,
   Inject,
@@ -27,6 +28,7 @@ import {
   Observable,
   Subject,
   tap,
+  skip,
 } from 'rxjs';
 
 import { ControlErrorAnchorDirective } from './control-error-anchor.directive';
@@ -43,7 +45,7 @@ const errorTailorClass = 'error-tailor-has-error';
     '[formControlName]:not([controlErrorsIgnore]), [formControl]:not([controlErrorsIgnore]), [formGroup]:not([controlErrorsIgnore]), [formGroupName]:not([controlErrorsIgnore]), [formArrayName]:not([controlErrorsIgnore]), [ngModel]:not([controlErrorsIgnore])',
   exportAs: 'errorTailor',
 })
-export class ControlErrorsDirective implements OnInit, OnDestroy {
+export class ControlErrorsDirective implements OnInit, OnDestroy, DoCheck {
   @Input('controlErrors') customErrors: ErrorsMap = {};
   @Input() controlErrorsClass: string | string[] | undefined;
   @Input() controlCustomClass: string | string[] | undefined;
@@ -52,6 +54,7 @@ export class ControlErrorsDirective implements OnInit, OnDestroy {
   @Input() controlErrorsOnBlur: boolean | undefined;
   @Input() controlErrorsOnChange: boolean | undefined;
   @Input() controlErrorsOnStatusChange: boolean | undefined;
+  @Input() controlErrorsOnTouched: boolean | undefined;
   @Input() controlErrorAnchor: ControlErrorAnchorDirective;
 
   private ref: ComponentRef<ControlErrorComponent>;
@@ -62,6 +65,7 @@ export class ControlErrorsDirective implements OnInit, OnDestroy {
   private mergedConfig: ErrorTailorConfig = {};
   private customAnchorDestroyFn: () => void;
   private host: HTMLElement;
+  private touchedChanges$ = new Subject<boolean>();
 
   constructor(
     private vcr: ViewContainerRef,
@@ -91,6 +95,7 @@ export class ControlErrorsDirective implements OnInit, OnDestroy {
     let changesOnBlur$: Observable<any> = EMPTY;
     let changesOnChange$: Observable<any> = EMPTY;
     let changesOnStatusChange$: Observable<any> = EMPTY;
+    let changesOnTouched$: Observable<boolean> = EMPTY;
 
     if (!this.controlErrorsClass || this.controlErrorsClass?.length === 0) {
       if (this.mergedConfig.controlErrorsClass && this.mergedConfig.controlErrorsClass) {
@@ -116,6 +121,11 @@ export class ControlErrorsDirective implements OnInit, OnDestroy {
 
     if (this.mergedConfig.controlErrorsOn.status) {
       changesOnStatusChange$ = statusChanges$;
+    }
+
+    if (this.mergedConfig.controlErrorsOn.touched) {
+      // every time the touched property changes, skipping the first emission since it's the initial state
+      changesOnTouched$ = this.touchedChanges$.asObservable().pipe(distinctUntilChanged(), skip(1));
     }
 
     if (this.isInput && this.mergedConfig.controlErrorsOn.blur) {
@@ -144,12 +154,30 @@ export class ControlErrorsDirective implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy))
       .subscribe(() => {
         const hasErrors = !!this.control.errors;
+
         if (hasErrors) {
           this.showError();
         } else {
           this.hideError();
         }
       });
+
+    changesOnTouched$.pipe(takeUntil(this.destroy)).subscribe(() => {
+      const hasErrors = !!this.control.errors;
+      const touched = this.mergedConfig.controlErrorsOn.touched ? this.control.touched : true;
+
+      if (hasErrors && touched) {
+        this.showError();
+      } else {
+        this.hideError();
+      }
+    });
+  }
+
+  ngDoCheck(): void {
+    if (this.mergedConfig.controlErrorsOn.touched) {
+      this.touchedChanges$.next(this.control.touched);
+    }
   }
 
   private setError(text: string, error?: ValidationErrors) {
