@@ -216,6 +216,12 @@ One typical case when to use it is radio buttons in the same radio group where i
 <input [controlErrorsOnChange]="true" formControlName="name" />
 ```
 
+- `controlErrorsOnTouched` - To modify the error display behavior to show errors when the control is marked as `touched` via `control.markAsTouched()` or `form.markAllAsTouched()`:
+
+```html
+<input [controlErrorsOnTouched]="true" formControlName="name" />
+```
+
 ## Methods
 
 - `showError()` - Programmatic access to show a control error component (without a blur or a submit event). A validation error should still exist on that element. The key is the published `exportAs` reference of `errorTailor` to a directive instance of `ControlErrorsDirective` and calling its public method `showError()`.
@@ -336,17 +342,29 @@ bootstrapApplication(AppComponent, {
 
   ```
 
-- `controlErrorsOn` - Optional. An object that allows the default behavior for showing the errors to be overridden. (each individual property in the object is optional, so it's possible to override only 1 setting)
+- `controlErrorsOn` - Optional. Allows to override the default behavior for showing the errors. These are the possible properties and their defaults:
 
-```ts
-{
-  controlErrorsOn: {
-    async: true,  // (default: true)
-    blur: true,   // (default: true)
-    change: true, // (default: false)
+  ```ts
+  {
+    controlErrorsOn: {
+      async: true,
+      blur: true,
+      change: false,
+      touched: false,
+    }
   }
-}
-```
+  ```
+
+  The object will be merged with the default configuration object, so you can simply define one or more properties that you wish to override:
+
+  ```ts
+  {
+    controlErrorsOn: {
+      change: true,
+      touched: true,
+    }
+  }
+  ```
 
 ## Recipes
 
