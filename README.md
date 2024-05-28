@@ -107,9 +107,9 @@ export class AppComponent {
 }
 ```
 
-The directive will show all errors for a form field automatically in two instances - on the field element blur and on form submit.
-
 ### Customize the behavior
+
+By default the directive will show all errors for a form field automatically in two instances: on the field element blur and on form submit.
 
 The default behavior can be overridden globally or on a per control basis.
 
@@ -125,8 +125,8 @@ bootstrapApplication(AppComponent, {
         }
       },
       controlErrorsOn: {
-        change: true, // errors will be shown/hidden on every change
-        touched: true, // errors will be shown/hidden when the controls are marked as touched
+        change: true, // errors are shown/hidden on every change
+        touched: true, // errors are shown/hidden when the controls are marked as touched
       }
     })
   ]
