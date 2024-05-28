@@ -1,6 +1,6 @@
 <form [formGroup]="form" errorTailor>
   <div class="form-group">
-    <input class="form-control" formControlName="name" placeholder="Name" />
+    <input class="form-control" formControlName="name" placeholder="Name" [controlErrorsOnTouched]="true" />
   </div>
   <div class="form-check form-group">
     <input class="form-check-input" type="checkbox" formControlName="terms" id="check" [controlErrorAnchor]="anchor" />
@@ -67,6 +67,16 @@
       Showing/hiding errors on cookies validation:
       <button type="button" class="btn btn-success btn-custom" (click)="showError()">Show error</button>
       <button type="button" class="btn btn-success btn-custom" (click)="hideError()">Hide error</button>
+    </span>
+  </div>
+  <br />
+  <div class="text-right">
+    <span>
+      Showing/hiding errors on name via touched:
+      <button type="button" class="btn btn-success btn-custom" (click)="markNameAsTouched()">Mark as touched</button>
+      <button type="button" class="btn btn-success btn-custom" (click)="markNameAsUntouched()">
+        Mark as untouched
+      </button>
     </span>
   </div>
   <br />

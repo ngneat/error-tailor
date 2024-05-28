@@ -6,7 +6,7 @@ import { ControlErrorsDirective } from '@ngneat/error-tailor';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  styleUrls: ['./app.component.scss'],
 })
 export class AppComponent {
   form: UntypedFormGroup;
@@ -14,19 +14,19 @@ export class AppComponent {
 
   options = Array.from(Array(5), (_, i) => ({
     label: `Animal ${i + 1}`,
-    id: i + 1
+    id: i + 1,
   }));
 
   extraErrors = {
     minlength: ({ requiredLength }) => `Use country abbreviation! (min ${requiredLength} chars)`,
-    maxlength: 'Use country abbreviation! (max 3 chars)'
+    maxlength: 'Use country abbreviation! (max 3 chars)',
   };
 
   @ViewChild('gdprErrorTailor', { static: true }) gdprErrorTailor: ControlErrorsDirective;
 
   formGroup = this.builder.group({
     name: [null, Validators.required],
-    emailAddresses: this.builder.array([this.initEmailAddressFields()])
+    emailAddresses: this.builder.array([this.initEmailAddressFields()]),
   });
 
   get emailAddresses() {
@@ -36,7 +36,7 @@ export class AppComponent {
   initEmailAddressFields(): UntypedFormGroup {
     return this.builder.group({
       label: [null, Validators.required],
-      emailAddress: [null, [Validators.required, Validators.email]]
+      emailAddress: [null, [Validators.required, Validators.email]],
     });
   }
 
@@ -62,11 +62,11 @@ export class AppComponent {
       address: this.builder.group(
         {
           city: ['', Validators.required],
-          country: ['', [Validators.minLength(2), Validators.maxLength(3)]]
+          country: ['', [Validators.minLength(2), Validators.maxLength(3)]],
         },
-        { validator: addressValidator }
+        { validator: addressValidator },
       ),
-      gdpr: [false, Validators.requiredTrue]
+      gdpr: [false, Validators.requiredTrue],
     });
     /**
      * It's not necessary to set errors directly. It's done via the validator itself.
@@ -82,6 +82,14 @@ export class AppComponent {
 
   hideError(): void {
     this.gdprErrorTailor.hideError();
+  }
+
+  markNameAsTouched(): void {
+    this.form.controls.name.markAsTouched();
+  }
+
+  markNameAsUntouched(): void {
+    this.form.controls.name.markAsUntouched();
   }
 
   submit() {}
