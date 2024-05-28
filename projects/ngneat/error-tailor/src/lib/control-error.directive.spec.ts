@@ -10,7 +10,12 @@ import {
   ValidationErrors,
   Validators,
 } from '@angular/forms';
-import { ControlErrorsDirective, errorTailorImports, provideErrorTailorConfig } from '@ngneat/error-tailor';
+import {
+  ControlErrorsDirective,
+  ErrorTailorConfig,
+  errorTailorImports,
+  provideErrorTailorConfig,
+} from '@ngneat/error-tailor';
 import { byPlaceholder, byText, createComponentFactory, Spectator } from '@ngneat/spectator';
 import { map, asyncScheduler, Observable, scheduled } from 'rxjs';
 import { DefaultControlErrorComponent } from './control-error.component';
@@ -64,6 +69,7 @@ describe('ControlErrorDirective', () => {
           <input formControlName="username" placeholder="Username" />
           <input formControlName="onSubmitOnly" placeholder="On submit only" [controlErrorsOnBlur]="false" />
           <input formControlName="onEveryChange" placeholder="On every change" [controlErrorsOnChange]="true" />
+          <input formControlName="onTouchedChange" placeholder="On touched change" [controlErrorsOnTouched]="true" />
           <button type="submit">Submit</button>
         </form>
       `,
@@ -78,6 +84,7 @@ describe('ControlErrorDirective', () => {
         username: ['', Validators.required, this.usernameValidator.bind(this)],
         onSubmitOnly: ['', [Validators.required]],
         onEveryChange: ['', [Validators.required]],
+        onTouchedChange: ['', [Validators.required]],
       });
 
       @ViewChild('explicitErrorTailor', { static: true }) explicitErrorTailor: ControlErrorsDirective;
@@ -137,8 +144,10 @@ describe('ControlErrorDirective', () => {
 
       const onSubmitOnly = spectator.query<HTMLInputElement>(byPlaceholder('On submit only'));
       const onEveryChange = spectator.query<HTMLInputElement>(byPlaceholder('On every change'));
+      const onTouchedChange = spectator.query<HTMLInputElement>(byPlaceholder('On touched change'));
       typeInElementAndFocusOut(spectator, 'test', onSubmitOnly);
       typeInElementAndFocusOut(spectator, 'test', onEveryChange);
+      typeInElementAndFocusOut(spectator, 'test', onTouchedChange);
 
       spectator.click('button');
 
@@ -176,6 +185,16 @@ describe('ControlErrorDirective', () => {
 
       spectator.typeInElement('t', onEveryChange);
       expect(spectator.query(byText('required error'))).toBeFalsy();
+    });
+
+    it('should show errors when the control becomes touched when controlErrorsOnTouched is enabled', () => {
+      const onEveryChange = spectator.query<HTMLInputElement>(byPlaceholder('On touched change'));
+
+      expect(spectator.query(byText('required error'))).toBeFalsy();
+
+      spectator.component.form.markAllAsTouched();
+      spectator.detectComponentChanges();
+      expect(spectator.query(byText('required error'))).toBeTruthy();
     });
 
     it('should not show errors on interactions', () => {
@@ -500,10 +519,7 @@ describe('ControlErrorDirective', () => {
     })
     class CustomControlErrorComponent extends DefaultControlErrorComponent {}
 
-    function getCustomErrorComponentFactory<C>(
-      component: Type<C>,
-      controlErrorComponentAnchorFn: (hostElem: Element, errorElem: Element) => () => void = null,
-    ) {
+    function getCustomErrorComponentFactory<C>(component: Type<C>, config: Partial<ErrorTailorConfig> = {}) {
       return createComponentFactory({
         component,
         providers: [
@@ -516,10 +532,7 @@ describe('ControlErrorDirective', () => {
             controlErrorsClass: ['global', 'config'],
             controlCustomClass: 'control custom',
             controlErrorComponent: CustomControlErrorComponent,
-            controlErrorComponentAnchorFn,
-            controlErrorsOn: {
-              change: true,
-            },
+            ...config,
           }),
         ],
         imports: [FormsModule, CustomControlErrorComponent, ReactiveFormsModule, errorTailorImports],
@@ -563,9 +576,8 @@ describe('ControlErrorDirective', () => {
       let anchorFnDestroyCalled = false;
 
       let spectator: Spectator<CustomErrorFormGroupComponent>;
-      const createComponent = getCustomErrorComponentFactory(
-        CustomErrorFormGroupComponent,
-        (hostElem: Element, errorElem: Element) => {
+      const createComponent = getCustomErrorComponentFactory(CustomErrorFormGroupComponent, {
+        controlErrorComponentAnchorFn: (hostElem: Element, errorElem: Element) => {
           anchorFnCalled = true;
           expect(hostElem).toBeTruthy();
           expect(errorElem).toBeTruthy();
@@ -573,7 +585,7 @@ describe('ControlErrorDirective', () => {
             anchorFnDestroyCalled = true;
           };
         },
-      );
+      });
 
       beforeEach(() => (spectator = createComponent()));
 
@@ -604,24 +616,47 @@ describe('ControlErrorDirective', () => {
     });
 
     describe('controlErrorsOn', () => {
-      let spectator: Spectator<CustomErrorFormGroupComponent>;
-      const createComponent = getCustomErrorComponentFactory(CustomErrorFormGroupComponent);
+      describe('change', () => {
+        let spectator: Spectator<CustomErrorFormGroupComponent>;
+        const createComponent = getCustomErrorComponentFactory(CustomErrorFormGroupComponent, {
+          controlErrorsOn: { change: true },
+        });
 
-      beforeEach(() => (spectator = createComponent()));
+        beforeEach(() => (spectator = createComponent()));
 
-      it('should override default behavior for showing errors', () => {
-        const input = spectator.query<HTMLInputElement>(byPlaceholder('Name'));
+        it('should show errors on change when overriding default behavior by setting controlErrorsOn.change to true', () => {
+          const input = spectator.query<HTMLInputElement>(byPlaceholder('Name'));
 
-        expect(spectator.query(byText('required error'))).toBeFalsy();
+          expect(spectator.query(byText('required error'))).toBeFalsy();
 
-        spectator.typeInElement('test', input);
-        expect(spectator.query(byText('required error'))).toBeFalsy();
+          spectator.typeInElement('test', input);
+          expect(spectator.query(byText('required error'))).toBeFalsy();
 
-        spectator.typeInElement('', input);
-        expect(spectator.query(byText('required error'))).toBeTruthy();
+          spectator.typeInElement('', input);
+          expect(spectator.query(byText('required error'))).toBeTruthy();
 
-        spectator.typeInElement('t', input);
-        expect(spectator.query(byText('required error'))).toBeFalsy();
+          spectator.typeInElement('t', input);
+          expect(spectator.query(byText('required error'))).toBeFalsy();
+        });
+      });
+
+      describe('touched', () => {
+        let spectator: Spectator<CustomErrorFormGroupComponent>;
+        const createComponent = getCustomErrorComponentFactory(CustomErrorFormGroupComponent, {
+          controlErrorsOn: { touched: true },
+        });
+
+        beforeEach(() => (spectator = createComponent()));
+
+        it('should show errors when control becomes touched when overriding default behavior by setting controlErrorsOn.touched to true', () => {
+          const input = spectator.query<HTMLInputElement>(byPlaceholder('Name'));
+
+          expect(spectator.query(byText('required error'))).toBeFalsy();
+
+          spectator.component.form.markAllAsTouched();
+          spectator.detectComponentChanges();
+          expect(spectator.query(byText('required error'))).toBeTruthy();
+        });
       });
     });
   });
