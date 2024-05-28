@@ -216,7 +216,7 @@ One typical case when to use it is radio buttons in the same radio group where i
 <input [controlErrorsOnChange]="true" formControlName="name" />
 ```
 
-- `controlErrorsOnTouched` - To modify the error display behavior to show errors when the control is marked as `touched` via `control.markAsTouched()` or `form.markAllAsTouched()`:
+- `controlErrorsOnTouched` - To modify the error display behavior to show errors when the control is marked as `touched` via `control.markAsTouched()` or `formGroup.markAllAsTouched()`:
 
 ```html
 <input [controlErrorsOnTouched]="true" formControlName="name" />
