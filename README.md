@@ -109,6 +109,36 @@ export class AppComponent {
 
 The directive will show all errors for a form field automatically in two instances - on the field element blur and on form submit.
 
+### Customize the behavior
+
+The default behavior can be overridden globally or on a per control basis.
+
+If you want to override the behavior globally, so that it affects all form controls, you can do so via the `controlErrorsOn` property:
+
+```ts
+bootstrapApplication(AppComponent, {
+  providers: [
+    provideErrorTailorConfig({
+      errors: {
+        useValue: {
+          required: 'This field is required'
+        }
+      },
+      controlErrorsOn: {
+        change: true, // errors will be shown/hidden on every change
+        touched: true, // errors will be shown/hidden when the controls are marked as touched
+      }
+    })
+  ]
+})
+```
+
+Or you can change the behavior of a single form control by adding the relevant inputs. For example, to only show the errors on submit you can set to `false` both `controlErrorsOnBlur` and `controlErrorsOnAsync`:
+
+```html
+<input [controlErrorsOnBlur]="false" [controlErrorsOnAsync]="false" formControlName="name" />
+```
+
 ## Inputs
 
 - `controlErrorsClass` - A custom classes that'll be added to the control error component and override custom classes from global config, a component that is added after the form field when an error needs to be displayed:
