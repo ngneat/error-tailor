@@ -1,13 +1,15 @@
-import { Component, Type, ViewChild } from '@angular/core';
+import { Component, inject, Type, ViewChild } from '@angular/core';
 import { fakeAsync, tick } from '@angular/core/testing';
 import {
   AbstractControl,
   FormsModule,
+  NgControl,
   ReactiveFormsModule,
   UntypedFormArray,
   UntypedFormBuilder,
   UntypedFormControl,
   ValidationErrors,
+  ValidatorFn,
   Validators,
 } from '@angular/forms';
 import { ControlErrorsDirective, errorTailorImports, provideErrorTailorConfig } from '@ngneat/error-tailor';
@@ -473,6 +475,9 @@ describe('ControlErrorDirective', () => {
   });
 
   describe('GlobalConfig', () => {
+    const customValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null =>
+      control.value === 'custom' ? { custom: control.value } : null;
+
     @Component({
       selector: 'custom-error-form-group',
       standalone: true,
@@ -487,7 +492,7 @@ describe('ControlErrorDirective', () => {
     })
     class CustomErrorFormGroupComponent {
       form = this.builder.group({
-        name: new UntypedFormControl('', [Validators.required]),
+        name: new UntypedFormControl('', [Validators.required, customValidator]),
       });
       showName = true;
       constructor(private builder: UntypedFormBuilder) {}
@@ -511,6 +516,10 @@ describe('ControlErrorDirective', () => {
             errors: {
               useValue: {
                 required: () => 'required error',
+                custom: () => {
+                  const controlName = inject(NgControl).name;
+                  return `custom error for control ${controlName}`;
+                },
               },
             },
             controlErrorsClass: ['global', 'config'],
@@ -622,6 +631,20 @@ describe('ControlErrorDirective', () => {
 
         spectator.typeInElement('t', input);
         expect(spectator.query(byText('required error'))).toBeFalsy();
+      });
+    });
+
+    describe('errors', () => {
+      let spectator: Spectator<CustomErrorFormGroupComponent>;
+      const createComponent = getCustomErrorComponentFactory(CustomErrorFormGroupComponent);
+
+      beforeEach(() => (spectator = createComponent()));
+
+      it('should be able to access directive injector', () => {
+        const input = spectator.query<HTMLInputElement>(byPlaceholder('Name'));
+
+        spectator.typeInElement('custom', input);
+        expect(spectator.query(byText('custom error for control name'))).toBeTruthy();
       });
     });
   });

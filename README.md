@@ -48,6 +48,8 @@ bootstrapApplication(AppComponent, {
 <!-- prettier-ignore-end -->
 
 The `errors` config property takes a partial `Provider`, that should provide a `HashMap<string | (err:any) => string>` that is an object with keys corresponding to the errors name that you want to handle, and values that can be a simple string, or function that return a string used as error message to be shown.
+This function runs inside the directive injector context.
+
 Now the only thing you need to add is the `errorTailor` directive to your form:
 
 ```html
