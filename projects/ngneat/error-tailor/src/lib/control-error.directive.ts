@@ -4,11 +4,13 @@ import {
   ElementRef,
   EmbeddedViewRef,
   Inject,
+  Injector,
   Input,
   isDevMode,
   OnDestroy,
   OnInit,
   Optional,
+  runInInjectionContext,
   Self,
   TemplateRef,
   ViewContainerRef,
@@ -72,6 +74,7 @@ export class ControlErrorsDirective implements OnInit, OnDestroy {
     @Optional() private form: FormActionDirective,
     @Optional() @Self() private ngControl: NgControl,
     @Optional() @Self() private controlContainer: ControlContainer,
+    private injector: Injector,
   ) {
     this.host = elementRef.nativeElement as HTMLElement;
     this.submit$ = this.form ? this.form.submit$ : EMPTY;
@@ -193,7 +196,10 @@ export class ControlErrorsDirective implements OnInit, OnDestroy {
         return;
       }
 
-      const text = typeof getError === 'function' ? getError(controlErrors[firstKey]) : getError;
+      const text =
+        typeof getError === 'function'
+          ? runInInjectionContext(this.injector, () => getError(controlErrors[firstKey]))
+          : getError;
       this.addCustomClass();
       this.setError(text, controlErrors);
     }
